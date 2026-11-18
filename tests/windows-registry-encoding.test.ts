@@ -70,10 +70,23 @@ function writableProbeRoot(): string {
   throw new Error('no writable drive found for the registry-encoding fixture')
 }
 
-/** A real directory whose path contains Chinese characters. */
-const ROOT = writableProbeRoot()
-const DIR = join(ROOT, '腾讯', 'WorkBuddy')
-const EXE = join(DIR, 'WorkBuddy.exe')
+/**
+ * A real directory whose path contains Chinese characters.
+ *
+ * Resolved lazily, NOT at module scope: `describe.skipIf(!isWindows)` skips the
+ * CASES off Windows, but a module-level `writableProbeRoot()` still runs during
+ * collection and throws on a Linux CI runner (no drive letters), failing the
+ * whole suite before the skip is considered. A getter keeps the probe inside
+ * the Windows-only cases where it belongs.
+ */
+let root: string | undefined
+function fixture(): { ROOT: string; DIR: string; EXE: string } {
+  root ??= writableProbeRoot()
+  const ROOT = root
+  const DIR = join(ROOT, '腾讯', 'WorkBuddy')
+  const EXE = join(DIR, 'WorkBuddy.exe')
+  return { ROOT, DIR, EXE }
+}
 
 /**
  * The fixture key must sit UNDER the Uninstall tree — the only place the reader
@@ -103,11 +116,12 @@ afterAll(() => {
   for (const key of [KEY, LEGACY_KEY]) {
     try { reg(['delete', key, '/f']) } catch { /* already gone */ }
   }
-  rmSync(ROOT, { recursive: true, force: true })
+  if (root !== undefined) rmSync(root, { recursive: true, force: true })
 })
 
 describe.skipIf(!isWindows)('non-ASCII install paths survive the registry probe', () => {
   it('finds a Chinese install path where a UTF-8 read of reg.exe cannot', () => {
+    const { ROOT, DIR, EXE } = fixture()
     rmSync(ROOT, { recursive: true, force: true })
     mkdirSync(DIR, { recursive: true })
     writeFileSync(EXE, '')
@@ -150,6 +164,7 @@ describe.skipIf(!isWindows)('non-ASCII install paths survive the registry probe'
     // End to end at the level that matters: whichever layer produced the path,
     // the candidate list must place a real, existing file where the caller can
     // reach it — otherwise the key fetch is never attempted.
+    const { ROOT, DIR, EXE } = fixture()
     rmSync(ROOT, { recursive: true, force: true })
     mkdirSync(DIR, { recursive: true })
     writeFileSync(EXE, '')
