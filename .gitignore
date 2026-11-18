@@ -62,3 +62,4 @@ startup.log
 # them into the tarball, so the pattern is defensive rather than tidy.
 *.bak
 *.bak-*
+.commitmsg.txt
