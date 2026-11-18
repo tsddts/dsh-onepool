@@ -192,7 +192,8 @@ export async function installVersion(version: string, refreshLockfile: LockfileR
 
   try {
     const pkgPath = join(profile, 'package.json')
-    const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as Record<string, unknown>
+    const originalPkg = readFileSync(pkgPath, 'utf8')
+    const pkg = JSON.parse(originalPkg) as Record<string, unknown>
     let changed = false
     for (const key of ['dependencies', 'devDependencies', 'optionalDependencies']) {
       const block = pkg[key]
@@ -218,6 +219,9 @@ export async function installVersion(version: string, refreshLockfile: LockfileR
     // fails.
     const lockError = refreshProfileLockfile(profile, refreshLockfile)
     if (lockError !== undefined) {
+      // Leave no half-applied update behind: a new spec with an old lockfile is exactly the state
+      // that makes the NEXT start fail with --frozen-lockfile and get restored by the host.
+      writeFileSync(pkgPath, originalPkg, 'utf8')
       return { ok: false, restartRequired: false, path: target, error: lockError }
     }
     return { ok: true, version, path: target, restartRequired: true }
