@@ -81,7 +81,7 @@ $pkg | ConvertTo-Json -Depth 10 | Set-Content "$prof\package.json" -Encoding UTF
 Get-Content "$prof\package.json" -Raw
 ```
 
-### 第 3 步：装包（不启动 DSH）
+### 第 3 步：装包（⚠️ 这一步会断开当前会话）
 
 ```powershell
 $prof = "$env:USERPROFILE\.dsh\profiles\desktop"
@@ -93,30 +93,64 @@ Pop-Location
 node "$prof\node_modules\dsh-onepool\scripts\link-host-peers.mjs"
 ```
 
-**到这一步为止，正在运行的 DSH 完全没受影响**——它已经把旧模块加载进内存了，
-磁盘上的改动不会影响它。你的会话照常工作。
+### ⚠️ 更正：`pnpm install` 会立刻触发热重载，会话当场断开
+
+**2026-11-18 实测推翻了本节原来的说法**。原文写的是「磁盘上的改动不会影响运行中的进程，
+会话照常工作」——**这是错的**。
+
+`node_modules` 里 `dsh-xdpool` 被删、`dsh-onepool` 出现的同一秒，DSH 的插件管理器就
+察觉到了 profile 的变化，**当场卸载旧插件树并加载新的**。正在跑的那一轮请求因此被打断，
+会话的模型从 `buddy / deepseek-v4.1-flash` 掉到了备用模型。
+
+好消息是**迁移本身是成功的**：重载时 onepool 正常 apply，日志留下了完整证据
+
+```
+adopted pre-rename state from C:\Users\NeilM\.dsh\.xdpool -> C:\Users\NeilM\.dsh\.onepool (11 file(s))
+providers registered cn=http://127.0.0.1:55969 global=http://127.0.0.1:55970 ...
+free lane ready rows=10 live=true
+```
+
+**所以正确的做法是**：
+
+1. 把第 2 步的**文件改动**做完（改 `package.json`，这一步真的不影响正在跑的进程）；
+2. `pnpm install` 之前**先把手上这一轮对话发完**，因为它就是断开点；
+3. 断开后不要慌：等 DSH 自己重载完（几秒），再在模型选择器里把模型切回 `buddy`。
+
+**想完全避开中断**，就在没有任务在跑的时候做第 2 步 + 第 3 步。中断是 `pnpm install`
+引起的，不是你重不重启引起的。
 
 ---
 
-## 四、切换（唯一会断开的一步）
+## 四、切换（`pnpm install` 就已经是切换点）
 
-**这一步会重启 DSH，当前会话会断开。请在合适的时候做。**
+**注意：如果你按第三节做到了 `pnpm install`，切换其实已经发生**——插件管理器会当场
+重载，不需要你再手动重启。见上一节的更正。
+
+**如果重载后模型掉到了备用模型**，在 DSH 的模型选择器里切回：
+
+```
+provider: buddy
+model:    deepseek-v4.1-flash
+```
+
+**如果 `buddy` 不在列表里**，先跑这条确认插件是活的：
 
 ```powershell
-# 确认新包能加载（在重启前跑，不碰运行中的进程）
+# 插件启动时会把两个本地 shim 挂到随机端口，日志里记着端口号
+Get-Content "$env:USERPROFILE\.dsh\.onepool\startup.log" -Tail 5
+# 然后用日志里的端口探活（401 是正常的，说明服务在监听）
+Test-NetConnection -ComputerName 127.0.0.1 -Port <日志里的端口> -InformationLevel Quiet
+```
+
+两个端口都 `True` 说明 onepool 已加载进当前进程，模型列表刷新一下就会出现。
+
+### 若你选择「先改文件、稍后安装」
+
+```powershell
 node C:\Users\NeilM\Desktop\research\onepool\tools\verify-installed.mjs "$env:USERPROFILE\.dsh\profiles\desktop"
 ```
 
-看到 `ALL CHECKS PASSED` 后：
-
-1. **先发一条消息，确认当前会话还在工作**（记住最后一个 token 计数）。
-2. 关闭 DSH（不是强杀，让它正常退出）。
-3. 重新打开 DSH。
-4. 打开同一个会话，发一条消息。
-
-**如果它正常回话**：迁移成功，模型仍是 `buddy / deepseek-v4.1-flash`，账号池里 9 个账号都在。
-
-**如果它报错**：见下一节回滚。
+看到 `ALL CHECKS PASSED` 后再执行 `pnpm install`。校验不碰运行中的进程，可以随时跑。
 
 ---
 
