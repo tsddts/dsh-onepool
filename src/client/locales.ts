@@ -408,6 +408,7 @@ export const en = {
 
   'chan.empty': 'No channel is connected yet.',
   'shell.brand': 'OnePool',
+  'shell.slogan': '问渠那得清如许，为有源头活水来',
   'shell.star': 'Star',
   'shell.starHint': 'Open this plugin on GitHub',
   'shell.tabPool': 'Account pool',
@@ -1043,6 +1044,7 @@ export const zh: Record<OnePoolSettingsKey, string> = {
 
   'chan.empty': '还没有任何渠道连上来。',
   'shell.brand': '一泓',
+  'shell.slogan': '问渠那得清如许，为有源头活水来',
   'shell.star': '点Star',
   'shell.starHint': '在 GitHub 上给这个插件点个星',
   'shell.tabPool': '账号池',

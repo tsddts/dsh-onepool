@@ -46,8 +46,6 @@ export interface PoolShellProps {
   t?: Translate | undefined
   /** Plugin version, shown next to the product name. Never a "latest" claim. */
   version?: string | undefined
-  /** The user's avatar, as a data URI. */
-  avatar: string
   tabs: readonly ShellTab[]
   /** Id of the page on screen. */
   active: string
@@ -145,7 +143,6 @@ export function PageHero({
 export function PoolShell({
   t,
   version,
-  avatar,
   tabs,
   active,
   onSelect,
@@ -202,7 +199,6 @@ export function PoolShell({
       </div>
       <nav className="dsm-onepool-nav">
         <div className="dsm-onepool-brand">
-          <img className="dsm-onepool-avatar" src={avatar} alt="" />
           <span className="dsm-onepool-brand-copy">
             <span className="dsm-onepool-brand-title">
               {t?.('shell.brand') ?? 'OnePool'}
@@ -210,11 +206,14 @@ export function PoolShell({
                 ? null
                 : <span className="dsm-onepool-version">v{version}</span>}
             </span>
+            <span className="dsm-onepool-brand-slogan">
+              {t?.('shell.slogan') ?? '问渠那得清如许，为有源头活水来'}
+            </span>
           </span>
         </div>
         <a
           className="dsm-onepool-star"
-          href="https://github.com/XDTrees/dsh-onepool"
+          href="https://github.com/tsddts/dsh-onepool"
           target="_blank"
           rel="noreferrer"
           title={t?.('shell.starHint') ?? 'Open this plugin on GitHub'}

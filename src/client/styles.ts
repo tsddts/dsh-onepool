@@ -907,9 +907,11 @@ export const SHELL_CSS = `
    fraction of the cost. */
 .dsm-onepool-nav{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 12px;padding:10px 12px;border-radius:16px;border:1px solid color-mix(in srgb, var(--dsw-alias-border-l2,#ffffff1f) 82%, transparent);background:color-mix(in srgb, var(--dsw-alias-bg-layer-2,#1c1e22) 62%, transparent);box-shadow:inset 0 1px 0 rgb(255 255 255 / 7%), 0 8px 26px rgb(0 0 0 / 10%)}
 .dsm-onepool-brand{display:flex;align-items:center;gap:9px;min-width:0}
-.dsm-onepool-avatar{width:26px;height:26px;flex:none;border-radius:9px;object-fit:cover;box-shadow:inset 0 1px 0 rgb(255 255 255 / 22%), 0 4px 12px rgb(0 0 0 / 34%)}
 .dsm-onepool-brand-copy{display:flex;flex-direction:column;min-width:0}
 .dsm-onepool-brand-title{display:flex;align-items:baseline;gap:6px;font-size:14px;line-height:19px;font-weight:700;letter-spacing:-.2px;color:var(--dsw-alias-label-primary,#e8e8ea);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Brand slogan: a single quiet line under the product name. Muted on purpose —
+   it is voice, not information, and must never compete with the tab strip. */
+.dsm-onepool-brand-slogan{margin-top:2px;font-size:12px;line-height:18px;font-weight:400;letter-spacing:.4px;color:var(--dsw-alias-label-tertiary,#8a90a0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dsm-onepool-version{font-size:10.5px;line-height:14px;font-weight:500;color:var(--dsw-alias-label-tertiary,#8a90a0);font-variant-numeric:tabular-nums}
 /* The star is pinned to the brand row explicitly. Grid auto-placement would
    put it below the tab strip (the strip comes first in the DOM) and stretch it
@@ -994,6 +996,17 @@ export const SHELL_CSS = `
 .dsm-onepool-pill[data-tone="warn"]{border-color:color-mix(in oklab, var(--dsw-alias-state-warning-primary,#e8a33d) 45%, transparent);color:var(--dsw-alias-state-warning-primary,#e8a33d)}
 .dsm-onepool-pill[data-tone="off"]{border-color:color-mix(in oklab, var(--dsw-alias-label-tertiary,#8a90a0) 40%, transparent);color:var(--dsw-alias-label-tertiary,#8a90a0)}
 
+`.trim()
+
+/**
+ * 数据看板 iframe 承载容器。看板自带深色画布与圆角面板，这里只负责把它
+ * 嵌进 OnePool 卡片的 body：圆角裁剪 + 细边框，让 iframe 边界和宿主其他
+ * 面板一致；背景色与看板自身 --bg 对齐，加载瞬间不闪白。
+ */
+export const XDPOOL_DASHBOARD_CSS = `
+.dsm-onepool-xdash{border:1px solid color-mix(in srgb, var(--dsw-alias-border-l2,#36373b) 80%, transparent);border-radius:12px;overflow:hidden;background:#0d1014;min-width:0}
+.dsm-onepool-xdash iframe{color-scheme:dark}
+@media (prefers-reduced-motion: no-preference){.dsm-onepool-xdash{transition:border-color .18s ease}}
 `.trim()
 
 export const LEDGER_CARD_CSS = `

@@ -41,9 +41,14 @@ jobs:
         run: |
           set -euo pipefail
           # 用前后逗号包住做精确匹配，避免 'automerge-old' 之类的误命中
+          # Both label spellings count. release-please tags its release PR
+          # `autorelease: pending` (the config's labels:[automerge] does not
+          # survive in this action version), so honour that here — otherwise
+          # the release PR waits for a human and "push main -> publish" breaks.
           case ",$PR_LABELS," in
-            *,automerge,*) echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
-            *)             echo "has_label=false" >> "$GITHUB_OUTPUT" ;;
+            *,automerge,*)            echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
+            *,autorelease: pending,*) echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
+            *)                        echo "has_label=false" >> "$GITHUB_OUTPUT" ;;
           esac
           if [ "$PR_AUTHOR" = "dependabot[bot]" ]; then
             echo "is_dependabot=true" >> "$GITHUB_OUTPUT"

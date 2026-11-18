@@ -46,9 +46,8 @@ import {
 } from '../status-paths.ts'
 import { DEFAULT_AUTOMATION_HOURS } from '../status-paths.ts'
 import { POOL_CARD_CSS } from './styles.ts'
-import { POOL_CARD_AVATAR } from './avatar.ts'
 import { PoolShell, PageHero, initialShellTab, rememberedShellTab } from './shell.tsx'
-import { LedgerPage } from './LedgerPage.tsx'
+import { XdpoolDashboardPage } from './XdpoolDashboardPage.tsx'
 import { AggregatePage } from './AggregatePage.tsx'
 import { ChannelsPage } from './ChannelsPage.tsx'
 import { RoutingPage } from './RoutingPage.tsx'
@@ -1522,7 +1521,6 @@ export function PoolCard({ t, settingsScope }: PoolCardProps) {
     <PoolShell
       t={t}
       version={POOL_VERSION}
-      avatar={POOL_CARD_AVATAR}
       tabs={shellTabs}
       active={page}
       onSelect={setPage}
@@ -1530,7 +1528,7 @@ export function PoolCard({ t, settingsScope }: PoolCardProps) {
     >
       {page === 'aggregate' ? <AggregatePage t={t} />
         : page === 'channels' ? <ChannelsPage t={t} />
-          : page === 'ledger' ? <LedgerPage t={t} usage={usage} />
+          : page === 'ledger' ? <XdpoolDashboardPage />
                   : page === 'routing' ? <RoutingPage t={t} />
                 : page === 'gateway' ? <GatewayPage t={t} />
                   : page === 'backup' ? <BackupPanel t={t} />
