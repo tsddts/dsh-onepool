@@ -15,7 +15,11 @@ name: Release
 on:
   push:
     tags:
+      # release-please with a `package-name` emits `dsh-onepool-v1.1.0`, while a
+      # hand-pushed tag is `v1.1.0`. Match both so the publish chain never goes
+      # silent just because the tag gained a component prefix.
       - 'v*'
+      - 'dsh-onepool-v*'
   # 手动触发默认只跑构建+测试，不发版——这样可以用它验证 CI 而不误发 npm。
   # 确实要就着手动重发时，勾上 publish 输入。
   workflow_dispatch:
@@ -88,7 +92,10 @@ jobs:
         # 版本号对不上就中止：宁可让发布失败，也不要发出一个名不副实的版本
         run: |
           PKG_VERSION="$(node -p "require('./package.json').version")"
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          # Strip an optional component prefix (dsh-onepool-v1.1.0 -> 1.1.0)
+          # as well as the bare v prefix (v1.1.0 -> 1.1.0).
+          TAG_VERSION="${GITHUB_REF_NAME#dsh-onepool-v}"
+          TAG_VERSION="${TAG_VERSION#v}"
           echo "package.json=$PKG_VERSION  tag=$TAG_VERSION"
           if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
             echo "::error::tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION"
