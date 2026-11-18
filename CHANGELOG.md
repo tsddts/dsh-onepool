@@ -7,6 +7,89 @@
 > 的一个分叉（MIT），不是它的后继版本。下面的 2.x 条目是**上游的历史**，原样保留，
 > 它们记录的是这个代码库在那些版本里实际发生了什么；分叉自己的变更从 1.0.0 开始。
 
+## [1.1.0](https://github.com/tsddts/dsh-onepool/compare/dsh-onepool-v1.0.0...dsh-onepool-v1.1.0) (2026-11-18)
+
+
+### Features
+
+* **automation:** 接入八类客户端任务链 + 专家链间隔修复（1.2.0） ([20db6fc](https://github.com/tsddts/dsh-onepool/commit/20db6fc89358704313b9c2bf712b579a98e4204a))
+* **automation:** 积分自动化——任务领取 / 活跃上报 / 签到，卡片可开关 (1.1.0) ([4029aa3](https://github.com/tsddts/dsh-onepool/commit/4029aa3668b80da39ef9d747616d59a35c0032cf))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([0ef7738](https://github.com/tsddts/dsh-onepool/commit/0ef77389a2f7663725d7be9bf29c282de189a4c6))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([d4e4fe8](https://github.com/tsddts/dsh-onepool/commit/d4e4fe81522f9b13d7fe9324cea60a1a0dca4fe6))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([5c470e3](https://github.com/tsddts/dsh-onepool/commit/5c470e3c6b8da0e0074ee4e2376f08823f940cf1))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([f6fa9e4](https://github.com/tsddts/dsh-onepool/commit/f6fa9e47de8312f25beeec70d082c3099a87e6b2))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([5bc48b1](https://github.com/tsddts/dsh-onepool/commit/5bc48b165e96f1332f8ff2db857e73240836c3a5))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([62c2267](https://github.com/tsddts/dsh-onepool/commit/62c2267bdcd8c4dcc42189dda682ffbd3fe4c7d7))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([19ba42a](https://github.com/tsddts/dsh-onepool/commit/19ba42aef175d841b69c67c8d937a85dee0c7f3c))
+* **card:** surface per-model cooldowns instead of marking the whole account cooling ([3f171c7](https://github.com/tsddts/dsh-onepool/commit/3f171c79b7d8f482f4a3a4e6bb79f46af28740fb))
+* **card:** 去掉头像，品牌栏加源头活水 slogan ([7d89207](https://github.com/tsddts/dsh-onepool/commit/7d89207ed6b49e7738b6464f7f7a6f2c5e1d479f))
+* **checkin:** daily check-in for every pooled account + CN/global region routing ([76557a9](https://github.com/tsddts/dsh-onepool/commit/76557a9548586c3fefe49da08a4c1f23fe0fdf8b))
+* DSH WorkBuddy XD Pool — multi-account auto-failover provider plugin ([edb83db](https://github.com/tsddts/dsh-onepool/commit/edb83dbd14cba3fbb40432984083e4e8e50232bd))
+* **gateway:** serve exactly what the card says, across every lane ([de9ff6e](https://github.com/tsddts/dsh-onepool/commit/de9ff6eaa280cdb5e9f8d27930a68d88ad52dad2))
+* **pool:** account usage switch, per-package deadlines, credential freshness ([8771a85](https://github.com/tsddts/dsh-onepool/commit/8771a854d23323dd34d8ce618803ca73f14cc751))
+* **pool:** sticky distribution — one account per conversation ([cb36e29](https://github.com/tsddts/dsh-onepool/commit/cb36e29c6d180cb4450e1a1abe189862e57864f4))
+* **pool:** 免费模型被限流时，点名同名的付费行作为退路 ([de2e15f](https://github.com/tsddts/dsh-onepool/commit/de2e15f63db9b49b28b0f21e1a9300bcb91a711e))
+* **pool:** 第五种「先花快到期的」模式、模式选择改可换行芯片行、网关 401 折叠为标记并判死 ([aba1bb2](https://github.com/tsddts/dsh-onepool/commit/aba1bb284afe172c3d5aaf3301a4eb79cd4813f4))
+* **pool:** 账号可停用 + 均衡用号 + 当前账号显示；修两处用号逻辑；卡片按 product register 重排 ([2b1c39a](https://github.com/tsddts/dsh-onepool/commit/2b1c39a2216d1d005158c7b6c6a568e5723fbc73))
+* **pool:** 账号可单独停用 + 新增均衡用号模式（1.0.0） ([a5429aa](https://github.com/tsddts/dsh-onepool/commit/a5429aaa34723cfbe5c71dfa02941f2eeb059bad))
+* **provider:** append credit multiplier and promo badges to model display name ([5b65265](https://github.com/tsddts/dsh-onepool/commit/5b65265092bc0a26dc71a9941713fea18181b351))
+* **regions:** split CN/global into two providers with a tabbed card ([94ca683](https://github.com/tsddts/dsh-onepool/commit/94ca6839eb848c286e55504e79a32cdfba850bb5))
+* **shim:** surface a friendly hint on context-window overrun instead of a bare 400 echo ([bced1e3](https://github.com/tsddts/dsh-onepool/commit/bced1e325a00a5122adfbcecca1fb2f75fd94a80))
+* **shim:** surface a friendly hint on context-window overrun instead of a bare 400 echo ([c73dd6a](https://github.com/tsddts/dsh-onepool/commit/c73dd6aba718751d60569d4cac9f5fe08f645184))
+* zero-downtime migration path from xdpool ([306624b](https://github.com/tsddts/dsh-onepool/commit/306624b8acc82334c5dec72ce10a4d4d0c492835))
+* 读懂上游的活动标签，模型自己说它什么时候免费 ([4be2cdf](https://github.com/tsddts/dsh-onepool/commit/4be2cdfed9c22dc38d84681d1282e7860e5b8091))
+
+
+### Bug Fixes
+
+* 1.4.1 — hy3 长对话仍弹 400：真实窗口误声明导致压不到位 ([47bda32](https://github.com/tsddts/dsh-onepool/commit/47bda32a007c2b78a025a8cd364dcccee7b3162d))
+* 2.6.1 — 交流群二维码就地展开在标签栏下方 ([#125](https://github.com/tsddts/dsh-onepool/issues/125)) ([0ac277d](https://github.com/tsddts/dsh-onepool/commit/0ac277dc23576c3ab79026d8d8e507eb9cf899b1))
+* 2.6.4 — 真正把 postinstall 打进包里 ([#131](https://github.com/tsddts/dsh-onepool/issues/131)) ([813d51c](https://github.com/tsddts/dsh-onepool/commit/813d51c2501f728d90b7ff54aa3823f9aca17020))
+* 2.7.1 — 插件入口消失（client bundle 混入 node:），加 [#154](https://github.com/tsddts/dsh-onepool/issues/154)/[#155](https://github.com/tsddts/dsh-onepool/issues/155)/[#127](https://github.com/tsddts/dsh-onepool/issues/127)/[#153](https://github.com/tsddts/dsh-onepool/issues/153) ([#157](https://github.com/tsddts/dsh-onepool/issues/157)) ([639ccc9](https://github.com/tsddts/dsh-onepool/commit/639ccc90e3564638e179f27b43f05f23a11f318b))
+* **accounts:** keep sticky bindings across a restart ([fd7733b](https://github.com/tsddts/dsh-onepool/commit/fd7733b61dc14dfcad46e74a1f41dd85a3013c97))
+* **accounts:** 多 build keyId 分发 + 同步 opener 回归测试 ([76da3ee](https://github.com/tsddts/dsh-onepool/commit/76da3ee1bb79b34df419ca0b0daf1170c6bddb34))
+* **adapter:** 接上宿主的附件服务，修复图文模型贴图报错 ([cb61c6a](https://github.com/tsddts/dsh-onepool/commit/cb61c6adf0152843e9951e0abaa2d73bd6658f72))
+* **automation:** 旅行任务改为一天两趟，卡片显示具体领了什么 ([c9d48bf](https://github.com/tsddts/dsh-onepool/commit/c9d48bf6d94c960419acc3a8429aa8c0fcbea21a))
+* **build:** 发版分支恢复 LedgerPage，移除未提交的 dashboard 引用 ([e306bd7](https://github.com/tsddts/dsh-onepool/commit/e306bd79f981397d91d94410e418234b6e299834))
+* **card:** 猫猫旅行那行终于显示出来了 ([c027e10](https://github.com/tsddts/dsh-onepool/commit/c027e1063b9aa137a82947449430b02c56d68828))
+* **channels:** cover the 11128 rules in the vendored channel pack too ([103d732](https://github.com/tsddts/dsh-onepool/commit/103d732597bfdf74325e27496ccb8db6b86ec0f0))
+* **channels:** let the model catalogue expire, so renames and prices arrive ([aab56bc](https://github.com/tsddts/dsh-onepool/commit/aab56bcaeb821822a35c1e7026fde3e67fbc3eac))
+* **ci:** auto-merge 标签匹配的 case 模式加引号 ([26da791](https://github.com/tsddts/dsh-onepool/commit/26da7911f0658fbfc576b9e51f2954203927f35f))
+* **ci:** regenerate the lockfile so billion-context is in it ([e68f74d](https://github.com/tsddts/dsh-onepool/commit/e68f74d219d52bbeb18e4c7f5205f8d5ae77fbdb))
+* clear credit reserves and allow confirmed free requests ([8cfe4c3](https://github.com/tsddts/dsh-onepool/commit/8cfe4c330cccfb6acb8ddf898b62860f4de42d89))
+* clear credit reserves and allow confirmed free requests ([0e4667c](https://github.com/tsddts/dsh-onepool/commit/0e4667c96021bce7618efed5e88ec16d8a58b11a))
+* **client:** enter the pool from a sidebar row, not a floating overlay ([b0edb5c](https://github.com/tsddts/dsh-onepool/commit/b0edb5c1d98c300466de7bcfb250a65b155c5da3))
+* **client:** stop clearing a disabled button's background on hover ([36fcbc3](https://github.com/tsddts/dsh-onepool/commit/36fcbc365aba9b630ae6088c555e0b8ef24cb71b))
+* **client:** 模式选择排版改为 2x2 网格，选中态用本卡片自己的视觉母语 ([cd73afc](https://github.com/tsddts/dsh-onepool/commit/cd73afc05e83c22cbba3b238882460d31143055c))
+* **codearts:** keep max_tokens at the 65536 ceiling the backend accepts ([ed649cd](https://github.com/tsddts/dsh-onepool/commit/ed649cd82d0dfaa6d0feed55d3ea94d555a34ac8))
+* **deps:** 1.6.1 CI 可安装 —— lockfile 对齐 + pi-ai 升 0.85.1 + 补 modelErrors ([c2e5b37](https://github.com/tsddts/dsh-onepool/commit/c2e5b376d266b67e5334cea44d1f29e338facf31))
+* **metadata:** 仓库地址与作者名改为 XDTrees，修复 npm provenance 校验 422 ([df42779](https://github.com/tsddts/dsh-onepool/commit/df427790272ba629d71b21b91d4b8e6ade641835))
+* **pool:** cool per (account, model) so a 429 on one model never bans the whole account ([0a8ae32](https://github.com/tsddts/dsh-onepool/commit/0a8ae3231ff03c7a1acd8ae6ca4d7d3ce2bf2cdd))
+* **pool:** cool per (account, model) so a 429 on one model never bans the whole account ([2b7fbd3](https://github.com/tsddts/dsh-onepool/commit/2b7fbd31fd9fc3d46b1e6c2643e0bb23187cc37b))
+* **pool:** drive acquire/penalize per request model ([8065bdd](https://github.com/tsddts/dsh-onepool/commit/8065bddd8a1769721cb7355e7d74cf25729860a8))
+* **pool:** 上游吊销的登录状态不再吃满重试，卡片红字折叠为标记 ([dea0555](https://github.com/tsddts/dsh-onepool/commit/dea05555d361ae7299c0d6ceded251eb7d93a75c))
+* **pool:** 修复国际版账号识别、双区域模型目录与模型选择器重复分组 ([b6ecb3d](https://github.com/tsddts/dsh-onepool/commit/b6ecb3d93ad961dc7a7f9855c08e76c276383e9d))
+* **probe:** send the probe message content as typed content blocks ([381a028](https://github.com/tsddts/dsh-onepool/commit/381a028031acc6460e4c9e48b690719fd5761ffb))
+* **providers:** supply the modelErrors map the host adapter reads ([801a913](https://github.com/tsddts/dsh-onepool/commit/801a913efd29cb874090b8f0f950703cfd10f43e))
+* recover the Doubao login without a new sign-in ([1ebd0f0](https://github.com/tsddts/dsh-onepool/commit/1ebd0f0cc2b4b05d8cc8b0622476c7b0d40344f2))
+* **release:** 版本校验只在 tag 推送时跑 ([28a8265](https://github.com/tsddts/dsh-onepool/commit/28a8265bdc3193b8a9e2897119a1ff547dc246f6))
+* **release:** 让发版链路真正自动跑通 ([2e81e92](https://github.com/tsddts/dsh-onepool/commit/2e81e9211d21864762b54c787c85793b165e0ec2))
+* rewrite the git-context fingerprint in all three lanes ([673d046](https://github.com/tsddts/dsh-onepool/commit/673d0466e5d4abefce223dccbea8f6853a9d26b2))
+* **selection:** 国内版与国际版的模型勾选各自独立保存；补上图片服务的接线 ([5847dfe](https://github.com/tsddts/dsh-onepool/commit/5847dfef3d5aaac1571016a704d75311a4b0ad67))
+* stop double-mounting billion-context; attribute chat spend to WorkBuddy ([9a1b558](https://github.com/tsddts/dsh-onepool/commit/9a1b55893a46749a301dc2764ec64b5a485dd309))
+* **test:** CI 上 'international executable name' 用例依赖运行平台 ([5933060](https://github.com/tsddts/dsh-onepool/commit/59330601bd16b97780510feb970b80950a0c1958))
+* **tests:** 1.5.2 —— 测试不再依赖运行时区，发布流程恢复全绿 ([c70041a](https://github.com/tsddts/dsh-onepool/commit/c70041a0b49963f33fd4bb501877e474637ffc32))
+* **upstream:** rewrite the second 11128 fingerprint in all scanned roles ([50305fe](https://github.com/tsddts/dsh-onepool/commit/50305fe21b5cfa2ad5eb7d005677f837564ba00a))
+* **upstream:** rewrite the second 11128 fingerprint in all scanned roles ([3182626](https://github.com/tsddts/dsh-onepool/commit/31826264d961a2001955abf88f3e55a9eb6b8417))
+* **upstream:** rewrite the third 11128 fingerprint (file-reference guidance) ([669ecc7](https://github.com/tsddts/dsh-onepool/commit/669ecc75119d8c880bf460f21d3149e51647179b))
+* **upstream:** rewrite the third 11128 fingerprint in all scanned roles ([88c49a9](https://github.com/tsddts/dsh-onepool/commit/88c49a9417e347dd928c1342ff504eef2beb1c6f))
+* 免密通道会话编码合规 + 数据看板接入 UsageRecorder ([78c1845](https://github.com/tsddts/dsh-onepool/commit/78c1845bfadfc0305537a8ed5565456934b4642a))
+
+
+### Performance Improvements
+
+* **install:** mark host-provided peers optional so an install pulls 1 package ([3bf84a1](https://github.com/tsddts/dsh-onepool/commit/3bf84a1daaee840c0c5588abdf32bd3332200f80))
+
 ## 1.0.0 — 分叉为 一泓 / OnePool
 
 首个分叉版本。基线是上游 `ccd4db3`（2.7.5）。功能未改，改的是**身份、迁移连续性和
