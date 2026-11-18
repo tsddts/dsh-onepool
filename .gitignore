@@ -42,3 +42,23 @@ _backup-lib-*/
 # future patches will use; the notes file is listed so nobody re-adds it either.
 pack.js.patched-local-*.bak
 FIX-*-NOTES.md
+
+# The pool's own runtime state. These live under `~/.dsh/.onepool` and contain
+# real credentials (gateway access tokens, aggregate API keys). They must never
+# be committed, and `tools/leakcheck.mjs` fails the publish if one appears.
+accounts.json
+ignored.json
+preferred.json
+aggregate.json
+doubao-session.json
+sticky-affinity.json
+spend-cache.json
+startup.log
+.xdpool/
+.onepool/
+
+# Scratch copies made by one-off edit scripts during development. They are full
+# copies of a shipped file (pack.js alone is 3 MB) and npm would happily pack
+# them into the tarball, so the pattern is defensive rather than tidy.
+*.bak
+*.bak-*

@@ -2,7 +2,7 @@
   "name": "dsh-onepool",
   "displayName": "DSH OnePool · 一泓",
   "description": "One DSH model pool for every free quota you have: merge all locally signed-in WorkBuddy accounts with auto-failover, sign in to 13 vendors by QR/web, aggregate 76 vendors' free tiers, plus a usage dashboard, model routing, a local OpenAI-compatible gateway and a points-automation suite.",
-  "version": "2.7.5",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "XDTrees",
   "contributors": [
@@ -63,11 +63,12 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "prepublishOnly": "tsdown",
+    "prepublishOnly": "node tools/leakcheck.mjs && node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit && node node_modules/vitest/vitest.mjs run",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "typecheck:client": "tsc -p tsconfig.client.json --noEmit",
-    "postinstall": "node scripts/link-host-peers.mjs"
+    "postinstall": "node scripts/link-host-peers.mjs",
+    "leakcheck": "node tools/leakcheck.mjs"
   },
   "dsh": {
     "bundle": {

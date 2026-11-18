@@ -35792,7 +35792,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
           // releases; each keeps its own length and sentence shape.
           .replace(/You are a coding agent running in the Codex CLI, a terminal-based coding assistant/gi, "You are a coding agent running in this environment, a terminal-based coding assistant")
           .replace(/You are a coding agent running in the Codex CLI/gi, "You are a coding agent running in this environment")
-          .replace(/Codex CLI is an open source project led by OpenAI/gi, "This coding agent is an open source project");
+          .replace(/Codex CLI is an open source project led by OpenAI/gi, "This coding agent is an open source project").replace(/Main branch \(you will usually use this for PRs\)/gi, "Main branch (PRs usually go here)");
       }
     }
     const tools = options.tools?.map((tool) => ({

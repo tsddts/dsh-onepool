@@ -1,6 +1,88 @@
 # Changelog
+
 本项目的所有重要变更都会记录在此文件。
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+
+> **分叉说明**：1.0.0 起这是 [XDTrees/dsh-xdpool](https://github.com/XDTrees/dsh-xdpool)
+> 的一个分叉（MIT），不是它的后继版本。下面的 2.x 条目是**上游的历史**，原样保留，
+> 它们记录的是这个代码库在那些版本里实际发生了什么；分叉自己的变更从 1.0.0 开始。
+
+## 1.0.0 — 分叉为 一泓 / OnePool
+
+首个分叉版本。基线是上游 `ccd4db3`（2.7.5）。功能未改，改的是**身份、迁移连续性和
+一条会让会话整体失效的规则**。
+
+### 三条发送链补齐同一份网关指纹规则
+
+网关按对话**内容**做渠道校验，命中回 `400 / 11128`。关键在于：一条助手回答只要引用了
+被拦的句子，这句话就进了历史，**此后这个会话的每一次请求都带着它**——重发、换号、
+重启都无效，因为被拒的是请求体本身。
+
+2026-11-18 的实例：会话前四轮 `completed`，第五、六轮连续 `INVALID_REQUEST`。第 4 轮
+那段回答在解释这个过滤机制时，把 `Main branch (you will usually use this for PRs)`
+原样抄进了正文。
+
+补齐后三条链（池车道 `BANNED_SYSTEM_PHRASES`、`BuddyAdapter` 内联链、
+openai-gateway 车道的 `CONTENT_FINGERPRINTS`）规则一致。
+
+实测（`copilot.tencent.com`，池内真实凭据）：同一段失败会话的 assistant 原文，
+原样发送 `400 / 11128`；经修补后的链 `200` + 正常 SSE。
+
+### 行为级一致性测试，做过变异验证
+
+`tests/fingerprint-lane-parity.test.ts` 不比对规则清单，而是**直接调用两条链的改写
+函数**，断言它们对同一句话给出同一结果。变异验证：删掉池车道的那条规则，7 个用例中
+4 个立刻变红。
+
+> 为什么不用源码正则解析：试过三版，每一版都因为某个原因静默漏掉一行（一行被格式化
+> 拆成三行；替换文本里含逗号和句点），而每一次漏行都让测试**通过**。
+
+### 数据目录迁移改走新→旧两步
+
+上游改过两次名（`dsh-workbuddy-xdpool` → `dsh-xdpool`），这是第三次。
+机械改名会把 `LEGACY_DATA_DIR_NAME` 从 `.workbuddy-xdpool` 改成
+`.workbuddy-onepool`——一个任何机器上都不存在的目录，结果是所有存量用户打开分叉
+看到空池，聚合页 API Key、忽略名单、首选账号、启动日志全部丢失且不可重建。
+
+现在按 `LEGACY_DATA_DIR_NAMES = ['.xdpool', '.workbuddy-xdpool']` **新→旧**认领，
+先试 `.xdpool`（2.x 写的，真实存在），再试 `.workbuddy-xdpool`（1.x）。
+`PROVIDER_ID_RENAMES` 同时列出两次跳变。
+
+### 移除上游作者的社群入口
+
+卡片上的「交流群」按钮打开的是上游维护者的微信机器人和 QQ 群二维码。分叉里保留等于
+把用户引进无人能回答这个版本的房间。按钮、展开面板、12 个 `shell.group*` 语言键、
+15 条 CSS 与 `client/community-qr.ts` 一并删除；**Star 按钮保留并指向上游仓库**——
+MIT 要求署名，那也是这个分叉唯一应该指向的地方。
+
+### 两个上游测试的环境假设被修正
+
+- `windows-registry-encoding.test.ts` 把非 ASCII 夹具钉在 `D:\`。在 D 盘是光驱且
+  挂载了 Windows ISO 的机器上，`mkdir` 返回 EPERM，两个用例为与编码无关的原因失败。
+  现在会寻找可写盘符，跳过系统盘和空挂载。
+- `host-compat.test.ts` 把 `row.navLabel` 钉成拉丁品牌名。改成断言每个语言表都有
+  短且非空的标签——窄栏位才是约束，具体用词不是。
+
+### 已知问题（来自上游，未在本版修复）
+
+`pnpm install` 直接跑会失败：`dsh-settings@0.1.5-rc.2` 声明 peer
+`dsh-invariants ^0.1.5-rc.2`，该范围展开为 `>=0.1.5 <0.2.0-0`，而 npm 上 0.1.5 只有
+`0.1.5-rc.*` 预发布版，永远匹配不到。绕过：
+
+```bash
+pnpm install --ignore-scripts --config.auto-install-peers=false
+```
+
+### 验证
+
+```
+tsc -p tsconfig.json --noEmit         0
+tsc -p tsconfig.client.json --noEmit  0
+vitest run                            124 files / 1396 tests passed
+tsdown                                lib/ 重新构建
+```
+
+---
 ## 2.7.5 — 一键安装更新
 
 > 2.7.4 加了「检查更新」，但查到了只会告诉你「去插件设置里更新」。现在有安装按钮。

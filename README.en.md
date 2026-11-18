@@ -1,32 +1,76 @@
-# DSH OnePool
+# OnePool · DSH OnePool
+
+> One pool for every model quota you already have.
+>
+> A fork of [XDTrees/dsh-xdpool](https://github.com/XDTrees/dsh-xdpool) (MIT). Upstream built the thing;
+> this fork keeps it from **going dark because of one sentence** — see
+> "What this fork changes" below.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/v/dsh-onepool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/dm/dsh-onepool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-onepool?style=flat-square" alt="MIT license"></a>
-  <a href="https://github.com/XDTrees/dsh-onepool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-onepool?style=flat-square" alt="GitHub stars"></a>
-</p>
-
-## Join the group
-
-<p align="center">
-  <img src="assets/community-qr-wechat.jpg" width="240" alt="WeChat bot code: scan to add the bot, then send XD to be pulled into the group">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/community-qr-qq.jpg" width="240" alt="QQ group code: scan it to join the XD community group">
-  <br>
-  <b>Left: WeChat (bot)</b> — scanning only adds the bot. <b>Send “XD”</b> and it pulls you into the group; scanning alone does nothing.<br>
-  <b>Right: QQ group</b> — scan and you are in. Group number 1103463688.
-  <br>
-  <sub>Both groups are live; use whichever you prefer. If a code stops working, say so in <a href="https://github.com/XDTrees/dsh-onepool/issues">issues</a> and it will be refreshed.</sub>
-  <br>
-  <sub>The 交流群 button next to “Star” in the card's top-right corner opens these same two codes — no need to come back to the README.</sub>
-</p>
-
-<p align="center">
-  <sub>The downloads badge reads <code>dsh-onepool</code>'s own live npm stats now, not the pre-rename snapshot.</sub>
+  <a href="https://github.com/NeilM/dsh-onepool"><img src="https://img.shields.io/github/license/NeilM/dsh-onepool?style=flat-square" alt="MIT license"></a>
 </p>
 
 English | [中文](./README.md)
+
+## What this fork changes
+
+**In one line**: the gateway validates the CONTENT of your conversation and
+answers `400 / 11128` when it recognises another client's sentence. One
+assistant reply that quotes such a sentence makes **every later turn of that
+session** fail — resending, switching accounts and restarting all fail, because
+the request body itself is what is rejected.
+
+Upstream encodes that rule in one of the three send paths. The other two were
+missing it, so on 2026-11-18 an explanation of the filter quoted the filter and
+killed its own session (turns 5 and 6: `INVALID_REQUEST`).
+
+What this fork does:
+
+1. **All three paths carry the same rule**, with a **behavioural** parity test
+   (`tests/fingerprint-lane-parity.test.ts`) that calls both rewrite functions
+   and asserts they agree on the same input. The test was mutation-checked:
+   removing one rule turns it red.
+2. **Migration stays continuous**: upstream renamed itself twice
+   (`dsh-workbuddy-xdpool` → `dsh-xdpool`); this is the third. The data
+   directory is adopted newest-first (`.xdpool`, then `.workbuddy-xdpool`), so
+   your account pool, aggregate API keys, ignore list and preferred account
+   survive the hop.
+3. **The upstream author's community QR block is gone.** The card's 交流群 button
+   pointed at his WeChat bot and QQ group; keeping it in a fork sends users into
+   a room where nobody can answer questions about this build.
+
+## Install
+
+```bash
+dsh plugin --profile desktop add https://github.com/NeilM/dsh-onepool
+```
+
+Or use the npm package name `dsh-onepool` in the in-app plugin page.
+
+**Note on installing dependencies**: `pnpm install` fails out of the box for an
+upstream packaging reason (`dsh-settings@0.1.5-rc.2` declares a peer on
+`dsh-invariants ^0.1.5-rc.2`, which expands to `>=0.1.5 <0.2.0-0` and matches
+no published pre-release). Use:
+
+```bash
+pnpm install --ignore-scripts --config.auto-install-peers=false
+```
+
+## Moving over from xdpool
+
+The data directory is adopted automatically. If your default model is still
+pinned to an old provider id, the startup log prints which file and line to
+edit: `agent-default-model.provider` in `settings.yaml`, and the matching row
+in `cordis.patch.yml`.
+
+| old | new |
+| --- | --- |
+| `xdpool` / `xdpool-global` | `onepool` / `onepool-global` |
+| `xdpool-aggregate` / `xdpool-free` | `onepool-aggregate` / `onepool-free` |
+| `~/.dsh/.xdpool` | `~/.dsh/.onepool` |
+
+## Upstream text (the feature description, still accurate for this build)
 
 **Every free model quota you can get your hands on, wired into one DSH model pool.**
 
@@ -145,7 +189,7 @@ dsh plugin --profile desktop add dsh-onepool
 **Option B — install from the GitHub source**
 
 ```sh
-dsh plugin --profile desktop add github:XDTrees/dsh-onepool
+dsh plugin --profile desktop add github:NeilM/dsh-onepool
 ```
 
 **Option C — register the bundle by hand**

@@ -1,0 +1,73 @@
+fix: rewrite the git-context fingerprint in all three lanes
+
+A conversation whose assistant history quotes
+`Main branch (you will usually use this for PRs)` fails every later request
+with 400 / 11128, permanently: the gateway scans message CONTENT, the quote is
+now part of the history, and resending, switching accounts or restarting all
+fail because the request body itself is what is rejected.
+
+Upstream rewrote that sentence in one of the three paths that serialise a
+message — the channel lane's CONTENT_FINGERPRINTS. The pool lane
+(BANNED_SYSTEM_PHRASES) and BuddyAdapter's inline chain did not, so on
+2026-11-18 an explanation of the filter quoted the filter and killed its own
+session: turns 5 and 6 both INVALID_REQUEST.
+
+Both missing sites now carry the rule. Measured against copilot.tencent.com
+with a pool credential: the failing session's assistant text answers
+400 / 11128 as-is and clears channel verification after the rewrite.
+
+TESTS — BEHAVIOURAL, AND MUTATION-CHECKED
+
+  tests/fingerprint-lane-parity.test.ts does not compare rule LISTS. Three
+  attempts at extracting the list with a regular expression each dropped a row
+  for a different reason (one row is formatter-wrapped across three lines, one
+  replacement contains a comma and a period) and every one of those failures
+  made the test PASS. It instead calls both rewrite functions — the exported
+  sanitizeSystemContent, and the chain extracted verbatim from the shipped pack
+  and evaluated — and asserts they agree on each fingerprint, are
+  case-insensitive, keep the meaning, and leave ordinary prose byte-identical.
+
+  Removing the pool-lane rule turns 4 of its 7 cases red. That check was run.
+
+PACKAGING
+
+  Version 1.0.0 (was upstream's 2.7.5; a fork's first release is its own, and
+  shipping a second "2.7.5" that behaves differently makes bug reports
+  ambiguous). CHANGELOG opens with the fork entry and keeps upstream's 2.x
+  history below it verbatim. release-please bootstrap-sha dropped because it
+  pointed at upstream history.
+
+  tools/leakcheck.mjs fails the publish on a real credential value, a private
+  key, a JWT, a pool account file or a tracked state file — deliberately not a
+  bare grep for the field NAMES, which appear legitimately 186 times. Wired as
+  prepublishOnly alongside typecheck and the suite. *.bak is now ignored: three
+  scratch copies, one of them a 3 MB copy of pack.js, were otherwise entering
+  the tarball.
+
+  tools/verify-installed.mjs imports the INSTALLED entry module from an isolated
+  profile and checks the exports the host calls, the bundled client (and that
+  the removed community QR is absent from it), the patch file, the vendored
+  pack's shipped chain, and that the built output adopts .xdpool and writes
+  .onepool. 12 checks, all passing against the packed tarball.
+
+  tools/e2e-gateway.mjs replays the failing session's text through that shipped
+  chain and posts it live. It treats 429 / 6004 as success because that is the
+  gateway's ACCEPTED answer for an exhausted credential; requiring 200 made the
+  check fail on a healthy build.
+
+DOCS
+
+  README heads rewritten: the upstream author's 先加群 QR block and the two
+  now-deleted community images are gone, every URL points at this fork instead
+  of a nonexistent XDTrees/dsh-onepool, and the upstream credit plus the MIT
+  obligation are stated at the top. The 280 lines of feature documentation
+  below are untouched — they remain accurate.
+
+VERIFICATION
+
+  tsc -p tsconfig.json --noEmit            0
+  tsc -p tsconfig.client.json --noEmit     0
+  vitest run                               124 files / 1396 tests passed
+  npm pack                                 23 files / 2.6 MB, no .bak
+  verify-installed.mjs (isolated profile)  12/12
+  e2e-gateway.mjs (live)                   raw 400/11128, rewritten accepted

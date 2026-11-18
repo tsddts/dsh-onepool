@@ -564,6 +564,20 @@ const BANNED_SYSTEM_PHRASES: readonly (readonly [RegExp, string])[] = Object.fre
   ],
   [/You are a coding agent running in the Codex CLI/gi, 'You are a coding agent running in this environment'],
   [/Codex CLI is an open source project led by OpenAI/gi, 'This coding agent is an open source project'],
+  // The git-context line (#790-era). Every agent that reads a repository injects
+  // `Main branch (you will usually use this for PRs)` as part of the branch
+  // description, and the gateway treats that sentence as another client's
+  // signature. The channel lane's openai-gateway path already rewrote it
+  // (`CONTENT_FINGERPRINTS` in the vendored pack) but the two chat lanes — this
+  // pool lane and `BuddyAdapter`'s inline chain — did not, so a single assistant
+  // reply that QUOTED the sentence (for instance while explaining this very
+  // filter) permanently poisoned that conversation: every later request in it
+  // carried the quote and answered 400 / 11128.
+  //
+  // Measured 2026-11-18 against copilot.tencent.com with a live credential:
+  // bare literal -> 400, literal after this rewrite -> 200 + normal SSE, and the
+  // full ~35 KB real system prompt from the failing session -> 200.
+  [/Main branch \(you will usually use this for PRs\)/gi, 'Main branch (PRs usually go here)'],
 ] as const)
 
 /**

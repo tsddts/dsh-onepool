@@ -1,32 +1,66 @@
-# DSH OnePool
+# 一泓 · DSH OnePool
+
+> 一个池子，装下你手上所有能用的模型额度。
+>
+> 基于 [XDTrees/dsh-xdpool](https://github.com/XDTrees/dsh-xdpool) 分叉（MIT）。上游负责把这件事做出来，
+> 这个分叉负责让它**不再因为一句话突然全线失联**——见下面「这个分叉改了什么」。
 
 <p align="center">
   <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/v/dsh-onepool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/dm/dsh-onepool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-onepool?style=flat-square" alt="MIT license"></a>
-  <a href="https://github.com/XDTrees/dsh-onepool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-onepool?style=flat-square" alt="GitHub stars"></a>
-</p>
-
-## 先加群
-
-<p align="center">
-  <img src="assets/community-qr-wechat.jpg" width="240" alt="微信机器人二维码：扫码添加后发送 XD 拉你进群">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/community-qr-qq.jpg" width="240" alt="QQ 群二维码：直接扫码加入 XD 交流群">
-  <br>
-  <b>左：微信（机器人）</b> —— 扫码添加机器人后<b>发送「XD」</b>，它才会拉你进群；只扫码不加不发是不会有反应的。<br>
-  <b>右：QQ 群</b> —— 直接扫码即可加入，群号 1103463688。
-  <br>
-  <sub>两个群都在，哪个方便用哪个。二维码失效了在 <a href="https://github.com/XDTrees/dsh-onepool/issues">issues</a> 说一声会换新。</sub>
-  <br>
-  <sub>卡片右上角「点Star」旁边的「交流群」按钮打开的是同样这两张码 —— 不用回头找 README。</sub>
-</p>
-
-<p align="center">
-  <sub>下载量徽章读的是 npm 上 <code>dsh-onepool</code> 自己的实时统计，不再是改名前的快照。</sub>
+  <a href="https://github.com/NeilM/dsh-onepool"><img src="https://img.shields.io/github/license/NeilM/dsh-onepool?style=flat-square" alt="MIT license"></a>
 </p>
 
 [English](./README.en.md) | 中文
+
+## 这个分叉改了什么
+
+**一句话**：网关会拿你的对话内容做渠道校验，命中就回 `400 / 11128`。一条助手回答
+只要引用了被拦的句子，这个会话**从此每一轮都失败**——重发、换号、重启都没用，因为
+被拒的是请求体本身。
+
+上游把这条规则写进了三条发送链里的一条。另外两条漏了，于是 2026-11-18 那天，一段
+解释这个过滤机制的回答把自己所在的会话写死了（第 5、6 轮连续 `INVALID_REQUEST`）。
+
+这个分叉做的事：
+
+1. **三条链补齐同一份规则**，并加了一个**行为级**一致性测试
+   (`tests/fingerprint-lane-parity.test.ts`)：直接调用两条链的改写函数，断言它们
+   对同一句话给出同一个结果。测试做过变异验证——删掉一条规则会立刻红。
+2. **迁移不断档**：上游改了两次名字（`dsh-workbuddy-xdpool` → `dsh-xdpool`），
+   这个分叉是第三次。数据目录按 **新→旧** 顺序认领（`.xdpool` 再 `.workbuddy-xdpool`），
+   所以你现在的账号池、聚合页 API Key、忽略名单、首选账号都还在。
+3. **删掉上游作者的社群入口**：卡片上的「交流群」按钮原本指向上游作者的微信群/QQ 群，
+   分叉里留着只会把用户引进无人能回答这个版本的房间。
+
+## 安装
+
+```bash
+dsh plugin --profile desktop add https://github.com/NeilM/dsh-onepool
+```
+
+或者在应用内插件页填 npm 包名 `dsh-onepool`。
+
+**装依赖时注意**：`pnpm install` 会因为上游的一个打包问题失败
+（`dsh-settings@0.1.5-rc.2` 的 peer 指向 `dsh-invariants ^0.1.5-rc.2`，展开后
+`>=0.1.5 <0.2.0-0` 匹配不到任何已发布的预发布版）。用：
+
+```bash
+pnpm install --ignore-scripts --config.auto-install-peers=false
+```
+
+## 从 xdpool 迁过来
+
+数据目录会自动认领，不需要手动搬。如果你的默认模型还钉在旧 provider id 上，
+启动日志会打印该改哪个文件里的哪一行：`settings.yaml` 的
+`agent-default-model.provider`，以及 `cordis.patch.yml` 里同名的那行。
+
+| 旧 | 新 |
+| --- | --- |
+| `xdpool` / `xdpool-global` | `onepool` / `onepool-global` |
+| `xdpool-aggregate` / `xdpool-free` | `onepool-aggregate` / `onepool-free` |
+| `~/.dsh/.xdpool` | `~/.dsh/.onepool` |
+
+## 上游原文（以下为 `dsh-xdpool` 的功能说明，行为在这个分叉里仍然成立）
 
 **把你手上所有能白嫖的模型额度，接进 DSH 的同一个模型池。**
 
@@ -152,7 +186,7 @@ dsh plugin --profile desktop add dsh-onepool
 **方式二：从 GitHub 源码安装**
 
 ```sh
-dsh plugin --profile desktop add github:XDTrees/dsh-onepool
+dsh plugin --profile desktop add github:NeilM/dsh-onepool
 ```
 
 **方式三：手动注册 bundle**
