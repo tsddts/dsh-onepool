@@ -2,6 +2,30 @@
 
 > 状态截至 2026-11-18。本文件说的是**发布前还有哪几步是人做的**，工具能自动跑的部分已经跑完了。
 
+## 〇、当前唯一待办：npm 首次发布授权（2026-11-19 更新）
+
+代码侧发版链路已全部修通并实测：push main → release-please 开 bump PR → auto-merge 自动合并 → 打 tag → 触发 `release.yml`。release PR #8 已自动合并，`dsh-onepool-v1.1.0` tag 已打。**唯一卡点**：`dsh-onepool` 是全新包名，npm registry 上不存在（GET 404），OIDC `npm publish` 对不存在的包返回 `404 PUT /dsh-onepool`，因为 npm 的 trusted publishing 只能给**已存在**的包配置。
+
+需要账号所有人在浏览器/本机做一次（无法代劳，含 npm 登录 OTP）：
+
+1. 首次建包（建立包名后才能配 trusted publisher）：
+   ```powershell
+   cd C:\Users\NeilM\Desktop\research\onepool
+   npm login                  # 你的 npm 账号 + 邮箱 OTP
+   npm publish --access public
+   ```
+2. 打开 https://www.npmjs.com/package/dsh-onepool/settings → **Trusted publishers** → Add GitHub Actions publisher：
+   - owner `tsddts` / repo `dsh-onepool` / workflow `release.yml` / environment 留空
+3. 配好后，在 tag 上重跑发布：
+   ```powershell
+   gh workflow run release.yml --repo tsddts/dsh-onepool --ref dsh-onepool-v1.1.0 -f publish=true
+   ```
+
+配好之后，往后每次改动 push main 即全自动发版，无需再做这一步。
+相关修复提交：`26da791`(auto-merge bash)、`2e81e92`(版本同步+windows测试)、`9a386a8`(tag 匹配)、`e306bd7`(恢复 LedgerPage)。
+
+> 下面第一节的表格是 1.0.0 首发时的历史记录，发版链路修复后的最新验证见上方。
+
 ## 一、已经做完并验证过的
 
 | 项 | 结果 |
