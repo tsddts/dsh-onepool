@@ -46,7 +46,7 @@ import {
 } from '../status-paths.ts'
 import { DEFAULT_AUTOMATION_HOURS } from '../status-paths.ts'
 import { POOL_CARD_CSS } from './styles.ts'
-import { PoolShell, PageHero, initialShellTab, rememberedShellTab } from './shell.tsx'
+import { PoolShell, initialShellTab, rememberedShellTab } from './shell.tsx'
 import { AggregatePage } from './AggregatePage.tsx'
 import { LedgerPage } from './LedgerPage.tsx'
 import { ChannelsPage } from './ChannelsPage.tsx'
@@ -1411,8 +1411,6 @@ export function PoolCard({ t, settingsScope }: PoolCardProps) {
       if (mounted.current) setReserveBusy(undefined)
     }
   }
-  const title = t?.('row.title') ?? 'OnePool'
-  const description = t?.('row.desc') ?? ''
   /**
    * The vendor behind one lane, as the login page describes it.
    *
@@ -1504,19 +1502,11 @@ export function PoolCard({ t, settingsScope }: PoolCardProps) {
     }
   }
   /*
-   * The pool page's own header. The pages that read a different document
-   * (channels, providers) render theirs, because each has its own actions and
-   * its own reason to be empty.
-   *
-   * The per-region actions moved DOWN into the region cards: a page-level
-   * rescan button cannot say which lane it will scan, and with both cards on
-   * screen "Detect accounts again" at the top of the page was a question with
-   * no answer. Every action here targets exactly one lane, so the header is
-   * left without buttons rather than given one that has to guess.
+   * The pool page has no page-level hero: its title would just repeat the tab
+   * label, its description was empty, and every action lives in a region card
+   * below. The other pages render their own headers inside their components,
+   * because each has its own actions and its own reason to be empty.
    */
-  const poolHero = (
-    <PageHero title={title} sub={description} />
-  )
   return (
     <PoolShell
       t={t}
@@ -1524,7 +1514,6 @@ export function PoolCard({ t, settingsScope }: PoolCardProps) {
       tabs={shellTabs}
       active={page}
       onSelect={setPage}
-      hero={page === 'pool' ? poolHero : undefined}
     >
       {page === 'aggregate' ? <AggregatePage t={t} />
         : page === 'channels' ? <ChannelsPage t={t} />
