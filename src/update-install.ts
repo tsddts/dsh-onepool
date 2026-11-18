@@ -14,6 +14,17 @@
  * file. Nothing is written outside the profile's own directory, and nothing is changed if the
  * download fails — a half-applied update is worse than an unapplied one.
  *
+ * THE LOCKFILE IS PART OF THE UPDATE
+ *
+ * DSH installs profile dependencies with `pnpm install --frozen-lockfile` whenever the profile
+ * has a `pnpm-lock.yaml` (see the host's dsh-plugin-manager: `hadLockfile ? '--frozen-lockfile'`).
+ * Changing only `package.json` leaves the lockfile naming the OLD spec, so on restart pnpm aborts
+ * with ERR_PNPM_OUTDATED_LOCKFILE and the host restores the previous package — the update appears
+ * to install, the panel even says "restart to apply", and the running version never changes.
+ * So after writing `package.json` we refresh the lockfile with `pnpm install --lockfile-only`.
+ * A failed refresh is reported as a failed install rather than a false success: a lockfile that
+ * still names the old build is the same as no update at all.
+ *
  * WHY `file:` AND NOT THE PUBLISHED VERSION
  *
  * Naming the version (`"dsh-onepool": "2.7.5"`) makes the host fetch from the registry on every
@@ -29,6 +40,7 @@
  *
  * @module dsh-onepool/update-install
  */
+import { spawnSync } from 'node:child_process'
 import { createWriteStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -36,6 +48,67 @@ import { checkForUpdate } from './update-check.ts'
 
 /** The package this plugin publishes under. */
 const PACKAGE = 'dsh-onepool'
+
+/**
+ * The lockfile refresh, as a synchronous spawn so the result is known before we answer the route.
+ *
+ * A transport-shaped interface rather than a direct `spawnSync` call so tests can assert the exact
+ * argv and simulate a failure without touching a real profile. Production passes `pnpm` from PATH
+ * — the same command DSH's plugin manager uses, so the lockfile is written by the same pnpm that
+ * will later consume it with `--frozen-lockfile`.
+ */
+export type LockfileRefresher = (options: {
+  cwd: string
+  args: readonly string[]
+}) => { status: number | null; stdout?: string; stderr?: string; error?: string }
+
+const defaultRefresher: LockfileRefresher = ({ cwd, args }) => {
+  const command = process.env['DSH_PNPM'] ?? 'pnpm'
+  const result = spawnSync(command, [...args], {
+    cwd,
+    env: process.env,
+    encoding: 'utf8',
+    // The lockfile refresh is local (the tarball is already on disk) and bounded; this keeps a
+    // hung pnpm from pinning the install route forever.
+    timeout: 120_000,
+  })
+  return {
+    status: result.status,
+    ...typeof result.stdout === 'string' ? { stdout: result.stdout } : {},
+    ...typeof result.stderr === 'string' ? { stderr: result.stderr } : {},
+    ...result.error === undefined ? {} : { error: result.error.message },
+  }
+}
+
+/** Args that make pnpm rewrite ONLY the lockfile, running no lifecycle scripts. */
+const LOCKFILE_ARGS = ['install', '--lockfile-only', '--ignore-scripts'] as const
+
+/**
+ * Refresh a profile's `pnpm-lock.yaml` after its `package.json` spec changed.
+ *
+ * Returned `error` is a human sentence ready for the card; `undefined` means the lockfile is in
+ * sync (or there was no lockfile to sync). Kept as its own exported unit so the behaviour that
+ * decides "did the update land" is testable without downloading a real tarball.
+ */
+export function refreshProfileLockfile(
+  profile: string,
+  refresh: LockfileRefresher = defaultRefresher,
+): string | undefined {
+  // A profile DSH created without a lockfile is installed with --config.lockfile=false, so there
+  // is nothing to refresh and pnpm must not be asked to create one here.
+  if (!existsSync(join(profile, 'pnpm-lock.yaml'))) return undefined
+  let result: ReturnType<LockfileRefresher>
+  try {
+    result = refresh({ cwd: profile, args: [...LOCKFILE_ARGS] })
+  } catch (error: unknown) {
+    return `刷新依赖锁文件失败：${error instanceof Error ? error.message : String(error)}`
+  }
+  const detail = (result.stderr || result.stdout || result.error || '').trim().slice(0, 400)
+  if (result.status !== 0) {
+    return `刷新依赖锁文件失败（${String(result.status)}）：${detail}`
+  }
+  return undefined
+}
 
 /** The profile directory whose `package.json` names this plugin. */
 function profileDir(): string | undefined {
@@ -72,7 +145,7 @@ export interface InstallResult {
  * The order matters: download first, verify it is a gzip tarball, and only then touch
  * `package.json`. A failed download must leave a working install alone.
  */
-export async function installVersion(version: string): Promise<InstallResult> {
+export async function installVersion(version: string, refreshLockfile: LockfileRefresher = defaultRefresher): Promise<InstallResult> {
   const profile = profileDir()
   if (profile === undefined) {
     return {
@@ -138,6 +211,15 @@ export async function installVersion(version: string): Promise<InstallResult> {
       }
     }
     writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8')
+
+    // A profile with a lockfile is installed with --frozen-lockfile on the next start. If the
+    // lockfile still names the old spec, that start fails and the host restores everything — so
+    // the update would silently never land. Refresh it now, and refuse to claim success if it
+    // fails.
+    const lockError = refreshProfileLockfile(profile, refreshLockfile)
+    if (lockError !== undefined) {
+      return { ok: false, restartRequired: false, path: target, error: lockError }
+    }
     return { ok: true, version, path: target, restartRequired: true }
   } catch (error: unknown) {
     return {
@@ -155,12 +237,12 @@ export async function installVersion(version: string): Promise<InstallResult> {
  * Kept together so the route cannot install a version the check never saw — the alternative is a
  * caller passing an arbitrary version string to an endpoint that writes `package.json`.
  */
-export async function updateToLatest(): Promise<InstallResult> {
+export async function updateToLatest(refreshLockfile: LockfileRefresher = defaultRefresher): Promise<InstallResult> {
   const status = await checkForUpdate({ force: true })
   if (status.error !== undefined) return { ok: false, restartRequired: false, error: status.error }
   if (status.latest === undefined) return { ok: false, restartRequired: false, error: '没有读到最新版本号' }
   if (!status.newer) {
     return { ok: true, version: status.current, restartRequired: false }
   }
-  return await installVersion(status.latest)
+  return await installVersion(status.latest, refreshLockfile)
 }

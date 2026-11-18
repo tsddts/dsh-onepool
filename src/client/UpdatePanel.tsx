@@ -27,6 +27,8 @@ interface UpdateStatus {
   latest?: string
   newer?: boolean
   publishedAt?: string
+  /** Where to download the release (GitHub), since npm does not carry this fork. */
+  releaseUrl?: string
   error?: string
   checkedAt?: string
 }
@@ -180,8 +182,18 @@ export function UpdatePanel({ t }: { readonly t?: Translate | undefined }): Reac
                 ? (t?.('update.installing') ?? '安装中…')
                 : (t?.('update.install', { version: status.latest ?? '' }) ?? `安装 ${status.latest ?? ''}`)}
             </button>
+            {status.releaseUrl === undefined ? null : (
+              <a
+                className="dsm-onepool-btn"
+                href={status.releaseUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {t?.('update.openRelease') ?? '前往发布页'}
+              </a>
+            )}
             <span className="dsm-onepool-update-hint">
-              {t?.('update.installHint') ?? '下载到本机并写入插件配置，重启 DSH 后生效；数据和账号不受影响。'}
+              {t?.('update.installHint') ?? '安装会写入本机插件配置，重启 DSH 后生效；若下载失败可到发布页手动更新。数据和账号不受影响。'}
             </span>
           </div>
         </>

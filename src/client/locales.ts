@@ -8,9 +8,10 @@
 export const en = {
   'update.install': 'Install {version}',
   'update.installing': 'Installing…',
-  'update.installHint': 'Downloads to this machine and updates the plugin config; takes effect after a DSH restart. Your data and accounts are unaffected.',
+  'update.installHint': 'Updates the plugin config and takes effect after a DSH restart; if the download fails, use the release page to update manually. Your data and accounts are unaffected.',
   'update.installed': 'Downloaded {version} — restart DSH to apply',
   'update.installFailed': 'Install failed',
+  'update.openRelease': 'Open release page',
 
   'update.title': 'Check for updates',
   'update.current': 'current',
@@ -651,9 +652,10 @@ export type OnePoolSettingsKey = keyof typeof en
 export const zh: Record<OnePoolSettingsKey, string> = {
   'update.install': '安装 {version}',
   'update.installing': '安装中…',
-  'update.installHint': '下载到本机并写入插件配置，重启 DSH 后生效；数据和账号不受影响。',
+  'update.installHint': '安装会写入本机插件配置，重启 DSH 后生效；若下载失败可到发布页手动更新。数据和账号不受影响。',
   'update.installed': '已下载 {version}，重启 DSH 后生效',
   'update.installFailed': '安装失败',
+  'update.openRelease': '前往发布页',
 
   'update.title': '检查更新',
   'update.current': '当前',
