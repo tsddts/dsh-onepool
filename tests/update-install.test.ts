@@ -1,8 +1,8 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { refreshProfileLockfile, type LockfileRefresher } from '../src/update-install.ts'
+import { installVersion, refreshProfileLockfile, type LockfileRefresher } from '../src/update-install.ts'
 
 /**
  * The bug this guards: an update wrote the new `file:` spec to package.json but left
@@ -51,5 +51,28 @@ describe('refreshProfileLockfile', () => {
     const refresh = vi.fn<LockfileRefresher>(() => ({ status: 0 }))
     expect(refreshProfileLockfile(dir, refresh)).toBeUndefined()
     expect(refresh).not.toHaveBeenCalled()
+  })
+})
+
+describe('installVersion rollback', () => {
+  it('restores package.json when the lockfile refresh fails', async () => {
+    const dir = profile(true)
+    const original = readFileSync(join(dir, 'package.json'), 'utf8')
+    const previousProfile = process.env['DSH_PROFILE_DIR']
+    process.env['DSH_PROFILE_DIR'] = dir
+    // A valid gzip member header is all the download path checks before it accepts the tarball.
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(new Uint8Array([0x1f, 0x8b, 0, 0]))))
+    try {
+      const refresh: LockfileRefresher = () => ({ status: 1, stderr: 'lockfile refused' })
+      const result = await installVersion('9.9.9', refresh)
+      expect(result.ok).toBe(false)
+      expect(result.error).toContain('刷新依赖锁文件失败')
+      // No half-applied state: a new spec with an old lockfile is what breaks the next start.
+      expect(readFileSync(join(dir, 'package.json'), 'utf8')).toBe(original)
+    } finally {
+      if (previousProfile === undefined) delete process.env['DSH_PROFILE_DIR']
+      else process.env['DSH_PROFILE_DIR'] = previousProfile
+      vi.unstubAllGlobals()
+    }
   })
 })
