@@ -46,9 +46,9 @@ jobs:
           # survive in this action version), so honour that here — otherwise
           # the release PR waits for a human and "push main -> publish" breaks.
           case ",$PR_LABELS," in
-            *,automerge,*)            echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
-            *,autorelease: pending,*) echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
-            *)                        echo "has_label=false" >> "$GITHUB_OUTPUT" ;;
+            *,automerge,*)              echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
+            *",autorelease: pending,"*) echo "has_label=true"  >> "$GITHUB_OUTPUT" ;;
+            *)                          echo "has_label=false" >> "$GITHUB_OUTPUT" ;;
           esac
           if [ "$PR_AUTHOR" = "dependabot[bot]" ]; then
             echo "is_dependabot=true" >> "$GITHUB_OUTPUT"
