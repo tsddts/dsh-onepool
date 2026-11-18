@@ -7,6 +7,13 @@
 > 的一个分叉（MIT），不是它的后继版本。下面的 2.x 条目是**上游的历史**，原样保留，
 > 它们记录的是这个代码库在那些版本里实际发生了什么；分叉自己的变更从 1.0.0 开始。
 
+## [1.1.2](https://github.com/tsddts/dsh-onepool/compare/dsh-onepool-v1.1.1...dsh-onepool-v1.1.2) (2026-11-18)
+
+
+### Bug Fixes
+
+* **update:** 更新时同步 pnpm lockfile，修复 1.1.x 反复装不上的问题 ([#10](https://github.com/tsddts/dsh-onepool/issues/10)) ([7bd21ec](https://github.com/tsddts/dsh-onepool/commit/7bd21ec61d26d2aa10f8d72a22559e3b90172473))
+
 ## [1.1.1](https://github.com/tsddts/dsh-onepool/compare/dsh-onepool-v1.1.0...dsh-onepool-v1.1.1) (2026-11-18)
 
 

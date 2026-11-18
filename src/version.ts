@@ -11,4 +11,4 @@
  *
  * @module dsh-onepool/version
  */
-export const POOL_VERSION = '1.1.1' // x-release-please-version
+export const POOL_VERSION = '1.1.2' // x-release-please-version

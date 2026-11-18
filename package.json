@@ -2,7 +2,7 @@
   "name": "dsh-onepool",
   "displayName": "DSH OnePool · 一泓",
   "description": "One DSH model pool for every free quota you have: merge all locally signed-in WorkBuddy accounts with auto-failover, sign in to 13 vendors by QR/web, aggregate 76 vendors' free tiers, plus a usage dashboard, model routing, a local OpenAI-compatible gateway and a points-automation suite.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "author": "苏明歌 (tsddts) <https://github.com/tsddts>",
   "contributors": [
