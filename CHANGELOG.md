@@ -7,6 +7,13 @@
 > 的一个分叉（MIT），不是它的后继版本。下面的 2.x 条目是**上游的历史**，原样保留，
 > 它们记录的是这个代码库在那些版本里实际发生了什么；分叉自己的变更从 1.0.0 开始。
 
+## [1.1.1](https://github.com/tsddts/dsh-onepool/compare/dsh-onepool-v1.1.0...dsh-onepool-v1.1.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* **release:** tag 匹配同时支持带组件名与裸版本号 ([9a386a8](https://github.com/tsddts/dsh-onepool/commit/9a386a8beb9d6a89ae0edb80073803628411b8f7))
+
 ## [1.1.0](https://github.com/tsddts/dsh-onepool/compare/dsh-onepool-v1.0.0...dsh-onepool-v1.1.0) (2026-11-18)
 
 
