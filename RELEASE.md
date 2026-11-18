@@ -25,14 +25,14 @@
 
 ```bash
 cd C:\Users\NeilM\Desktop\research\onepool
-gh repo create NeilM/dsh-onepool --public --source=. --remote=origin --push
+gh repo create tsddts/dsh-onepool --public --source=. --remote=origin --push
 ```
 
-**注意**：README 和 `package.json` 里的 `github.com/NeilM/dsh-onepool` 是占位。
+**注意**：README 和 `package.json` 里的 `github.com/tsddts/dsh-onepool` 是占位。
 如果你用的是别的账号名，这两处要一起改：
 
 ```bash
-grep -rl "NeilM/dsh-onepool" --include="*.md" --include="*.json" . | grep -v node_modules
+grep -rl "tsddts/dsh-onepool" --include="*.md" --include="*.json" . | grep -v node_modules
 ```
 
 ### 2. 抢注 npm 包名
@@ -76,7 +76,7 @@ npm publish --access public
 
 ```bash
 # 目标机上
-dsh plugin --profile desktop add github:NeilM/dsh-onepool
+dsh plugin --profile desktop add github:tsddts/dsh-onepool
 ```
 
 或者在当前机器上，先把 xdpool 从 profile 里移除再装（见第 3 步），出问题可以回滚：

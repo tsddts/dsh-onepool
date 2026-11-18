@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/v/dsh-onepool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
-  <a href="https://github.com/NeilM/dsh-onepool"><img src="https://img.shields.io/github/license/NeilM/dsh-onepool?style=flat-square" alt="MIT license"></a>
+  <a href="https://github.com/tsddts/dsh-onepool"><img src="https://img.shields.io/github/license/tsddts/dsh-onepool?style=flat-square" alt="MIT license"></a>
 </p>
 
 English | [中文](./README.md)
@@ -43,7 +43,7 @@ What this fork does:
 ## Install
 
 ```bash
-dsh plugin --profile desktop add https://github.com/NeilM/dsh-onepool
+dsh plugin --profile desktop add https://github.com/tsddts/dsh-onepool
 ```
 
 Or use the npm package name `dsh-onepool` in the in-app plugin page.
@@ -189,7 +189,7 @@ dsh plugin --profile desktop add dsh-onepool
 **Option B — install from the GitHub source**
 
 ```sh
-dsh plugin --profile desktop add github:NeilM/dsh-onepool
+dsh plugin --profile desktop add github:tsddts/dsh-onepool
 ```
 
 **Option C — register the bundle by hand**
