@@ -21,8 +21,39 @@
 所以切换**不改 model pin、不改 provider id、不删旧目录**。会话里那条模型选择
 （`buddy / deepseek-v4.1-flash`）在切换后仍然解析得到——只是背后服务它的插件换了。
 
-**唯一真正会中断会话的情况**：切换时 DSH 进程被强制杀掉，而切换还没完成。所以流程是
-「先改文件 → 再重启」，中间不留半成品状态。
+**关于中断**：数据迁移本身是无缝的，但 **`pnpm install` 会触发热重载并打断正在跑的那一轮**，
+详见第 3 步下面的更正。这是唯一真正会中断会话的点。
+
+### 豆包登录态：文件迁过来了，但格式需要转换
+
+`doubao-session.json` 会随其他 11 个文件一起被复制，**不需要重新扫码**。但实测发现
+一个上游遗留问题：磁盘上的文件是 **v2 多账号格式**（`{version:2, accounts:[...]}`），
+而 2.7.5 和本分叉的 `readStoredSession()` 只会读 **v1**（顶层 `cookies` + `sessionid`），
+整个代码库里没有任何 v2 解析器。所以迁移后豆包卡片仍显示未登录，**这是格式问题，不是凭据丢失**。
+
+修复（保留 v2 备份，只转换格式，不碰 cookie 值）：
+
+```powershell
+$d = "C:\Users\NeilM\Desktop\research\onepool"
+$p = "$env:USERPROFILE\.dsh\.onepool\doubao-session.json"
+
+# 脚本会自己写带时间戳的 .v2-backup，并先 dry-run
+node "$d\tools\convert-doubao-session.mjs" $p
+node "$d\tools\convert-doubao-session.mjs" $p --apply
+
+# 验证 cookie 是否仍有效（不打印任何 cookie）
+node "$d\tools\verify-doubao-session.mjs" $p
+```
+
+实测结果：
+
+```
+source: v2, accounts=1, usable=1   cookie count: 32
+sessionid / sessionid_ss / sid_tt / uid_tt 全部 present
+HTTP status: 200  RESULT: SESSION VALID   account name: 用户493110
+```
+
+**不需要重新登录。** 如果验证返回 401/403，才说明 cookie 本身已过期，那时重登一次即可。
 
 ---
 
