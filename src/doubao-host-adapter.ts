@@ -22,7 +22,7 @@
  * context window, output ceiling, whether the model reasons, and the multiplier as a tag. A
  * model with no published figure says nothing rather than inventing one.
  *
- * @module dsh-xdpool/doubao-host-adapter
+ * @module dsh-onepool/doubao-host-adapter
  */
 import {
   LlmAdapter,

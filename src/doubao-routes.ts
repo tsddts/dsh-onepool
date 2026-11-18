@@ -15,7 +15,7 @@
  * returning a URL for the browser to open — the debugging port has to belong to the browser
  * that signs in, and only one this process started can promise that.
  *
- * @module dsh-xdpool/doubao-routes
+ * @module dsh-onepool/doubao-routes
  */
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { originTrusted, type TrustedHosts } from './origin-trust.ts'

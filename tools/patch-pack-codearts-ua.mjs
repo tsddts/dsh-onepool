@@ -35,7 +35,7 @@ if (!source.includes(ANCHOR)) {
 
 const replacement = [
   ANCHOR,
-  '      // [xdpool-local] Override the host USER-AGENT, or the gateway answers 403.',
+  '      // [onepool-local] Override the host USER-AGENT, or the gateway answers 403.',
   '      //',
   '      // attributionHeaders() stamps the DSH bot UA and snap-access rejects it',
   '      // outright with 403 {error_code:TM.00000001}. Measured against the live',

@@ -4,7 +4,7 @@
  *
  * Two live-install failures, one surface.
  *
- * 1. The gateway ignored the model selection. The XD Pool card read
+ * 1. The gateway ignored the model selection. The OnePool card read
  *    `已启用 3 / 18` — `hy3`, `space-bunny`, `deepseek-v4.1-flash` — while
  *    `GET /v1/models` answered with **17** WorkBuddy models, fourteen of them
  *    switched off. The two faces of one plugin read the catalog through

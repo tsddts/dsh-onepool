@@ -25,13 +25,13 @@
  * carries `credits.total` plus its `packages[]`. No new endpoint, and no derivation —
  * these are the vendor's own figures.
  *
- * @module dsh-xdpool/client/BalancePanel
+ * @module dsh-onepool/client/BalancePanel
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react'
 import { POOL_STATUS_PATH } from '../status-paths.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** One package behind an account's balance. */
 interface PackageInfo {
@@ -187,62 +187,62 @@ export function BalancePanel({ t }: { readonly t?: Translate | undefined }): Rea
   }
 
   return (
-    <div className="dsm-xdpool-bal">
-      <div className="dsm-xdpool-bal-head">
-        <span className="dsm-xdpool-bal-title">{t?.('bal.title') ?? '渠道积分'}</span>
+    <div className="dsm-onepool-bal">
+      <div className="dsm-onepool-bal-head">
+        <span className="dsm-onepool-bal-title">{t?.('bal.title') ?? '渠道积分'}</span>
         <button
           type="button"
-          className="dsm-xdpool-bal-refresh"
+          className="dsm-onepool-bal-refresh"
           aria-label={t?.('bal.refresh') ?? '刷新'}
           onClick={() => { void load() }}
         >
           ↻
         </button>
       </div>
-      <div className="dsm-xdpool-bal-list">
+      <div className="dsm-onepool-bal-list">
         {channels.map(row => {
           const expanded = open.has(row.id)
           return (
-            <div className="dsm-xdpool-bal-group" key={row.id}>
+            <div className="dsm-onepool-bal-group" key={row.id}>
               <button
                 type="button"
-                className="dsm-xdpool-bal-row"
+                className="dsm-onepool-bal-row"
                 aria-expanded={expanded}
                 onClick={() => { toggle(row.id) }}
               >
-                <span className="dsm-xdpool-bal-avatar" data-ch={row.id}>
+                <span className="dsm-onepool-bal-avatar" data-ch={row.id}>
                   {row.id === 'workbuddy' ? 'W' : 'X'}
                 </span>
-                <span className="dsm-xdpool-bal-name">{row.name}</span>
+                <span className="dsm-onepool-bal-name">{row.name}</span>
                 {/* Account count, then the balance: the count explains how the total
                     was reached, which is the question a bare number invites. */}
-                <span className="dsm-xdpool-bal-count">{compact(row.accounts.length)}</span>
-                <span className="dsm-xdpool-bal-total">{grouped(row.total)}</span>
-                <span className="dsm-xdpool-bal-star" data-on={row.preferred ? 'true' : 'false'}>★</span>
-                <span className="dsm-xdpool-bal-caret" aria-hidden="true">{expanded ? '⌄' : '›'}</span>
+                <span className="dsm-onepool-bal-count">{compact(row.accounts.length)}</span>
+                <span className="dsm-onepool-bal-total">{grouped(row.total)}</span>
+                <span className="dsm-onepool-bal-star" data-on={row.preferred ? 'true' : 'false'}>★</span>
+                <span className="dsm-onepool-bal-caret" aria-hidden="true">{expanded ? '⌄' : '›'}</span>
               </button>
               {!expanded ? null : (
-                <div className="dsm-xdpool-bal-accounts">
+                <div className="dsm-onepool-bal-accounts">
                   {row.accounts.map(account => (
-                    <div className="dsm-xdpool-bal-account" key={account.id}>
-                      <span className="dsm-xdpool-bal-account-name">{account.label}</span>
-                      <span className="dsm-xdpool-bal-account-total">{grouped(account.total)}</span>
+                    <div className="dsm-onepool-bal-account" key={account.id}>
+                      <span className="dsm-onepool-bal-account-name">{account.label}</span>
+                      <span className="dsm-onepool-bal-account-total">{grouped(account.total)}</span>
                       {account.packages.length === 0 ? null : (
-                        <div className="dsm-xdpool-bal-packs">
+                        <div className="dsm-onepool-bal-packs">
                           {/* Each package shows remain/size: a pack that is 100/100 is
                               untouched, and one at 5/500 is the one to spend first. */}
                           {account.packages.slice(0, 6).map((pack, index) => (
-                            <div className="dsm-xdpool-bal-pack" key={`${pack.packageName}-${String(index)}`}>
-                              <span className="dsm-xdpool-bal-pack-name">{pack.packageName}</span>
-                              <span className="dsm-xdpool-bal-pack-amount">
+                            <div className="dsm-onepool-bal-pack" key={`${pack.packageName}-${String(index)}`}>
+                              <span className="dsm-onepool-bal-pack-name">{pack.packageName}</span>
+                              <span className="dsm-onepool-bal-pack-amount">
                                 {grouped(pack.remain)}{pack.size > 0 ? ` / ${grouped(pack.size)}` : ''}
                               </span>
                             </div>
                           ))}
                           {account.packages.length > 6
                             ? (
-                              <div className="dsm-xdpool-bal-pack">
-                                <span className="dsm-xdpool-bal-pack-name">
+                              <div className="dsm-onepool-bal-pack">
+                                <span className="dsm-onepool-bal-pack-name">
                                   {t?.('bal.morePacks', { count: account.packages.length - 6 })
                                     ?? `还有 ${String(account.packages.length - 6)} 个包`}
                                 </span>
@@ -259,11 +259,11 @@ export function BalancePanel({ t }: { readonly t?: Translate | undefined }): Rea
           )
         })}
       </div>
-      <div className="dsm-xdpool-bal-foot">
-        <span className="dsm-xdpool-bal-foot-meta">
+      <div className="dsm-onepool-bal-foot">
+        <span className="dsm-onepool-bal-foot-meta">
           {t?.('bal.accounts', { count: totals.accounts }) ?? `${String(totals.accounts)} 个账号`}
         </span>
-        <span className="dsm-xdpool-bal-foot-total">{grouped(totals.credits)}</span>
+        <span className="dsm-onepool-bal-foot-total">{grouped(totals.credits)}</span>
       </div>
     </div>
   )

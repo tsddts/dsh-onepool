@@ -40,7 +40,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 const PACK = join(ROOT, 'vendor', 'channel-pack', 'pack.js')
-const MARKER = '[xdpool-local] codexCliBanner'
+const MARKER = '[onepool-local] codexCliBanner'
 
 const raw = readFileSync(PACK, 'utf8')
 const eol = raw.includes('\r\n') ? '\r\n' : '\n'
@@ -56,7 +56,7 @@ if (text.includes(MARKER)) {
 const OLD = `message.content = message.content.replace(/powered by DeepSeek Harness/gi, "running on DeepSeek Harness").replace(/DeepSeek Harness Web GUI/gi, "DeepSeek Harness web interface").replace(/Relative paths resolve from the workspace root/gi, "Relative paths are resolved against the workspace root");`
 
 const NEW = `message.content = message.content.replace(/powered by DeepSeek Harness/gi, "running on DeepSeek Harness").replace(/DeepSeek Harness Web GUI/gi, "DeepSeek Harness web interface").replace(/Relative paths resolve from the workspace root/gi, "Relative paths are resolved against the workspace root")
-          // [xdpool-local] codexCliBanner — see tools/patch-pack-codex-banner.mjs
+          // [onepool-local] codexCliBanner — see tools/patch-pack-codex-banner.mjs
           //
           // Codex CLI 0.166 opens with a developer message the gate catalogued.
           // Measured (#112): the banner's first 184 chars pass, 185 (the same

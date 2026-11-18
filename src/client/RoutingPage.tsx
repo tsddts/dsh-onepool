@@ -21,7 +21,7 @@
  *    configuring a chain for a key they intend to paste in next. Refusing the
  *    save would be a worse lie than the warning.
  *
- * @module dsh-xdpool/client/RoutingPage
+ * @module dsh-onepool/client/RoutingPage
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -31,11 +31,11 @@ import {
   type PoolWebComboCandidate,
   type PoolWebCombosStatus,
 } from '../status-paths.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 import { ROUTING_CARD_CSS } from './styles.ts'
 import { PageHero } from './shell.tsx'
 /** The translator the settings section injects; the page renders every string through it. */
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 /** Props delivered by the slot wrapper in {@link ./PoolCard}. */
 export interface RoutingPageProps {
   t?: Translate | undefined
@@ -354,13 +354,13 @@ export function RoutingPage({ t }: RoutingPageProps) {
     setEditing(draft.key)
   }, [])
   return (
-    <div className="dsm-xdpool-rt">
+    <div className="dsm-onepool-rt">
       <style>{ROUTING_CARD_CSS}</style>
       <PageHero
         title={t?.('route.title') ?? 'Routing'}
         sub={t?.('route.sub') ?? ''}
         pills={<>
-          <span className="dsm-xdpool-pill" data-tone="ok">
+          <span className="dsm-onepool-pill" data-tone="ok">
             {t?.('route.memberCount', { count: combos.length }) ?? `${combos.length} chain(s)`}
           </span>
           {/* A COUNT, not the sentence that used to sit here. The user reported
@@ -368,13 +368,13 @@ export function RoutingPage({ t }: RoutingPageProps) {
               search placeholder two hundred pixels below, so the page stated
               one fact twice and showed neither's number. The pill is the
               summary; the box is the control that acts on it. */}
-          <span className="dsm-xdpool-pill" data-tone="off">
+          <span className="dsm-onepool-pill" data-tone="off">
             {t?.('route.rosterCount', { count: candidates.length }) ?? `${candidates.length} model(s)`}
           </span>
         </>}
       />
-      <div className="dsm-xdpool-rt-new">
-        <span className="dsm-xdpool-rt-hint">{t?.('route.idHint') ?? ''}</span>
+      <div className="dsm-onepool-rt-new">
+        <span className="dsm-onepool-rt-hint">{t?.('route.idHint') ?? ''}</span>
         {/*
           A primary button, not the filter chip it used to borrow. `.agg-cat` is
           a *filter* affordance — it sits in a row of mutually exclusive chips
@@ -387,10 +387,10 @@ export function RoutingPage({ t }: RoutingPageProps) {
           {t?.('route.newChain') ?? 'New chain'}
         </button>
       </div>
-      {error !== undefined ? <p className="dsm-xdpool-panel-error">{error}</p> : null}
-      {flash !== undefined ? <p className="dsm-xdpool-rt-flash">{flash}</p> : null}
+      {error !== undefined ? <p className="dsm-onepool-panel-error">{error}</p> : null}
+      {flash !== undefined ? <p className="dsm-onepool-rt-flash">{flash}</p> : null}
       {status === undefined && error === undefined
-        ? <p className="dsm-xdpool-panel-empty">{t?.('route.loading') ?? 'Reading…'}</p>
+        ? <p className="dsm-onepool-panel-empty">{t?.('route.loading') ?? 'Reading…'}</p>
         : null}
       {current !== undefined
         ? <ChainEditor
@@ -405,8 +405,8 @@ export function RoutingPage({ t }: RoutingPageProps) {
       {status === undefined
         ? null
         : drafts.length === 0
-          ? <p className="dsm-xdpool-panel-empty">{t?.('route.empty') ?? 'No chain yet.'}</p>
-          : <div className="dsm-xdpool-rt-list">
+          ? <p className="dsm-onepool-panel-empty">{t?.('route.empty') ?? 'No chain yet.'}</p>
+          : <div className="dsm-onepool-rt-list">
               {drafts.map(draft => (
                 <ChainRow
                   key={draft.key}
@@ -421,7 +421,7 @@ export function RoutingPage({ t }: RoutingPageProps) {
                   }}
                 />
               ))}
-              <div className="dsm-xdpool-rt-actions">
+              <div className="dsm-onepool-rt-actions">
                 {/* The shared button, not the aggregate filter chip this used to
                     borrow. The chip renders here — its rules are in the shared
                     sheet, which the shell injects on every page — but it is a
@@ -475,24 +475,24 @@ function ChainRow({
   const flat = draft.flat
   const missing = flat.filter(model => candidateById.has(model) === false)
   return (
-    <div className="dsm-xdpool-rt-row" data-off={draft.enabled ? 'false' : 'true'}>
-      <div className="dsm-xdpool-rt-rowhead">
-        <span className="dsm-xdpool-rt-name">{draft.name === '' ? (t?.('route.newChain') ?? 'New chain') : draft.name}</span>
+    <div className="dsm-onepool-rt-row" data-off={draft.enabled ? 'false' : 'true'}>
+      <div className="dsm-onepool-rt-rowhead">
+        <span className="dsm-onepool-rt-name">{draft.name === '' ? (t?.('route.newChain') ?? 'New chain') : draft.name}</span>
         {draft.id !== undefined
-          ? <span className="dsm-xdpool-rt-cid">{draft.id}</span>
+          ? <span className="dsm-onepool-rt-cid">{draft.id}</span>
           : null}
-        <span className="dsm-xdpool-pill" data-tone={draft.enabled ? 'ok' : 'off'}>
+        <span className="dsm-onepool-pill" data-tone={draft.enabled ? 'ok' : 'off'}>
           {draft.enabled ? (t?.('route.enabled') ?? 'Enabled') : (t?.('route.chainDisabled') ?? 'Disabled')}
         </span>
-        <span className="dsm-xdpool-pills">
-          <span className="dsm-xdpool-pill" data-tone="off">
+        <span className="dsm-onepool-pills">
+          <span className="dsm-onepool-pill" data-tone="off">
             {t?.('route.platformCount', { count: draft.platforms.length }) ?? `${draft.platforms.length} platform(s)`}
           </span>
-          <span className="dsm-xdpool-pill" data-tone="off">
+          <span className="dsm-onepool-pill" data-tone="off">
             {t?.('route.memberCount', { count: flat.length }) ?? `${flat.length} model(s)`}
           </span>
         </span>
-        <span className="dsm-xdpool-pageactions">
+        <span className="dsm-onepool-pageactions">
           {/* An outline button, not the aggregate filter chip this borrowed: the
               chip's rule is in the shared sheet, so it renders, but Edit sits in
               a pair of per-row actions and reading as one filter pill among
@@ -501,7 +501,7 @@ function ChainRow({
           <button type="button" className="dsm-btn dsm-btn-outline" onClick={onEdit}>
             {editable ? (t?.('route.editOpen') ?? 'Editing') : (t?.('route.edit') ?? 'Edit')}
           </button>
-          <button type="button" className="dsm-xdpool-rt-drop" onClick={onDelete}>
+          <button type="button" className="dsm-onepool-rt-drop" onClick={onDelete}>
             {t?.('route.removeMember') ?? 'Remove'}
           </button>
         </span>
@@ -517,20 +517,20 @@ function ChainRow({
         part the two-level editor is for, and it should be visible collapsed too.
       */}
       {draft.platforms.length === 0
-        ? <p className="dsm-xdpool-rt-warn">{t?.('route.noMembers') ?? 'Add at least one member.'}</p>
-        : <ol className="dsm-xdpool-rt-lanes">
+        ? <p className="dsm-onepool-rt-warn">{t?.('route.noMembers') ?? 'Add at least one member.'}</p>
+        : <ol className="dsm-onepool-rt-lanes">
             {draft.platforms.map((platform, index) => (
-              <li className="dsm-xdpool-rt-lane" key={`${platform.owner}-${index}`}>
-                <span className="dsm-xdpool-rt-ord">{index + 1}</span>
-                <span className="dsm-xdpool-rt-lanename" title={platform.owner}>
+              <li className="dsm-onepool-rt-lane" key={`${platform.owner}-${index}`}>
+                <span className="dsm-onepool-rt-ord">{index + 1}</span>
+                <span className="dsm-onepool-rt-lanename" title={platform.owner}>
                   {ownerName(platform.owner, t)}
                 </span>
-                <span className="dsm-xdpool-rt-lanecount">· {platform.models.length}</span>
+                <span className="dsm-onepool-rt-lanecount">· {platform.models.length}</span>
               </li>
             ))}
           </ol>}
       {missing.length > 0
-        ? <p className="dsm-xdpool-rt-warn">
+        ? <p className="dsm-onepool-rt-warn">
             {t?.('route.missing', { models: missing.join(', ') }) ?? missing.join(', ')}
           </p>
         : null}
@@ -546,7 +546,7 @@ function ChainRow({
  * inventing a second one here would make the same vendor look like two.
  */
 function ownerName(owner: string, t?: Translate | undefined): string {
-  if (owner === 'workbuddy') return t?.('route.ownerPool') ?? 'XD Pool（WorkBuddy）'
+  if (owner === 'workbuddy') return t?.('route.ownerPool') ?? 'OnePool（WorkBuddy）'
   return owner
 }
 /**
@@ -650,12 +650,12 @@ function ChainEditor({
     roster.filter(candidate => candidate.owner === owner && !group.models.includes(bareModelOf(candidate)))
 
   return (
-    <div className="dsm-xdpool-rt-editor">
-      <div className="dsm-xdpool-rt-editorhead">
-        <span className="dsm-xdpool-rt-edname">
+    <div className="dsm-onepool-rt-editor">
+      <div className="dsm-onepool-rt-editorhead">
+        <span className="dsm-onepool-rt-edname">
           {draft.name === '' ? (t?.('route.newChain') ?? 'New chain') : draft.name}
         </span>
-        <label className="dsm-xdpool-switch">
+        <label className="dsm-onepool-switch">
           <input
             type="checkbox"
             checked={draft.enabled}
@@ -664,8 +664,8 @@ function ChainEditor({
           <span>{t?.('route.enabled') ?? 'Enabled'}</span>
         </label>
       </div>
-      <div className="dsm-xdpool-rt-fields">
-        <label className="dsm-xdpool-rt-field">
+      <div className="dsm-onepool-rt-fields">
+        <label className="dsm-onepool-rt-field">
           <span>{t?.('route.chainName') ?? 'Chain name'}</span>
           <input
             type="text"
@@ -674,7 +674,7 @@ function ChainEditor({
             onChange={event => { onChange({ name: event.target.value }) }}
           />
         </label>
-        <label className="dsm-xdpool-rt-field">
+        <label className="dsm-onepool-rt-field">
           <span>{t?.('route.strategy') ?? 'Strategy'}</span>
           <select
             value={draft.strategy}
@@ -684,7 +684,7 @@ function ChainEditor({
             <option value="round-robin">{t?.('route.strategyRoundRobin') ?? 'Round robin'}</option>
           </select>
         </label>
-        <label className="dsm-xdpool-rt-field">
+        <label className="dsm-onepool-rt-field">
           <span>{t?.('route.stickyLimit') ?? 'Turns per member'}</span>
           <input
             type="number"
@@ -699,54 +699,54 @@ function ChainEditor({
           />
         </label>
       </div>
-      <p className="dsm-xdpool-rt-hint">{t?.('route.stickyHint') ?? ''}</p>
+      <p className="dsm-onepool-rt-hint">{t?.('route.stickyHint') ?? ''}</p>
 
-      <p className="dsm-xdpool-rt-hint">{t?.('route.platformOrder') ?? 'Platform order (higher is tried first)'}</p>
+      <p className="dsm-onepool-rt-hint">{t?.('route.platformOrder') ?? 'Platform order (higher is tried first)'}</p>
       {draft.platforms.length === 0
-        ? <p className="dsm-xdpool-rt-warn">{t?.('route.noMembers') ?? 'Add at least one member.'}</p>
-        : <div className="dsm-xdpool-rt-laneboxes">
+        ? <p className="dsm-onepool-rt-warn">{t?.('route.noMembers') ?? 'Add at least one member.'}</p>
+        : <div className="dsm-onepool-rt-laneboxes">
             {draft.platforms.map((platform, index) => {
               const group = { models: platform.models }
               const choices = candidatesFor(platform.owner, group)
               const picked = pickByLane[platform.owner] ?? ''
               return (
-                <div className="dsm-xdpool-rt-lanebox" key={`${platform.owner}-${index}`}>
-                  <div className="dsm-xdpool-rt-lanebox-head">
-                    <span className="dsm-xdpool-rt-ord">{index + 1}</span>
-                    <span className="dsm-xdpool-rt-lanebox-name">{ownerName(platform.owner, t)}</span>
-                    <span className="dsm-xdpool-rt-cid">{platform.owner}</span>
+                <div className="dsm-onepool-rt-lanebox" key={`${platform.owner}-${index}`}>
+                  <div className="dsm-onepool-rt-lanebox-head">
+                    <span className="dsm-onepool-rt-ord">{index + 1}</span>
+                    <span className="dsm-onepool-rt-lanebox-name">{ownerName(platform.owner, t)}</span>
+                    <span className="dsm-onepool-rt-cid">{platform.owner}</span>
                   </div>
-                  <div className="dsm-xdpool-rt-laneacts">
-                    <button type="button" className="dsm-xdpool-rt-drop" disabled={index === 0} onClick={() => { moveLane(index, -1) }}>
+                  <div className="dsm-onepool-rt-laneacts">
+                    <button type="button" className="dsm-onepool-rt-drop" disabled={index === 0} onClick={() => { moveLane(index, -1) }}>
                       {t?.('route.moveUp') ?? 'Up'}
                     </button>
-                    <button type="button" className="dsm-xdpool-rt-drop" disabled={index === draft.platforms.length - 1} onClick={() => { moveLane(index, 1) }}>
+                    <button type="button" className="dsm-onepool-rt-drop" disabled={index === draft.platforms.length - 1} onClick={() => { moveLane(index, 1) }}>
                       {t?.('route.moveDown') ?? 'Down'}
                     </button>
-                    <button type="button" className="dsm-xdpool-rt-drop" onClick={() => { dropLane(index) }}>
+                    <button type="button" className="dsm-onepool-rt-drop" onClick={() => { dropLane(index) }}>
                       {t?.('route.removePlatform') ?? 'Remove'}
                     </button>
                   </div>
                   {platform.models.length === 0
-                    ? <p className="dsm-xdpool-rt-hint">{t?.('route.platformNoModels') ?? 'No model added to this platform yet.'}</p>
-                    : <ol className="dsm-xdpool-rt-members">
+                    ? <p className="dsm-onepool-rt-hint">{t?.('route.platformNoModels') ?? 'No model added to this platform yet.'}</p>
+                    : <ol className="dsm-onepool-rt-members">
                         {platform.models.map((model, modelIndex) => {
                           const fullId = platform.owner === 'workbuddy' ? model : `${platform.owner}/${model}`
                           const candidate = candidateById.get(fullId)
                           return (
-                            <li className="dsm-xdpool-rt-member" key={`${model}-${modelIndex}`}>
-                              <span className="dsm-xdpool-rt-ord">{modelIndex + 1}</span>
-                              <span className="dsm-xdpool-rt-mid" title={fullId}>{model}</span>
+                            <li className="dsm-onepool-rt-member" key={`${model}-${modelIndex}`}>
+                              <span className="dsm-onepool-rt-ord">{modelIndex + 1}</span>
+                              <span className="dsm-onepool-rt-mid" title={fullId}>{model}</span>
                               {candidate === undefined
-                                ? <span className="dsm-xdpool-agg-tag dsm-xdpool-rt-mtag" data-tone="busy">
+                                ? <span className="dsm-onepool-agg-tag dsm-onepool-rt-mtag" data-tone="busy">
                                     {t?.('route.unusable') ?? 'needs a key'}
                                   </span>
-                                : <span className="dsm-xdpool-agg-tag dsm-xdpool-rt-mtag" data-tone="ok">
+                                : <span className="dsm-onepool-agg-tag dsm-onepool-rt-mtag" data-tone="ok">
                                     {compact(candidate.contextWindow)}
                                   </span>}
                               <button
                                 type="button"
-                                className="dsm-xdpool-rt-drop"
+                                className="dsm-onepool-rt-drop"
                                 disabled={modelIndex === 0}
                                 onClick={() => {
                                   const next = [...platform.models]
@@ -760,7 +760,7 @@ function ChainEditor({
                               </button>
                               <button
                                 type="button"
-                                className="dsm-xdpool-rt-drop"
+                                className="dsm-onepool-rt-drop"
                                 disabled={modelIndex === platform.models.length - 1}
                                 onClick={() => {
                                   const next = [...platform.models]
@@ -774,7 +774,7 @@ function ChainEditor({
                               </button>
                               <button
                                 type="button"
-                                className="dsm-xdpool-rt-drop"
+                                className="dsm-onepool-rt-drop"
                                 onClick={() => { patchLane(index, { models: platform.models.filter(entry => entry !== model) }) }}
                               >
                                 {t?.('route.removeMember') ?? 'Remove'}
@@ -788,9 +788,9 @@ function ChainEditor({
                       dropdown would repeat what the card already says. */}
                   {choices.length === 0
                     ? null
-                    : <div className="dsm-xdpool-rt-addrow">
+                    : <div className="dsm-onepool-rt-addrow">
                         <select
-                          className="dsm-xdpool-rt-pick"
+                          className="dsm-onepool-rt-pick"
                           value={picked}
                           disabled={busy}
                           onChange={event => { setPickByLane(prev => ({ ...prev, [platform.owner]: event.target.value })) }}
@@ -820,9 +820,9 @@ function ChainEditor({
 
       {addable.length === 0
         ? null
-        : <div className="dsm-xdpool-rt-addrow">
+        : <div className="dsm-onepool-rt-addrow">
             <select
-              className="dsm-xdpool-rt-pick"
+              className="dsm-onepool-rt-pick"
               value={pickLane}
               disabled={busy}
               onChange={event => { setPickLane(event.target.value) }}
@@ -847,7 +847,7 @@ function ChainEditor({
               {t?.('route.addPlatform') ?? 'Add platform'}
             </button>
           </div>}
-      <p className="dsm-xdpool-rt-hint">{t?.('route.platformHint') ?? 'Higher is tried first; the same applies to models inside one platform.'}</p>
+      <p className="dsm-onepool-rt-hint">{t?.('route.platformHint') ?? 'Higher is tried first; the same applies to models inside one platform.'}</p>
     </div>
   )
 }

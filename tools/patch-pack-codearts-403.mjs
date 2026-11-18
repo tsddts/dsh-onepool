@@ -27,7 +27,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] 403 is not auth for CodeArts'
+const MARKER = '[onepool-local] 403 is not auth for CodeArts'
 
 const source = readFileSync(PATH, 'utf8')
 if (source.includes(MARKER)) {
@@ -85,7 +85,7 @@ const CODE_RE = new RegExp(
 )
 
 const NEW_CODE_LINE = join(
-  '  // [xdpool-local] 403 is not auth — see isAuthError. The frontend renders AUTH',
+  '  // [onepool-local] 403 is not auth — see isAuthError. The frontend renders AUTH',
   '  // as "API 密钥无效", so routing a WAF 403 here produced a confident wrong',
   '  // diagnosis. Only a 401, or a 403 whose body names the token, is AUTH.',
   '  if (status === 401) return "AUTH";',

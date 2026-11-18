@@ -419,5 +419,5 @@ export class FreeCatalog {
  */
 export function sessionSeedFor(conversationKey: string | undefined): string {
   const seed = conversationKey ?? ''
-  return crypto.createHash('sha256').update(`xdpool-free-seed\0${seed}`, 'utf8').digest('hex').slice(0, 16)
+  return crypto.createHash('sha256').update(`onepool-free-seed\0${seed}`, 'utf8').digest('hex').slice(0, 16)
 }

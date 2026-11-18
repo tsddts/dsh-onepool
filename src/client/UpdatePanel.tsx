@@ -13,13 +13,13 @@
  * is kept apart from "no update": telling a user they are current when the registry was
  * unreachable is the one wrong answer this panel could give.
  *
- * @module dsh-xdpool/client/UpdatePanel
+ * @module dsh-onepool/client/UpdatePanel
  */
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react'
 import { POOL_UPDATE_CHECK_PATH, POOL_UPDATE_INSTALL_PATH } from '../status-paths.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** What the route reports. */
 interface UpdateStatus {
@@ -130,17 +130,17 @@ export function UpdatePanel({ t }: { readonly t?: Translate | undefined }): Reac
   const checked = agoText(status?.checkedAt)
   const published = dayText(status?.publishedAt)
   return (
-    <div className="dsm-xdpool-update">
-      <div className="dsm-xdpool-update-head">
-        <span className="dsm-xdpool-update-title">
+    <div className="dsm-onepool-update">
+      <div className="dsm-onepool-update-head">
+        <span className="dsm-onepool-update-title">
           {t?.('update.title') ?? '检查更新'}
         </span>
         {status?.current === undefined ? null : (
-          <span className="dsm-xdpool-update-versions">
+          <span className="dsm-onepool-update-versions">
             {t?.('update.current') ?? '当前'} <b>{status.current}</b>
             {status.latest === undefined ? null : (
               <>
-                <span className="dsm-xdpool-update-sep" aria-hidden="true">·</span>
+                <span className="dsm-onepool-update-sep" aria-hidden="true">·</span>
                 {t?.('update.latest') ?? '最新'} <b>{status.latest}</b>
               </>
             )}
@@ -148,7 +148,7 @@ export function UpdatePanel({ t }: { readonly t?: Translate | undefined }): Reac
         )}
         <button
           type="button"
-          className="dsm-xdpool-btn"
+          className="dsm-onepool-btn"
           disabled={busy}
           onClick={() => { void check(true) }}
         >
@@ -157,21 +157,21 @@ export function UpdatePanel({ t }: { readonly t?: Translate | undefined }): Reac
       </div>
 
       {status?.error === undefined ? null : (
-        <p className="dsm-xdpool-update-error">
+        <p className="dsm-onepool-update-error">
           {t?.('update.failed') ?? '没能检查更新'}：{status.error}
         </p>
       )}
 
       {status?.error !== undefined || status === undefined ? null : newer ? (
         <>
-          <p className="dsm-xdpool-update-newer">
+          <p className="dsm-onepool-update-newer">
             {t?.('update.available', { version: status.latest ?? '' }) ?? `有新版本 ${status.latest ?? ''}`}
             {published === undefined ? '' : `（发布于 ${published}）`}
           </p>
-          <div className="dsm-xdpool-update-acts">
+          <div className="dsm-onepool-update-acts">
             <button
               type="button"
-              className="dsm-xdpool-btn"
+              className="dsm-onepool-btn"
               data-tone="primary"
               disabled={installing}
               onClick={() => { void install() }}
@@ -180,20 +180,20 @@ export function UpdatePanel({ t }: { readonly t?: Translate | undefined }): Reac
                 ? (t?.('update.installing') ?? '安装中…')
                 : (t?.('update.install', { version: status.latest ?? '' }) ?? `安装 ${status.latest ?? ''}`)}
             </button>
-            <span className="dsm-xdpool-update-hint">
+            <span className="dsm-onepool-update-hint">
               {t?.('update.installHint') ?? '下载到本机并写入插件配置，重启 DSH 后生效；数据和账号不受影响。'}
             </span>
           </div>
         </>
       ) : (
-        <p className="dsm-xdpool-update-current">
+        <p className="dsm-onepool-update-current">
           {t?.('update.upToDate') ?? '已是最新版本'}
           {checked === undefined ? '' : `（${checked}检查）`}
         </p>
       )}
 
       {installed === undefined ? null : (
-        <p className={installed.ok ? 'dsm-xdpool-update-current' : 'dsm-xdpool-update-error'}>
+        <p className={installed.ok ? 'dsm-onepool-update-current' : 'dsm-onepool-update-error'}>
           {installed.text}
         </p>
       )}

@@ -26,7 +26,7 @@
  * The value is written on every catalog change and on startup, so a save takes
  * effect on the picker's next read without a restart.
  *
- * @module dsh-xdpool/model-switch-bridge
+ * @module dsh-onepool/model-switch-bridge
  */
 import type { WorkBuddyRegion } from './upstream.ts'
 
@@ -65,15 +65,15 @@ export function currentLaneSelection(): LaneSelection {
 /**
  * Replace the selection and mirror it where the pack can see it.
  *
- * The mirror is `globalThis.__xdpoolLaneSelection`, which `pack.js` reads in its
- * `[xdpool-local] laneAllowedIds` helper. A global rather than a getter on the
+ * The mirror is `globalThis.__onepoolLaneSelection`, which `pack.js` reads in its
+ * `[onepool-local] laneAllowedIds` helper. A global rather than a getter on the
  * account pool because the pack's adapters receive `accountPool` — this
  * plugin's own object — and nothing else that this module could hang a function
  * on without editing ten constructors.
  */
 export function applyLaneSelection(next: LaneSelection): void {
   laneSelection = next
-  ;(globalThis as { __xdpoolLaneSelection?: LaneSelection }).__xdpoolLaneSelection = next
+  ;(globalThis as { __onepoolLaneSelection?: LaneSelection }).__onepoolLaneSelection = next
 }
 
 /**

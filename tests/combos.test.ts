@@ -375,7 +375,7 @@ describe('the chain table survives a save/load round trip', () => {
       A name is user data; the id has to survive any script.
     */
     const { saveCombos, readAggregateSettingsSync, combosOf } = await import('../src/store.ts')
-    const home = mkdtempSync(join(tmpdir(), 'xdpool-combos-'))
+    const home = mkdtempSync(join(tmpdir(), 'onepool-combos-'))
     const previous = process.env.DSH_HOME
     process.env.DSH_HOME = home
     try {
@@ -392,7 +392,7 @@ describe('the chain table survives a save/load round trip', () => {
   })
   it('writes the whole table and reads back what it can serve', async () => {
     const { saveCombos } = await import('../src/store.ts')
-    const home = mkdtempSync(join(tmpdir(), 'xdpool-combos-'))
+    const home = mkdtempSync(join(tmpdir(), 'onepool-combos-'))
     const previous = process.env.DSH_HOME
     process.env.DSH_HOME = home
     try {
@@ -417,7 +417,7 @@ describe('the chain table survives a save/load round trip', () => {
   })
   it('forgets the table when the user deletes every chain', async () => {
     const { saveCombos, readAggregateSettingsSync, combosOf, aggregateSettingsPath } = await import('../src/store.ts')
-    const home = mkdtempSync(join(tmpdir(), 'xdpool-combos-'))
+    const home = mkdtempSync(join(tmpdir(), 'onepool-combos-'))
     const previous = process.env.DSH_HOME
     process.env.DSH_HOME = home
     try {

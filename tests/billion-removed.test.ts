@@ -61,8 +61,8 @@ describe('the billion-context surface is gone', () => {
     const manifest = JSON.parse(read('package.json'))
     expect(manifest.optionalDependencies?.['billion-context']).toBeUndefined()
     const patch = read('cordis.patch.yml')
-    expect(patch).not.toMatch(/^- id: billion-context-xdpool$/mu)
+    expect(patch).not.toMatch(/^- id: billion-context-onepool$/mu)
     // The provider row this plugin DOES own must still be registered.
-    expect(patch).toContain('- id: llm-xdpool')
+    expect(patch).toContain('- id: llm-onepool')
   })
 })

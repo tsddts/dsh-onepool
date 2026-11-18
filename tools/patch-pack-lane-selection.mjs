@@ -3,7 +3,7 @@
  * card's model selection (#121).
  *
  * The pack is a build artifact of another repository, so this is a source patch
- * applied with the same `[xdpool-local]` marker convention the file already
+ * applied with the same `[onepool-local]` marker convention the file already
  * carries for its other local edits (the fingerprint rewrites, the catalog
  * TTL). It inserts one helper and rewrites the ten identical
  * `disabledModelsFor(this.product.id)` reads inside `listModels`.
@@ -25,7 +25,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 const PACK = join(ROOT, 'vendor', 'channel-pack', 'pack.js')
-const MARKER = '[xdpool-local] laneAllowedIds'
+const MARKER = '[onepool-local] laneAllowedIds'
 
 const raw = readFileSync(PACK, 'utf8')
 const eol = raw.includes('\r\n') ? '\r\n' : '\n'
@@ -36,17 +36,17 @@ if (text.includes(MARKER)) {
   process.exit(0)
 }
 
-const HELPER = `// [xdpool-local] laneAllowedIds
+const HELPER = `// [onepool-local] laneAllowedIds
 //
 // buddy / workbuddy are exempt from the startup silence pass because
-// dsh-xdpool's own pool card owns their model selection (see
+// dsh-onepool's own pool card owns their model selection (see
 // POOL_OWNED_PROVIDERS below). The exemption avoided a conflict but not a GAP:
 // \`disabledModelsFor("buddy")\` is therefore always empty, so every adapter
 // returned its whole catalogue and the card's "1 of 16" had no effect on the
 // host's model picker (#121).
 //
 // This helper is the missing link. It intersects the pack's own blacklist with
-// the allow-list dsh-xdpool publishes on \`globalThis.__xdpoolLaneSelection\`,
+// the allow-list dsh-onepool publishes on \`globalThis.__onepoolLaneSelection\`,
 // keyed by lane id. The global is a handoff, not an API: the pack is a build
 // artifact of another repository and cannot import from the plugin's src/, and
 // threading a value through ten adapter constructors would be rejected by the
@@ -60,7 +60,7 @@ const HELPER = `// [xdpool-local] laneAllowedIds
 //     and must be honoured — hence the two are distinguished below rather than
 //     folded with \`??\`.
 function laneAllowedIds(disabled, laneId) {
-  const table = globalThis.__xdpoolLaneSelection;
+  const table = globalThis.__onepoolLaneSelection;
   const allow = table === void 0 || table === null ? void 0 : table[laneId];
   if (allow === void 0) return disabled;
   const allowed = new Set(allow);

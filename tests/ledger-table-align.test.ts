@@ -3,8 +3,8 @@
  * not as a CSS problem.
  *
  * The ledger's numeric columns were left-aligned in the header and right-aligned
- * in the body, because `.dsm-xdpool-table th{text-align:left}` is specificity
- * (0,1,1) and `.dsm-xdpool-num{text-align:right}` is (0,1,0) — the more specific
+ * in the body, because `.dsm-onepool-table th{text-align:left}` is specificity
+ * (0,1,1) and `.dsm-onepool-num{text-align:right}` is (0,1,0) — the more specific
  * rule won, and every numeric title sat at the far left of a column whose numbers
  * hugged the right edge. Two of four numeric headers were affected, which is why
  * the table looked "错位" rather than simply untidy.
@@ -22,19 +22,19 @@ const page = readFileSync(new URL('../src/client/LedgerPage.tsx', import.meta.ur
 describe('numeric table columns line up with their headers', () => {
   it('right-aligns the header and the cell through selectors that beat the th rule', () => {
     // The pair is the point: bumping only one side reproduces the original bug.
-    expect(styles).toContain('.dsm-xdpool-table th.dsm-xdpool-num,')
-    expect(styles).toContain('.dsm-xdpool-table td.dsm-xdpool-num,')
+    expect(styles).toContain('.dsm-onepool-table th.dsm-onepool-num,')
+    expect(styles).toContain('.dsm-onepool-table td.dsm-onepool-num,')
   })
 
   it('no longer relies on the bare class, which the th rule always out-specified', () => {
     // (0,1,1) beats (0,1,0). Keeping the bare selector as the ONLY alignment for
     // a numeric column would silently reintroduce the shift.
-    const rule = styles.slice(styles.indexOf('.dsm-xdpool-table th.dsm-xdpool-num,'))
+    const rule = styles.slice(styles.indexOf('.dsm-onepool-table th.dsm-onepool-num,'))
     expect(rule.slice(0, 260)).toContain('text-align:right')
   })
 
   it('every numeric header carries the class that now works', () => {
-    const headers = [...page.matchAll(/<th className="dsm-xdpool-num">([^<]*)</gu)]
+    const headers = [...page.matchAll(/<th className="dsm-onepool-num">([^<]*)</gu)]
     // The recent-calls table has four numeric columns (in / out / cached / ttft).
     expect(headers.length).toBeGreaterThanOrEqual(4)
   })

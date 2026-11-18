@@ -8,7 +8,7 @@
  * is push-driven. A login can take a minute of browser work, so this page owns
  * its own polling and stops it the moment the user leaves.
  *
- * @module dsh-xdpool/client/ChannelsPage
+ * @module dsh-onepool/client/ChannelsPage
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -20,12 +20,12 @@ import {
 } from '../status-paths.ts'
 import type { ChannelAccount, ChannelRpcEnvelope } from '../channels.ts'
 import { accountsFrom, autoCheckinFrom, callPack, createdFrom, fetchChannels, pollFrom, providerStatusesFrom, type ChannelAutoCheckin } from './channel-rpc.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 import { CHANNEL_CARD_CSS } from './styles.ts'
 import { BrandTile } from './brand-tile.tsx'
 import { channelIcon, channelInitials } from './channel-icons.ts'
 import { PageHero } from './shell.tsx'
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 export interface ChannelsPageProps {
   t?: Translate | undefined
 }
@@ -361,7 +361,7 @@ export function ChannelsPage({ t }: ChannelsPageProps) {
   const state = status?.state ?? 'pending'
   const channels = status?.channels ?? []
   return (
-    <div className="dsm-xdpool-channels">
+    <div className="dsm-onepool-channels">
       <style>{CHANNEL_CARD_CSS}</style>
       <PageHero
         title={t?.('chan.title') ?? 'Login channels'}
@@ -372,15 +372,15 @@ export function ChannelsPage({ t }: ChannelsPageProps) {
         // rendered at the size of a title inside a box the size of a chip, and
         // the user read the mismatch as "this one never got styled".
         pills={<span
-          className="dsm-xdpool-pill"
+          className="dsm-onepool-pill"
           data-tone={connectedCount > 0 ? 'ok' : 'off'}
         >
           {t?.('chan.connectedCount', { count: connectedCount }) ?? `${connectedCount} connected`}
         </span>}
       />
       {autoCheckin !== undefined && (
-        <div className="dsm-xdpool-autocheckin">
-          <label className="dsm-xdpool-switch">
+        <div className="dsm-onepool-autocheckin">
+          <label className="dsm-onepool-switch">
             <input
               type="checkbox"
               checked={autoCheckin.enabled}
@@ -390,15 +390,15 @@ export function ChannelsPage({ t }: ChannelsPageProps) {
             <span>{t?.('chan.autoCheckin') ?? 'Claim daily credits automatically'}</span>
           </label>
           {autoCheckin.lastResult !== undefined && (
-            <span className="dsm-xdpool-autocheckin-note">{autoCheckin.lastResult}</span>
+            <span className="dsm-onepool-autocheckin-note">{autoCheckin.lastResult}</span>
           )}
         </div>
       )}
       {error !== undefined && (
-        <p className="dsm-xdpool-panel-error">{error}</p>
+        <p className="dsm-onepool-panel-error">{error}</p>
       )}
       {state === 'pending' && (
-        <p className="dsm-xdpool-panel-empty">{t?.('chan.pending')}</p>
+        <p className="dsm-onepool-panel-empty">{t?.('chan.pending')}</p>
       )}
       {/*
         Two different failures, two different sentences. A pack that is already
@@ -408,17 +408,17 @@ export function ChannelsPage({ t }: ChannelsPageProps) {
         something was broken when nothing was.
       */}
       {state === 'unavailable' && status?.reason === ROUTE_OWNED_ELSEWHERE && (
-        <p className="dsm-xdpool-panel-empty">
+        <p className="dsm-onepool-panel-empty">
           {t?.('chan.ownedElsewhere') ?? 'Another plugin already serves these login channels.'}
         </p>
       )}
       {state === 'unavailable' && status?.reason !== ROUTE_OWNED_ELSEWHERE && (
-        <p className="dsm-xdpool-panel-error">
+        <p className="dsm-onepool-panel-error">
           {t?.('chan.unavailable')}{status?.reason !== undefined ? ` (${status.reason})` : ''}
         </p>
       )}
       {state === 'ready' && channels.length === 0 && (
-        <p className="dsm-xdpool-panel-empty">{t?.('chan.empty')}</p>
+        <p className="dsm-onepool-panel-empty">{t?.('chan.empty')}</p>
       )}
       {channels.map((channel) => (
         <ChannelRow
@@ -479,15 +479,15 @@ function ChannelRow({
   const tileMark = icon === undefined ? { initials: channelInitials(channel.name) } : { icon }
   return (
     <div
-      className="dsm-xdpool-channel"
-      style={{ '--dsm-xdpool-channel-accent': channel.accent } as Record<string, string>}
+      className="dsm-onepool-channel"
+      style={{ '--dsm-onepool-channel-accent': channel.accent } as Record<string, string>}
     >
-      <div className="dsm-xdpool-channel-head">
+      <div className="dsm-onepool-channel-head">
         <BrandTile accent={channel.accent} glyph="login" {...tileMark} />
-        <span className="dsm-xdpool-channel-name">{channel.name}</span>
-        <span className="dsm-xdpool-channel-org">{channel.org}</span>
+        <span className="dsm-onepool-channel-name">{channel.name}</span>
+        <span className="dsm-onepool-channel-org">{channel.org}</span>
         {connectedCount > 0 && (
-          <span className="dsm-xdpool-channel-tag">
+          <span className="dsm-onepool-channel-tag">
             {t?.('chan.connected', { count: connectedCount }) ?? 'Connected'}
           </span>
         )}
@@ -496,17 +496,17 @@ function ChannelRow({
           user standing on this page has not seen that card, and the answer to
           "is signing in here worth it" is this line and nothing else. */}
       {channel.note !== '' && (
-        <p className="dsm-xdpool-channel-note">{channel.note}</p>
+        <p className="dsm-onepool-channel-note">{channel.note}</p>
       )}
-      <div className="dsm-xdpool-channel-actions">
+      <div className="dsm-onepool-channel-actions">
         {busy ? (
           <>
-            <span className="dsm-xdpool-channel-waiting">
+            <span className="dsm-onepool-channel-waiting">
               {ui.message ?? t?.('chan.signingIn') ?? 'Waiting for sign-in…'}
             </span>
             {ui.loginUrl !== undefined && (
               <a
-                className="dsm-xdpool-btn"
+                className="dsm-onepool-btn"
                 href={ui.loginUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -514,7 +514,7 @@ function ChannelRow({
                 {t?.('chan.openLogin') ?? 'Open the sign-in page'}
               </a>
             )}
-            <button type="button" className="dsm-xdpool-btn" onClick={onCancel}>
+            <button type="button" className="dsm-onepool-btn" onClick={onCancel}>
               {t?.('agg.clear') ?? 'Cancel'}
             </button>
           </>
@@ -526,11 +526,11 @@ function ChannelRow({
                shape) left a channel with no way to add a second account and no
                way to see what the click had done. */}
             {ownedElsewhere === true ? (
-              <span className="dsm-xdpool-channel-hint">
+              <span className="dsm-onepool-channel-hint">
                 {t?.('chan.ownedElsewhereRow') ?? '在「我们的免费模型」里登录'}
               </span>
             ) : (
-              <button type="button" className="dsm-xdpool-btn" onClick={onSignIn}>
+              <button type="button" className="dsm-onepool-btn" onClick={onSignIn}>
                 {t?.('chan.login') ?? 'Add account'}
               </button>
             )}
@@ -540,17 +540,17 @@ function ChannelRow({
                 the pack drives that page — so the advice has to sit next to the
                 button instead. */}
             {channel.smsHint === true && (
-              <span className="dsm-xdpool-channel-hint">{t?.('chan.loginSmsHint') ?? ''}</span>
+              <span className="dsm-onepool-channel-hint">{t?.('chan.loginSmsHint') ?? ''}</span>
             )}
             {/* What the button will actually do, before it is pressed. */}
             {channel.loginHint === 'doubao' && (
-              <span className="dsm-xdpool-channel-hint">{t?.('chan.doubaoHint') ?? ''}</span>
+              <span className="dsm-onepool-channel-hint">{t?.('chan.doubaoHint') ?? ''}</span>
             )}
             {ui.phase === 'done' && (
-              <span className="dsm-xdpool-channel-ok">{t?.('chan.done') ?? 'Account added'}</span>
+              <span className="dsm-onepool-channel-ok">{t?.('chan.done') ?? 'Account added'}</span>
             )}
             {ui.phase === 'failed' && (
-              <span className="dsm-xdpool-channel-error">
+              <span className="dsm-onepool-channel-error">
                 {ui.message ?? t?.('chan.failed') ?? 'Sign-in failed'}
               </span>
             )}

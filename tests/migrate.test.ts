@@ -11,7 +11,7 @@
  *
  * `adoptLegacyDataDir` is exercised against throwaway homes in `tmpdir()`, the
  * same discipline `provider-registration.test.ts` established — the real
- * `D:\dsh-home\.xdpool` must never be read or written by a test run.
+ * `D:\dsh-home\.onepool` must never be read or written by a test run.
  */
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -22,13 +22,14 @@ import {
   CURRENT_DATA_DIR_NAME,
   describeProviderIdRename,
   LEGACY_DATA_DIR_NAME,
+  LEGACY_DATA_DIR_NAMES,
   PROVIDER_ID_RENAMES,
 } from '../src/migrate.ts'
 /** Homes created during this file's run, removed afterwards. */
 const created: string[] = []
 /** A throwaway DSH home, plus the env that points the migration at it. */
 function throwawayHome(): { home: string; env: NodeJS.ProcessEnv } {
-  const home = mkdtempSync(join(tmpdir(), 'xdpool-migrate-'))
+  const home = mkdtempSync(join(tmpdir(), 'onepool-migrate-'))
   created.push(home)
   return { home, env: { DSH_HOME: home } as NodeJS.ProcessEnv }
 }
@@ -44,17 +45,26 @@ afterEach(() => {
   }
 })
 describe('the names this migration is built on', () => {
-  it('adopts the pre-rename directory into the current one', () => {
-    expect(LEGACY_DATA_DIR_NAME).toBe('.workbuddy-xdpool')
-    expect(CURRENT_DATA_DIR_NAME).toBe('.xdpool')
-    expect(LEGACY_DATA_DIR_NAME).not.toBe(CURRENT_DATA_DIR_NAME)
+  it('walks the legacy directories newest-first', () => {
+    // The immediate predecessor is what a real install has TODAY: upstream 2.x
+    // wrote `.xdpool`. `.workbuddy-xdpool` is two renames stale and is only
+    // reached on a machine that never upgraded past 1.x.
+    expect(LEGACY_DATA_DIR_NAMES[0]).toBe('.xdpool')
+    expect(LEGACY_DATA_DIR_NAMES).toContain('.workbuddy-xdpool')
+    expect(LEGACY_DATA_DIR_NAME).toBe('.xdpool')
+    expect(CURRENT_DATA_DIR_NAME).toBe('.onepool')
+    for (const legacy of LEGACY_DATA_DIR_NAMES) expect(legacy).not.toBe(CURRENT_DATA_DIR_NAME)
   })
   it('maps every pre-rename provider id to its replacement', () => {
     expect(PROVIDER_ID_RENAMES).toEqual({
-      'workbuddy-xdpool': 'xdpool',
-      'workbuddy-xdpool-global': 'xdpool-global',
-      'workbuddy-xdpool-aggregate': 'xdpool-aggregate',
-      'workbuddy-xdpool-free': 'xdpool-free',
+      'workbuddy-xdpool': 'onepool',
+      'workbuddy-xdpool-global': 'onepool-global',
+      'workbuddy-xdpool-aggregate': 'onepool-aggregate',
+      'workbuddy-xdpool-free': 'onepool-free',
+      'xdpool': 'onepool',
+      'xdpool-global': 'onepool-global',
+      'xdpool-aggregate': 'onepool-aggregate',
+      'xdpool-free': 'onepool-free',
     })
   })
 })
@@ -158,8 +168,10 @@ describe('adopting the pre-rename directory', () => {
 describe('the note about ids the plugin cannot rename for you', () => {
   it('names every old id, its replacement, and the file to edit', () => {
     const note = describeProviderIdRename()
-    expect(note).toContain('workbuddy-xdpool -> xdpool')
-    expect(note).toContain('workbuddy-xdpool-global -> xdpool-global')
+    expect(note).toContain('workbuddy-xdpool -> onepool')
+    expect(note).toContain('workbuddy-xdpool-global -> onepool-global')
+    // The hop a user upgrading from upstream 2.x actually has to make.
+    expect(note).toContain('xdpool -> onepool')
     // The two files a user actually has to touch.
     expect(note).toContain('agent-default-model.provider')
     expect(note).toContain('cordis.patch.yml')

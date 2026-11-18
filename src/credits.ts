@@ -30,7 +30,7 @@
  * HERE, dated, and a model absent from this table is reported as unpriced rather than
  * billed at a guessed rate.
  *
- * @module dsh-xdpool/credits
+ * @module dsh-onepool/credits
  */
 
 /**

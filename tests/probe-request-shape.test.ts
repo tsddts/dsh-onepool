@@ -72,7 +72,7 @@ function hostAssertSupportedHistory(messages: Captured['messages']): void {
 describe('the model probe request shape', () => {
   it('sends every message as an array of content blocks', async () => {
     const captured: Captured[] = []
-    await probeModelConnectivity(recordingStream(captured), 'xdpool', 'deepseek-v4.1-flash')
+    await probeModelConnectivity(recordingStream(captured), 'onepool', 'deepseek-v4.1-flash')
     expect(captured).toHaveLength(1)
     const messages = captured[0]!.messages
     expect(messages.length).toBeGreaterThan(0)
@@ -83,13 +83,13 @@ describe('the model probe request shape', () => {
 
   it('survives the host walk that used to throw content.some is not a function', async () => {
     const captured: Captured[] = []
-    await probeModelConnectivity(recordingStream(captured), 'xdpool', 'deepseek-v4.1-flash')
+    await probeModelConnectivity(recordingStream(captured), 'onepool', 'deepseek-v4.1-flash')
     expect(() => hostAssertSupportedHistory(captured[0]!.messages)).not.toThrow()
   })
 
   it('carries the probe prompt as text inside the block', async () => {
     const captured: Captured[] = []
-    await probeModelConnectivity(recordingStream(captured), 'xdpool', 'hy3')
+    await probeModelConnectivity(recordingStream(captured), 'onepool', 'hy3')
     const blocks = captured[0]!.messages[0]!.content as Array<{ type: string; text?: string }>
     expect(blocks[0]!.type).toBe('text')
     // A probe that silently stopped asking anything would pass the two
@@ -99,8 +99,8 @@ describe('the model probe request shape', () => {
 
   it('still reports the provider and model it was asked about', async () => {
     const captured: Captured[] = []
-    await probeModelConnectivity(recordingStream(captured), 'xdpool-global', 'step-5-preview')
-    expect(captured[0]!.provider).toBe('xdpool-global')
+    await probeModelConnectivity(recordingStream(captured), 'onepool-global', 'step-5-preview')
+    expect(captured[0]!.provider).toBe('onepool-global')
     expect(captured[0]!.model).toBe('step-5-preview')
   })
 })

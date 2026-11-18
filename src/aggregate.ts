@@ -28,7 +28,7 @@
  * rejected credentials back (a 401 body routinely repeats the key), and this
  * text is folded into messages the host writes to its durable session log.
  *
- * @module dsh-xdpool/aggregate
+ * @module dsh-onepool/aggregate
  */
 import {
   chatEndpoint,
@@ -81,7 +81,7 @@ const LISTING_TIMEOUT_MS = 15_000
 /** One turn's budget, matching the pool shim's idle ceiling. */
 const TURN_TIMEOUT_MS = 300_000
 /** Sent when the registry does not declare one (kimchi, and most of the roster). */
-const USER_AGENT = 'dsh-xdpool/2.1'
+const USER_AGENT = 'dsh-onepool/2.1'
 /** How much of an upstream body is quoted back in a failure message. */
 const BODY_SNIPPET_CHARS = 400
 /** A trimmed non-empty string, or ''. */
@@ -499,7 +499,7 @@ export class AggregateCatalog {
  * That throw happens while the adapters are being BUILT — before any
  * `registerAdapter` call — so it escaped to the outermost catch in `apply` and
  * every provider went unregistered. The user's only symptom was "the model
- * picker does not list xdpool", and nothing on screen said why.
+ * picker does not list onepool", and nothing on screen said why.
  *
  * `providerRows()` exists on `AggregateCatalog` and on no pool catalog, in every
  * state including empty, so the answer no longer depends on what happens to be

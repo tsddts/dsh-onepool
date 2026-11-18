@@ -28,7 +28,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] auth failure rotates the account'
+const MARKER = '[onepool-local] auth failure rotates the account'
 const source = readFileSync(PATH, 'utf8')
 if (source.includes(MARKER)) {
   console.log('already patched')
@@ -104,7 +104,7 @@ const OLD_THROW = new RegExp(
 )
 
 const NEW_THROW = join(
-  '        // [xdpool-local] Carry what the upstream actually said. "HTTP 403" alone',
+  '        // [onepool-local] Carry what the upstream actually said. "HTTP 403" alone',
   '        // is undiagnosable: it was a WAF verdict on the User-Agent, and the',
   '        // operator had no way to see that from a bare status code.',
   '        const authDetail = errorDetail(errorText).slice(0, 200);',

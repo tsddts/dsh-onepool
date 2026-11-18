@@ -1,5 +1,5 @@
 /**
- * Regression tests for the 1.9.0 report: "the model picker does not list xdpool
+ * Regression tests for the 1.9.0 report: "the model picker does not list onepool
  * any more".
  *
  * The structural defect behind that report is a HOST contract, not a bug in this
@@ -53,7 +53,7 @@ describe('a rejected directory entry cannot take the adapters down with it', () 
     /**
      * Three providers: the aggregate lane, the credential-free lane, and Doubao.
      *
-     * The two pool lanes used to register here as well, under ids `xdpool` / `xdpool-global`,
+     * The two pool lanes used to register here as well, under ids `onepool` / `onepool-global`,
      * while the scan-login lanes registered `buddy` / `workbuddy` — two idents for one account
      * pool, which is what put four groups in the model picker (#148). Their adapters are still
      * built and still serve the loopback shims; only the duplicate listing entry is gone, so
@@ -146,7 +146,7 @@ describe('the startup trace distinguishes the two failure shapes', () => {
     process.env.DSH_HOME = home
     try {
       const path = startupLogPath()
-      expect(path).toBe(join(home, '.xdpool', 'startup.log'))
+      expect(path).toBe(join(home, '.onepool', 'startup.log'))
       recordStartupNote('apply entered')
       recordStartupNote('directory REJECTED: LlmError: nope (INVALID_DIRECTORY)')
       const lines = readFile(path, 'utf8').trimEnd().split('\n')
@@ -189,13 +189,13 @@ describe('the host really is all-or-nothing (the reason for the split)', () => {
       }
       for (const entry of entries) directory.add(entry.provider)
     }
-    commit([{ provider: 'xdpool', displayName: 'WorkBuddy 池', settingsNs: 'ns', owned: false }])
-    expect(() => commit([{ provider: 'xdpool', displayName: 'WorkBuddy 池', settingsNs: 'ns', owned: false }]))
+    commit([{ provider: 'onepool', displayName: 'WorkBuddy 池', settingsNs: 'ns', owned: false }])
+    expect(() => commit([{ provider: 'onepool', displayName: 'WorkBuddy 池', settingsNs: 'ns', owned: false }]))
       .toThrow(/duplicate configurable provider/)
     // And a rejected group registers NOTHING: the second provider is still absent.
     const fresh = new Set<string>()
     void fresh
-    expect(directory.has('xdpool')).toBe(true)
+    expect(directory.has('onepool')).toBe(true)
     expect(directory.size).toBe(1)
   })
 })

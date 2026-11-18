@@ -12,7 +12,7 @@
  * contract when the caller did NOT ask for it: `wantsNonStreaming` is true only
  * for an explicit `stream: false`, so an absent flag keeps today's SSE reply.
  *
- * @module dsh-xdpool/non-streaming
+ * @module dsh-onepool/non-streaming
  */
 import { randomBytes } from 'node:crypto'
 import { parseUsage } from './stats.ts'
@@ -53,7 +53,7 @@ export interface TurnAccumulator {
 
 export function createTurnAccumulator(modelId?: string): TurnAccumulator {
   return {
-    id: `chatcmpl-xdpool-${randomBytes(6).toString('base64url')}`,
+    id: `chatcmpl-onepool-${randomBytes(6).toString('base64url')}`,
     created: Math.floor(Date.now() / 1000),
     model: modelId ?? '',
     text: '',

@@ -52,7 +52,7 @@ afterEach(async () => {
  */
 async function withHome<T>(run: (home: string) => Promise<T> | T): Promise<T> {
   const previous = process.env.DSH_HOME
-  const home = mkdtempSync(join(tmpdir(), 'xdpool-relay-'))
+  const home = mkdtempSync(join(tmpdir(), 'onepool-relay-'))
   process.env.DSH_HOME = home
   try {
     return await run(home)
@@ -66,7 +66,7 @@ describe('relay settings store', () => {
     const { readAggregateSettingsSync, aggregateSettingsPath } = await import('../src/store.ts')
     await withHome(async home => {
       expect(readAggregateSettingsSync().relay).toBeUndefined()
-      expect(aggregateSettingsPath()).toBe(join(home, '.xdpool', 'aggregate.json'))
+      expect(aggregateSettingsPath()).toBe(join(home, '.onepool', 'aggregate.json'))
     })
   })
   it('never writes outside the throwaway home it was given', async () => {
@@ -425,7 +425,7 @@ describe('relay listener', () => {
 })
 describe('relay route', () => {
   it('is a single loopback-guarded route in the plugin namespace', () => {
-    expect(POOL_RELAY_PATH).toBe('/plugins/dsh-xdpool/relay')
+    expect(POOL_RELAY_PATH).toBe('/plugins/dsh-onepool/relay')
     const source = readFileSync(new URL('../src/web-status.ts', import.meta.url), 'utf8')
     const at = source.indexOf('disposeRelay = ctx.webServer.register')
     expect(at).toBeGreaterThan(-1)

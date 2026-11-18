@@ -27,7 +27,7 @@
  * Rule 4 is what makes a reverse proxy work without configuration; rule 3 is what makes an
  * explicitly configured surface work even when the proxy rewrites `Host`.
  *
- * @module dsh-xdpool/origin-trust
+ * @module dsh-onepool/origin-trust
  */
 import type { IncomingMessage } from 'node:http'
 

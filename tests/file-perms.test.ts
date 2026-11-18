@@ -22,7 +22,7 @@ import { ensureSecretDir, writeSecretFile, writeSecretAt } from '../src/file-per
 const POSIX = process.platform !== 'win32'
 
 function tempDir(): string {
-  return mkdtempSync(join(tmpdir(), 'xdpool-perms-'))
+  return mkdtempSync(join(tmpdir(), 'onepool-perms-'))
 }
 
 /** Mode bits only (`stat.mode` also carries the file type). */
@@ -73,7 +73,7 @@ describe('a secret file is created owner-only', () => {
     if (!POSIX) return
     const parent = tempDir()
     try {
-      const dir = join(parent, 'nested', '.xdpool')
+      const dir = join(parent, 'nested', '.onepool')
       await ensureSecretDir(dir)
       expect(modeOf(dir)).toBe(0o700)
       // Idempotent: a second call on an existing directory is a no-op, not an

@@ -18,20 +18,20 @@
  * 3. A failed bind is reported as a failure, not as "off". The difference matters
  *    because "off" tells the user to turn on something that is already on.
  *
- * Class names: this page reuses the shell's generic `.dsm-xdpool-sec`
+ * Class names: this page reuses the shell's generic `.dsm-onepool-sec`
  * and `-sectitle` instead of redefining a section frame per panel. The few
  * classes it does own are prefixed `-gw-` and all live in `GATEWAY_CARD_CSS`.
  *
- * @module dsh-xdpool/client/GatewayPage
+ * @module dsh-onepool/client/GatewayPage
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { POOL_RELAY_PATH, type PoolWebRelayStatus } from '../status-paths.ts'
 import { copyText } from './clipboard.ts'
 import { GATEWAY_CARD_CSS } from './styles.ts'
 import { PageHero } from './shell.tsx'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 /** The translator the settings section injects. */
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 export interface GatewayPageProps {
   t?: Translate | undefined
 }
@@ -268,19 +268,19 @@ export function GatewayPage({ t }: GatewayPageProps) {
     ? ''
     : `Base URL: ${baseUrl}\nAPI Key: ${key}`
   return (
-    <div className="dsm-xdpool-gw">
+    <div className="dsm-onepool-gw">
       <style>{GATEWAY_CARD_CSS}</style>
       <PageHero
         title={t?.('gw.title') ?? 'Gateway'}
         sub={t?.('gw.sub') ?? ''}
         pills={<>
-          <span className="dsm-xdpool-pill" data-tone={enabled ? 'ok' : 'off'}>
+          <span className="dsm-onepool-pill" data-tone={enabled ? 'ok' : 'off'}>
             {enabled ? (t?.('gw.on') ?? 'On') : (t?.('gw.off') ?? 'Off')}
           </span>
           {/* Two different states, on purpose. "On but not listening" is a
               failure the user has to be able to see; collapsing it into "off"
               would tell them to switch on something that is already on. */}
-          <span className="dsm-xdpool-pill" data-tone={listening ? 'ok' : enabled ? 'warn' : 'off'}>
+          <span className="dsm-onepool-pill" data-tone={listening ? 'ok' : enabled ? 'warn' : 'off'}>
             {listening
               ? (t?.('gw.listening') ?? 'Listening')
               : enabled
@@ -290,23 +290,23 @@ export function GatewayPage({ t }: GatewayPageProps) {
         </>}
       />
       {error !== undefined
-        ? <p className="dsm-xdpool-panel-error">{error}</p>
+        ? <p className="dsm-onepool-panel-error">{error}</p>
         : null}
       {flash !== undefined
-        ? <p className="dsm-xdpool-gw-flash">{flash}</p>
+        ? <p className="dsm-onepool-gw-flash">{flash}</p>
         : null}
       {status?.error !== undefined && status.error !== ''
-        ? <p className="dsm-xdpool-panel-error">{status.error}</p>
+        ? <p className="dsm-onepool-panel-error">{status.error}</p>
         : null}
       {status === undefined && error === undefined
-        ? <p className="dsm-xdpool-panel-empty">{t?.('gw.loading') ?? 'Reading…'}</p>
+        ? <p className="dsm-onepool-panel-empty">{t?.('gw.loading') ?? 'Reading…'}</p>
         : null}
-      <div className="dsm-xdpool-sec">
-        <p className="dsm-xdpool-sectitle">{t?.('gw.switch') ?? 'Relay'}</p>
+      <div className="dsm-onepool-sec">
+        <p className="dsm-onepool-sectitle">{t?.('gw.switch') ?? 'Relay'}</p>
         <div>
           <button
             type="button"
-            className="dsm-xdpool-gw-btn"
+            className="dsm-onepool-gw-btn"
             data-on={enabled ? 'true' : 'false'}
             disabled={busy}
             onClick={() => { void write({ enabled: !enabled }) }}
@@ -314,11 +314,11 @@ export function GatewayPage({ t }: GatewayPageProps) {
             {enabled ? (t?.('gw.turnOff') ?? 'Turn off') : (t?.('gw.turnOn') ?? 'Turn on')}
           </button>
         </div>
-        <p className="dsm-xdpool-gw-note">{t?.('gw.switchHint') ?? ''}</p>
+        <p className="dsm-onepool-gw-note">{t?.('gw.switchHint') ?? ''}</p>
       </div>
-      <div className="dsm-xdpool-sec">
-        <p className="dsm-xdpool-sectitle">{t?.('gw.address') ?? 'Address'}</p>
-        <label className="dsm-xdpool-gw-field">
+      <div className="dsm-onepool-sec">
+        <p className="dsm-onepool-sectitle">{t?.('gw.address') ?? 'Address'}</p>
+        <label className="dsm-onepool-gw-field">
           <span>{t?.('gw.host') ?? 'Bind address'}</span>
           <select value={host} disabled={busy} onChange={event => { setHost(event.target.value) }}>
             {HOSTS.map(option => (
@@ -328,7 +328,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
             ))}
           </select>
         </label>
-        <label className="dsm-xdpool-gw-field">
+        <label className="dsm-onepool-gw-field">
           <span>{t?.('gw.port') ?? 'Port'}</span>
           <input
             type="number"
@@ -342,7 +342,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
         <div>
           <button
             type="button"
-            className="dsm-xdpool-gw-btn"
+            className="dsm-onepool-gw-btn"
             data-on="false"
             disabled={busy || !portUsable}
             onClick={() => { void write({ host, port: parsedPort }) }}
@@ -350,21 +350,21 @@ export function GatewayPage({ t }: GatewayPageProps) {
             {t?.('gw.saveAddress') ?? 'Save address'}
           </button>
         </div>
-        {portUsable ? null : <p className="dsm-xdpool-gw-warn">{t?.('gw.portInvalid') ?? ''}</p>}
+        {portUsable ? null : <p className="dsm-onepool-gw-warn">{t?.('gw.portInvalid') ?? ''}</p>}
         {listening && status?.endpoint !== undefined && status.endpoint !== ''
           ? (
             <>
-              <p className="dsm-xdpool-gw-note">
+              <p className="dsm-onepool-gw-note">
                 {t?.('gw.endpoint', { endpoint: status.endpoint }) ?? status.endpoint}
               </p>
               {/* Two forms, because clients disagree about who appends `/v1` —
                   see the `origin` comment above. Each button names the client
                   behaviour it suits so the reader picks, instead of guessing and
                   getting a 404 that blames the relay. */}
-              <div className="dsm-xdpool-gw-actions">
+              <div className="dsm-onepool-gw-actions">
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on={copiedField === 'base' ? 'true' : 'false'}
                   onClick={() => { void copy('base', origin) }}
                   title={t?.('gw.copyOriginHint') ?? '客户端自己会补 /v1 时用这个（大多数 SDK）'}
@@ -375,7 +375,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                 </button>
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on={copiedField === 'baseV1' ? 'true' : 'false'}
                   onClick={() => { void copy('baseV1', baseUrl) }}
                   title={t?.('gw.copyV1Hint') ?? '要填完整前缀时用这个（含 /v1）'}
@@ -386,7 +386,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                 </button>
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on={copiedField === 'all' ? 'true' : 'false'}
                   onClick={() => { void copy('all', configSnippet) }}
                   title={t?.('gw.copyAllHint') ?? 'base URL + key，可直接粘进客户端'}
@@ -399,22 +399,22 @@ export function GatewayPage({ t }: GatewayPageProps) {
               {/* The wire this relay speaks, stated plainly. A client set to the
                   Responses API asks for `/v1/responses`, which is NOT forwarded —
                   saying so here is cheaper than the 404 that says it later. */}
-              <p className="dsm-xdpool-gw-note">
+              <p className="dsm-onepool-gw-note">
                 {t?.('gw.wire') ?? '只支持 Chat Completions（/v1/chat/completions 与 /v1/models）。若客户端用 Responses 或 Anthropic 协议，请改成 Chat Completions。'}
               </p>
             </>
           )
           : null}
       </div>
-      <div className="dsm-xdpool-sec">
-        <p className="dsm-xdpool-sectitle">{t?.('gw.key') ?? 'Key'}</p>
-        <p className="dsm-xdpool-gw-key">
+      <div className="dsm-onepool-sec">
+        <p className="dsm-onepool-sectitle">{t?.('gw.key') ?? 'Key'}</p>
+        <p className="dsm-onepool-gw-key">
           {key === '' ? (t?.('gw.noKey') ?? 'No key yet') : revealed ? key : maskOf(key)}
         </p>
-        <div className="dsm-xdpool-gw-actions">
+        <div className="dsm-onepool-gw-actions">
           <button
             type="button"
-            className="dsm-xdpool-gw-btn"
+            className="dsm-onepool-gw-btn"
             data-on={copiedField === 'key' ? 'true' : 'false'}
             disabled={busy || key === ''}
             // Copies the REAL key even while it is masked on screen: the mask is a
@@ -428,7 +428,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
           </button>
           <button
             type="button"
-            className="dsm-xdpool-gw-btn"
+            className="dsm-onepool-gw-btn"
             data-on="false"
             disabled={busy || key === ''}
             onClick={() => { setRevealed(current => !current) }}
@@ -437,7 +437,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
           </button>
           <button
             type="button"
-            className="dsm-xdpool-gw-btn"
+            className="dsm-onepool-gw-btn"
             data-on="false"
             disabled={busy}
             onClick={() => { void write({ key: '' }) }}
@@ -445,19 +445,19 @@ export function GatewayPage({ t }: GatewayPageProps) {
             {t?.('gw.rotate') ?? 'Rotate'}
           </button>
         </div>
-        <p className="dsm-xdpool-gw-note">{t?.('gw.keyHint') ?? ''}</p>
+        <p className="dsm-onepool-gw-note">{t?.('gw.keyHint') ?? ''}</p>
       </div>
-      <div className="dsm-xdpool-sec">
-        <p className="dsm-xdpool-sectitle">{t?.('gw.share') ?? 'Shared models'}</p>
-        <p className="dsm-xdpool-gw-note">{t?.('gw.shareHint') ?? ''}</p>
+      <div className="dsm-onepool-sec">
+        <p className="dsm-onepool-sectitle">{t?.('gw.share') ?? 'Shared models'}</p>
+        <p className="dsm-onepool-gw-note">{t?.('gw.shareHint') ?? ''}</p>
         {candidates.length === 0
-          ? <p className="dsm-xdpool-gw-note">{t?.('gw.shareNone') ?? ''}</p>
+          ? <p className="dsm-onepool-gw-note">{t?.('gw.shareNone') ?? ''}</p>
           : (
             <>
-              <div className="dsm-xdpool-gw-actions">
+              <div className="dsm-onepool-gw-actions">
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on="false"
                   disabled={busy}
                   onClick={() => { setAllShared(true) }}
@@ -466,7 +466,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                 </button>
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on="false"
                   disabled={busy}
                   onClick={() => { setAllShared(false) }}
@@ -475,7 +475,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                 </button>
                 <button
                   type="button"
-                  className="dsm-xdpool-gw-btn"
+                  className="dsm-onepool-gw-btn"
                   data-on="true"
                   disabled={busy || !sharedDirty}
                   onClick={() => {
@@ -486,16 +486,16 @@ export function GatewayPage({ t }: GatewayPageProps) {
                 </button>
               </div>
               {sharedDirty
-                ? <p className="dsm-xdpool-gw-warn">{t?.('gw.shareDirty') ?? ''}</p>
+                ? <p className="dsm-onepool-gw-warn">{t?.('gw.shareDirty') ?? ''}</p>
                 : null}
               {/* Grouped by lane, because the same model name appears under
                   several channels and a flat list of 140 rows cannot say which
                   one a tick actually enables. */}
               {[...new Set(candidates.map(row => row.source))].map(source => (
-                <div className="dsm-xdpool-gw-group" key={source}>
-                  <p className="dsm-xdpool-gw-group-title">{source}</p>
+                <div className="dsm-onepool-gw-group" key={source}>
+                  <p className="dsm-onepool-gw-group-title">{source}</p>
                   {candidates.filter(row => row.source === source).map(row => (
-                    <label className="dsm-xdpool-gw-model" key={row.id}>
+                    <label className="dsm-onepool-gw-model" key={row.id}>
                       <input
                         type="checkbox"
                         checked={shared.has(row.id)}
@@ -506,7 +506,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                           is how the user picks, and the id is what they then have
                           to type into the client. `qfmodel` alone would make this
                           list unreadable. */}
-                      <span className="dsm-xdpool-gw-model-name">{row.name}</span>
+                      <span className="dsm-onepool-gw-model-name">{row.name}</span>
                       {/*
                         The id is a BUTTON, not text.
 
@@ -522,7 +522,7 @@ export function GatewayPage({ t }: GatewayPageProps) {
                       */}
                       <button
                         type="button"
-                        className="dsm-xdpool-gw-model-id dsm-xdpool-gw-copyid"
+                        className="dsm-onepool-gw-model-id dsm-onepool-gw-copyid"
                         data-on={copiedField === `id:${row.id}` ? 'true' : 'false'}
                         title={t?.('gw.copyModelIdHint') ?? '复制模型 id —— 客户端里要填的就是这个'}
                         onClick={(event) => {
@@ -545,9 +545,9 @@ export function GatewayPage({ t }: GatewayPageProps) {
             </>
           )}
       </div>
-      <div className="dsm-xdpool-sec">
-        <p className="dsm-xdpool-sectitle">{t?.('gw.usage') ?? 'Using it'}</p>
-        <p className="dsm-xdpool-gw-note">{t?.('gw.usageHint') ?? ''}</p>
+      <div className="dsm-onepool-sec">
+        <p className="dsm-onepool-sectitle">{t?.('gw.usage') ?? 'Using it'}</p>
+        <p className="dsm-onepool-gw-note">{t?.('gw.usageHint') ?? ''}</p>
       </div>
     </div>
   )

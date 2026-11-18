@@ -23,7 +23,7 @@
  * Translating here would put a second, drifting copy of the wire format between
  * the client and the code that is actually verified.
  *
- * @module dsh-xdpool/relay
+ * @module dsh-onepool/relay
  */
 import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createServer, request as httpRequest } from 'node:http'
@@ -244,7 +244,7 @@ export function createPoolRelay(options: PoolRelayOptions): PoolRelay {
     try {
       return options.read()
     } catch (error) {
-      logger?.warn(`xdpool relay: settings unreadable, treating the relay as off: ${String(error)}`)
+      logger?.warn(`onepool relay: settings unreadable, treating the relay as off: ${String(error)}`)
       return { enabled: false, host: RELAY_HOSTS[0] ?? '127.0.0.1', port: RELAY_DEFAULT_PORT, key: '' }
     }
   }
@@ -271,7 +271,7 @@ export function createPoolRelay(options: PoolRelayOptions): PoolRelay {
       const fail = (error: unknown): void => {
         const raw = error instanceof Error ? error.message : String(error)
         bindError = explainBindFailure(raw, host, port)
-        logger?.warn(`xdpool relay: cannot bind ${host}:${port} — ${raw}`)
+        logger?.warn(`onepool relay: cannot bind ${host}:${port} — ${raw}`)
         next.close(() => resolve())
       }
       next.once('error', fail)
@@ -290,7 +290,7 @@ export function createPoolRelay(options: PoolRelayOptions): PoolRelay {
         bindError = ''
         // The port actually bound is reported, not the requested one: port 0
         // asks the OS for a free port and the caller has to be told which.
-        logger?.info?.(`xdpool relay: listening on http://${host}:${address.port}/v1`)
+        logger?.info?.(`onepool relay: listening on http://${host}:${address.port}/v1`)
         resolve()
       })
     })
@@ -309,11 +309,11 @@ export function createPoolRelay(options: PoolRelayOptions): PoolRelay {
     // 503 says "off" where a 401 would tell the client its key is stale and
     // prompt for one that would not help.
     if (!settings.enabled) {
-      writeJson(res, 503, 'relay_disabled', 'the XD Pool LAN relay is switched off')
+      writeJson(res, 503, 'relay_disabled', 'the OnePool LAN relay is switched off')
       return
     }
     if (!keyMatches(bearerOf(req), settings.key)) {
-      writeJson(res, 401, 'relay_unauthorized', 'a valid XD Pool relay key is required')
+      writeJson(res, 401, 'relay_unauthorized', 'a valid OnePool relay key is required')
       return
     }
     const path = (req.url ?? '').split('?')[0] ?? ''

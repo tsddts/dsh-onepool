@@ -31,7 +31,7 @@ import {
 let home: string
 
 beforeEach(() => {
-  home = mkdtempSync(join(tmpdir(), 'xdpool-keys-'))
+  home = mkdtempSync(join(tmpdir(), 'onepool-keys-'))
   process.env['DSH_HOME'] = home
 })
 

@@ -12,7 +12,7 @@ import { describe, expect, it, beforeEach } from 'vitest'
  * These tests exercise the storage helpers against a real localStorage shim, because the bug was
  * never in the rendering — it was in what got written.
  */
-const KEY = 'dsh-xdpool.doubao-skipped-models.v1'
+const KEY = 'dsh-onepool.doubao-skipped-models.v1'
 
 /** A minimal localStorage, since the these helpers run in the browser half. */
 class MemoryStore {

@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] error detail on the HTTP-status throw'
+const MARKER = '[onepool-local] error detail on the HTTP-status throw'
 const source = readFileSync(PATH, 'utf8')
 if (source.includes(MARKER)) {
   console.log('already patched')

@@ -30,7 +30,7 @@
  * — harvests the jar. The dedicated profile persists, so the second visit usually needs no
  * scan at all.
  *
- * @module dsh-xdpool/doubao-auth
+ * @module dsh-onepool/doubao-auth
  */
 import { spawn, spawnSync, type ChildProcess } from 'node:child_process'
 import { existsSync, mkdirSync } from 'node:fs'

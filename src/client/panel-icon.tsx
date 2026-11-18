@@ -12,7 +12,7 @@
  * Props are the ones the shell passes: `size` (16 expanded, 18 in the 56px rail)
  * and `active`, so the mark can take the same weight as its neighbours.
  *
- * @module dsh-xdpool/client/panel-icon
+ * @module dsh-onepool/client/panel-icon
  */
 
 import type { ReactNode } from 'react'

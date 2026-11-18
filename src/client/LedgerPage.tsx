@@ -21,16 +21,16 @@
  * exist: a dashboard that looks durable and resets at midnight is the kind of
  * thing users stop trusting after exactly one midnight.
  *
- * @module dsh-xdpool/client/LedgerPage
+ * @module dsh-onepool/client/LedgerPage
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { POOL_USAGE_PATH } from '../status-paths.ts'
 import type { UsageAccountRow, UsageCall, UsageSummary } from '../stats.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 import { LEDGER_CARD_CSS } from './styles.ts'
 import { KpiCard, PageHero } from './shell.tsx'
 /** The translator the settings section injects. */
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 export interface LedgerPageProps {
   t?: Translate | undefined
   /**
@@ -221,26 +221,26 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
         sub={t?.('ledger.sub') ?? 'What this machine actually sent and got back, since the pool last started.'}
         pills={(
           <>
-            <span className="dsm-xdpool-pill">
+            <span className="dsm-onepool-pill">
               {t?.('ledger.window', { count: summary?.samples ?? 0 }) ?? `last ${summary?.samples ?? 0} calls`}
             </span>
-            <span className="dsm-xdpool-pill" data-tone="off">
+            <span className="dsm-onepool-pill" data-tone="off">
               {t?.('ledger.memoryOnly') ?? 'cleared on restart'}
             </span>
           </>
         )}
       />
       {failed
-        ? <p className="dsm-xdpool-note" role="alert">
+        ? <p className="dsm-onepool-note" role="alert">
             {t?.('ledger.failed') ?? 'Could not read the usage numbers. The pool itself is unaffected.'}
           </p>
         : null}
       {summary === undefined
-        ? <p className="dsm-xdpool-note">
+        ? <p className="dsm-onepool-note">
             {t?.('ledger.loading') ?? 'Reading the recorded calls…'}
           </p>
         : <>
-            <div className="dsm-xdpool-kpis">
+            <div className="dsm-onepool-kpis">
               <KpiCard
                 label={t?.('ledger.tokens') ?? 'Tokens'}
                 value={summary.usageReported ? fmtInt(totals?.input ?? 0) : (t?.('ledger.notReported') ?? 'not reported')}
@@ -283,24 +283,24 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
               />
             </div>
             {details.length === 0
-              ? <p className="dsm-xdpool-note">
+              ? <p className="dsm-onepool-note">
                   {t?.('ledger.empty') ?? 'No calls recorded yet. Start a conversation and this fills in.'}
                 </p>
               : <>
-                  <section className="dsm-xdpool-sec">
-                    <h3 className="dsm-xdpool-sectitle">{t?.('ledger.recent') ?? 'Recent calls'}</h3>
-                    <div className="dsm-xdpool-tablewrap">
-                      <table className="dsm-xdpool-table">
+                  <section className="dsm-onepool-sec">
+                    <h3 className="dsm-onepool-sectitle">{t?.('ledger.recent') ?? 'Recent calls'}</h3>
+                    <div className="dsm-onepool-tablewrap">
+                      <table className="dsm-onepool-table">
                         <thead>
                           <tr>
                             <th>{t?.('ledger.colTime') ?? 'Time'}</th>
                             <th>{t?.('ledger.colChannel') ?? 'Channel'}</th>
                             <th>{t?.('ledger.colModel') ?? 'Model'}</th>
                             <th>{t?.('ledger.colAccount') ?? 'Account'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colIn') ?? 'In'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colOut') ?? 'Out'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colCached') ?? 'Cached'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colTtft') ?? 'TTFT'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colIn') ?? 'In'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colOut') ?? 'Out'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colCached') ?? 'Cached'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colTtft') ?? 'TTFT'}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -308,14 +308,14 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
                             <tr key={`${entry.turnId}:${String(entry.at)}:${String(index)}`} data-ok={entry.ok}>
                               <td>{fmtClock(entry.at)}</td>
                               <td>{channelLabel(entry, t)}</td>
-                              <td className="dsm-xdpool-ellipsis" title={entry.model}>{entry.model}</td>
-                              <td className="dsm-xdpool-ellipsis" title={entry.account ?? ''}>
+                              <td className="dsm-onepool-ellipsis" title={entry.model}>{entry.model}</td>
+                              <td className="dsm-onepool-ellipsis" title={entry.account ?? ''}>
                                 {entry.account ?? (t?.('ledger.noAccount') ?? '—')}
                               </td>
                               {tokenCells(entry).map((cell, cellIndex) => (
-                                <td className="dsm-xdpool-num" key={String(cellIndex)}>{cell}</td>
+                                <td className="dsm-onepool-num" key={String(cellIndex)}>{cell}</td>
                               ))}
-                              <td className="dsm-xdpool-num">
+                              <td className="dsm-onepool-num">
                                 {entry.ttftMs === undefined ? '—' : fmtMs(entry.ttftMs)}
                               </td>
                             </tr>
@@ -324,33 +324,33 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
                       </table>
                     </div>
                   </section>
-                  <section className="dsm-xdpool-sec">
-                    <h3 className="dsm-xdpool-sectitle">{t?.('ledger.accounts') ?? 'By account'}</h3>
-                    <div className="dsm-xdpool-tablewrap">
-                      <table className="dsm-xdpool-table">
+                  <section className="dsm-onepool-sec">
+                    <h3 className="dsm-onepool-sectitle">{t?.('ledger.accounts') ?? 'By account'}</h3>
+                    <div className="dsm-onepool-tablewrap">
+                      <table className="dsm-onepool-table">
                         <thead>
                           <tr>
                             <th>{t?.('ledger.colAccount') ?? 'Account'}</th>
                             <th>{t?.('ledger.colChannel') ?? 'Channel'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colTurns') ?? 'Turns'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colCalls') ?? 'Calls'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colIn') ?? 'In'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colOut') ?? 'Out'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colTurns') ?? 'Turns'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colCalls') ?? 'Calls'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colIn') ?? 'In'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colOut') ?? 'Out'}</th>
                             <th>{t?.('ledger.colModels') ?? 'Usually runs'}</th>
                           </tr>
                         </thead>
                         <tbody>
                           {accounts.map(row => (
                             <tr key={`${row.region}:${row.account}`}>
-                              <td className="dsm-xdpool-ellipsis" title={row.account}>
+                              <td className="dsm-onepool-ellipsis" title={row.account}>
                                 {row.account === '' ? (t?.('ledger.unattributed') ?? '(unattributed)') : row.account}
                               </td>
                               <td>{channelLabel(row, t)}</td>
-                              <td className="dsm-xdpool-num">{fmtInt(row.turns)}</td>
-                              <td className="dsm-xdpool-num">{fmtInt(row.calls)}</td>
-                              <td className="dsm-xdpool-num">{fmtInt(row.inputTokens)}</td>
-                              <td className="dsm-xdpool-num">{fmtInt(row.outputTokens)}</td>
-                              <td className="dsm-xdpool-ellipsis" title={row.topModels.join(', ')}>
+                              <td className="dsm-onepool-num">{fmtInt(row.turns)}</td>
+                              <td className="dsm-onepool-num">{fmtInt(row.calls)}</td>
+                              <td className="dsm-onepool-num">{fmtInt(row.inputTokens)}</td>
+                              <td className="dsm-onepool-num">{fmtInt(row.outputTokens)}</td>
+                              <td className="dsm-onepool-ellipsis" title={row.topModels.join(', ')}>
                                 {row.topModels.join(', ') || '—'}
                               </td>
                             </tr>
@@ -359,18 +359,18 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
                       </table>
                     </div>
                   </section>
-                  <section className="dsm-xdpool-sec">
-                    <h3 className="dsm-xdpool-sectitle">{t?.('ledger.models') ?? 'By model'}</h3>
-                    <div className="dsm-xdpool-tablewrap">
-                      <table className="dsm-xdpool-table">
+                  <section className="dsm-onepool-sec">
+                    <h3 className="dsm-onepool-sectitle">{t?.('ledger.models') ?? 'By model'}</h3>
+                    <div className="dsm-onepool-tablewrap">
+                      <table className="dsm-onepool-table">
                         <thead>
                           <tr>
                             <th>{t?.('ledger.colChannel') ?? 'Channel'}</th>
                             <th>{t?.('ledger.colModel') ?? 'Model'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colCalls') ?? 'Calls'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colTps') ?? 'tok/s'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colTtft') ?? 'TTFT'}</th>
-                            <th className="dsm-xdpool-num">{t?.('ledger.colShare') ?? 'Share'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colCalls') ?? 'Calls'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colTps') ?? 'tok/s'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colTtft') ?? 'TTFT'}</th>
+                            <th className="dsm-onepool-num">{t?.('ledger.colShare') ?? 'Share'}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -388,13 +388,13 @@ export function LedgerPage({ t, usage: shared }: LedgerPageProps) {
                                   that included another's.
                                 */}
                                 <td>{channelLabel(row, t)}</td>
-                                <td className="dsm-xdpool-ellipsis" title={row.model}>{row.model}</td>
-                                <td className="dsm-xdpool-num">{fmtInt(row.calls)}</td>
-                                <td className="dsm-xdpool-num">{fmtTps(row.tps)}</td>
-                                <td className="dsm-xdpool-num">
+                                <td className="dsm-onepool-ellipsis" title={row.model}>{row.model}</td>
+                                <td className="dsm-onepool-num">{fmtInt(row.calls)}</td>
+                                <td className="dsm-onepool-num">{fmtTps(row.tps)}</td>
+                                <td className="dsm-onepool-num">
                                   {row.avgTtftMs === null ? '—' : fmtMs(row.avgTtftMs)}
                                 </td>
-                                <td className="dsm-xdpool-num">{summary.usageReported ? `${share}%` : '—'}</td>
+                                <td className="dsm-onepool-num">{summary.usageReported ? `${share}%` : '—'}</td>
                               </tr>
                             )
                           })}

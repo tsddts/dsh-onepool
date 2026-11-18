@@ -25,7 +25,7 @@
  * to the paste, and pretending otherwise would leave the panel offering a button that does
  * nothing.
  *
- * @module dsh-xdpool/electron-bridge
+ * @module dsh-onepool/electron-bridge
  */
 
 /** What the host allows, as far as it can be established from in here. */

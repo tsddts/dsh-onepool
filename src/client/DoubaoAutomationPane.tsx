@@ -15,13 +15,13 @@
  * campaign tasks that ARE claimable — and one of those is the daily sign-in. The pane says that
  * rather than promising a check-in that cannot happen.
  *
- * @module dsh-xdpool/client/DoubaoAutomationPane
+ * @module dsh-onepool/client/DoubaoAutomationPane
  */
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react'
 import { POOL_DOUBAO_AUTOMATION_PATH } from '../status-paths.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** The automation state the route reports. */
 interface AutomationState {
@@ -93,28 +93,28 @@ export function DoubaoAutomationPane({ t }: { readonly t?: Translate | undefined
   const enabled = state.enabled === true
   const lastRun = agoText(state.lastRunAt)
   return (
-    <div className="dsm-xdpool-cpool-auto">
+    <div className="dsm-onepool-cpool-auto">
       <button
         type="button"
-        className="dsm-xdpool-region-tool"
+        className="dsm-onepool-region-tool"
         aria-expanded={open}
         onClick={() => { setOpen(!open) }}
       >
-        <span className="dsm-xdpool-region-tool-caret" aria-hidden="true">▸</span>
+        <span className="dsm-onepool-region-tool-caret" aria-hidden="true">▸</span>
         <span>{t?.('row.autoTitle') ?? '积分自动化'}</span>
-        <span className="dsm-xdpool-region-tool-value">
+        <span className="dsm-onepool-region-tool-value">
           {enabled ? (t?.('row.autoOn') ?? '已开启') : (t?.('row.autoOff') ?? '未开启')}
         </span>
       </button>
-      <div className="dsm-xdpool-region-pane" hidden={!open}>
-        <p className="dsm-xdpool-region-pane-warn">
+      <div className="dsm-onepool-region-pane" hidden={!open}>
+        <p className="dsm-onepool-region-pane-warn">
           豆包的签到自己点了会报系统错误（710010702），所以这里领的是「每日签到」等任务里
           已经完成、可以领的积分。开启后每 6 小时自动领一次。
         </p>
-        <div className="dsm-xdpool-cpool-autorow">
+        <div className="dsm-onepool-cpool-autorow">
           <button
             type="button"
-            className="dsm-xdpool-btn"
+            className="dsm-onepool-btn"
             data-tone={enabled ? undefined : 'primary'}
             disabled={busy}
             onClick={() => { void send({ enabled: !enabled }) }}
@@ -125,7 +125,7 @@ export function DoubaoAutomationPane({ t }: { readonly t?: Translate | undefined
           </button>
           <button
             type="button"
-            className="dsm-xdpool-btn"
+            className="dsm-onepool-btn"
             disabled={busy}
             onClick={() => { void send({}) }}
           >
@@ -133,7 +133,7 @@ export function DoubaoAutomationPane({ t }: { readonly t?: Translate | undefined
           </button>
         </div>
         {lastRun === undefined ? null : (
-          <p className="dsm-xdpool-region-pane-note">
+          <p className="dsm-onepool-region-pane-note">
             上次执行：{lastRun}
             {typeof state.lastClaimed === 'number' ? `，领到 ${String(state.lastClaimed)} 项` : ''}
             {state.lastNote === undefined ? '' : `（${state.lastNote}）`}
@@ -141,7 +141,7 @@ export function DoubaoAutomationPane({ t }: { readonly t?: Translate | undefined
         )}
         {lastRun === undefined && state.lastNote === undefined ? null : null}
         {state.lastNote !== undefined && lastRun === undefined ? (
-          <p className="dsm-xdpool-region-pane-note">{state.lastNote}</p>
+          <p className="dsm-onepool-region-pane-note">{state.lastNote}</p>
         ) : null}
       </div>
     </div>

@@ -33,7 +33,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] Whether this CodeArts credential\'s own STS expiry has passed'
+const MARKER = '[onepool-local] Whether this CodeArts credential\'s own STS expiry has passed'
 
 const source = readFileSync(PATH, 'utf8')
 if (source.includes(MARKER)) {
@@ -80,7 +80,7 @@ insertBefore('async function fetchCodeArtsAccountInfoDetailed(', [
 
 // ---------------------------------------------------------------- 2. the heal
 insertBefore('async function collectCreditBalances(', [
-  '// [xdpool-local] Re-mint any CodeArts credential whose own STS expiry has',
+  '// [onepool-local] Re-mint any CodeArts credential whose own STS expiry has',
   '// already passed, before the caller reports it as a failure.',
   '//',
   '// Best-effort by design: every failure is logged and swallowed. A refresh that',
@@ -115,7 +115,7 @@ insertBefore('async function collectCreditBalances(', [
 // the three RPC families that touch a CodeArts credential gets it. Inserted after the
 // declaration line, not before it.
 const HEAL_BLOCK = [
-  '    // [xdpool-local] One heal for every CodeArts entry point, before the switch.',
+  '    // [onepool-local] One heal for every CodeArts entry point, before the switch.',
   '    //',
   '    // A CodeArts credential lives two hours; its refresh_token behind it lives',
   '    // ~30 days. Three separate RPC families read that credential and each of',
@@ -154,7 +154,7 @@ const OLD_ERR = '              if (!result.ok) return { balance: null, error: `\
 const ESC = (s) => s.replace(/[^\x20-\x7e]/gu, ch => '\\u' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'))
 const NEW_ERR = [
   '              if (!result.ok) {',
-  '                // [xdpool-local] An expired STS token is the commonest CodeArts',
+  '                // [onepool-local] An expired STS token is the commonest CodeArts',
   '                // failure, and the raw APIG message does not say what to do about',
   '                // it. Name the condition, then name the one action that fixes it.',
   '                // Only when it IS expired: a 5xx keeps its original wording.',

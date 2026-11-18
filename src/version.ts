@@ -9,6 +9,6 @@
  * `tests/version-sync.test.ts` fails when this drifts from `package.json`, so
  * the release checklist cannot ship a card that calls itself the wrong version.
  *
- * @module dsh-xdpool/version
+ * @module dsh-onepool/version
  */
 export const POOL_VERSION = '2.7.5'

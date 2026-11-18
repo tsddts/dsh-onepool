@@ -107,7 +107,7 @@ function providerLine() {
 function registerSettings(service: Record<string, unknown>, ctx: { effect: (fn: () => unknown) => void; logger: { warn: (m: string) => void } }) {
   const installed: string[] = []
   if (typeof service.installSection === 'function') {
-    ;(service.installSection as (...args: unknown[]) => unknown)('ctx', 'xdpool', {}, {}, {})
+    ;(service.installSection as (...args: unknown[]) => unknown)('ctx', 'onepool', {}, {}, {})
     installed.push('installSection')
   }
   if (typeof service.configure === 'function') {
@@ -115,7 +115,7 @@ function registerSettings(service: Record<string, unknown>, ctx: { effect: (fn: 
     installed.push('configure')
   }
   if (typeof service.installSection !== 'function' && typeof service.configure !== 'function') {
-    ctx.logger.warn('dsh-xdpool: settings service exposes neither installSection nor configure; the card will not mount')
+    ctx.logger.warn('dsh-onepool: settings service exposes neither installSection nor configure; the card will not mount')
     installed.push('none')
   }
   return installed
@@ -143,7 +143,7 @@ describe('settings registration across both host lines', () => {
     const installed = registerSettings(service, { effect: () => {}, logger: { warn: () => {} } })
 
     expect(installed).toEqual(['installSection'])
-    expect(calls).toEqual(['installSection:xdpool'])
+    expect(calls).toEqual(['installSection:onepool'])
     expect(calls.some(call => call.startsWith('configure'))).toBe(false)
   })
 
@@ -276,9 +276,9 @@ describe('the browser entry stays loadable on both lines', () => {
     // configForms.get() is addressed by the HOST entry id; settingsScope.bind()
     // by the namespace installSection registered. Swapping them binds the card
     // to a namespace nothing serves, so every save silently no-ops.
-    expect(clientSource).toContain('XDPOOL_ENTRY_ID')
-    expect(clientSource).toContain("XDPOOL_SETTINGS_NS")
-    expect(clientSource).toContain("scope.bind({ namespace: XDPOOL_SETTINGS_NS })")
+    expect(clientSource).toContain('ONEPOOL_ENTRY_ID')
+    expect(clientSource).toContain("ONEPOOL_SETTINGS_NS")
+    expect(clientSource).toContain("scope.bind({ namespace: ONEPOOL_SETTINGS_NS })")
   })
 })
 
@@ -312,11 +312,11 @@ describe('the settings page renders on both kernel lines', () => {
     // their own, because a card that duplicated the region's own summary two
     // levels up was the layout the user asked to be replaced.
     const shell = readFileSync(new URL('../src/client/shell.tsx', import.meta.url), 'utf8')
-    expect(shell).toContain('className="dsm-xdpool-body"')
+    expect(shell).toContain('className="dsm-onepool-body"')
     expect(card).toContain('</PoolShell>')
-    expect(card).toMatch(/dsm-xdpool-card dsm-xdpool-usage/)
-    expect(card).toMatch(/dsm-xdpool-regions/)
-    expect(card).toMatch(/dsm-xdpool-region-grid/)
+    expect(card).toMatch(/dsm-onepool-card dsm-onepool-usage/)
+    expect(card).toMatch(/dsm-onepool-regions/)
+    expect(card).toMatch(/dsm-onepool-region-grid/)
     // Both lanes render, always — the tab that only appeared after a sign-in
     // is the failure mode here.
     expect(card).toContain('REGION_CARDS.map(region =>')
@@ -341,7 +341,7 @@ describe('the settings page renders on both kernel lines', () => {
     // Every pane it names has to exist with the same id, or the control points
     // at nothing.
     for (const suffix of ['accounts', 'models', 'dist', 'auto']) {
-      const id = `\`dsm-xdpool-\${region}-${suffix}\``
+      const id = `\`dsm-onepool-\${region}-${suffix}\``
       expect(card, `pane id ${suffix} must be declared`).toContain(id)
       expect(card, `pane ${suffix} must be rendered`).toContain(`id={` + suffix + 'PaneId}')
     }
@@ -371,19 +371,28 @@ describe('the settings page renders on both kernel lines', () => {
     const client = readFileSync(new URL('../src/client/index.tsx', import.meta.url), 'utf8')
     expect(client).toContain('installNavIcon')
     expect(client).toContain('MutationObserver')
-    expect(client).toContain('data-dsh-xdpool-nav-icon')
+    expect(client).toContain('data-dsh-onepool-nav-icon')
     expect(client).toContain("mask-image")
   })
 
-  it('shows the short nav label in the settings column', () => {
+  it('shows a short nav label in the settings column', () => {
     // The nav column is narrow, so the row uses a dedicated short label while
     // the card body keeps the full product name.
     const client = readFileSync(new URL('../src/client/index.tsx', import.meta.url), 'utf8')
     expect(client).toContain("t('row.navLabel')")
     const locales = readFileSync(new URL('../src/client/locales.ts', import.meta.url), 'utf8')
-    const labels = locales.match(/'row\.navLabel': '([^']+)'/g) ?? []
+    const labels = (locales.match(/'row\.navLabel': '([^']+)'/g) ?? [])
+    // One per table (en, zh).
     expect(labels.length).toBe(2)
-    for (const line of labels) expect(line).toContain('XD Pool')
+    // Each must actually carry a name. This fork brands the row 一泓 in Chinese and
+    // OnePool in English, so pinning a single literal would only re-assert the
+    // upstream name; what has to hold is that neither table is blank and that both
+    // are SHORT — the column is what imposes the limit, not the word.
+    for (const line of labels) {
+      const value = /'([^']+)'$/u.exec(line)?.[1] ?? ''
+      expect(value.trim().length).toBeGreaterThan(1)
+      expect(value.trim().length).toBeLessThanOrEqual(12)
+    }
   })
 })
 

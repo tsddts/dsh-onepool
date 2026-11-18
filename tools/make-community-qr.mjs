@@ -24,7 +24,7 @@
  * Not part of the build: a build step that needs Pillow would break
  * `pnpm install && pnpm build` on a machine without Python. Run it by hand:
  *
- *   XDPOOL_PYTHON=<python with Pillow> node tools/make-community-qr.mjs
+ *   ONEPOOL_PYTHON=<python with Pillow> node tools/make-community-qr.mjs
  */
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
@@ -32,7 +32,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 const OUT = join(ROOT, 'src', 'client', 'community-qr.ts')
-const PYTHON = process.env['XDPOOL_PYTHON'] ?? 'python'
+const PYTHON = process.env['ONEPOOL_PYTHON'] ?? 'python'
 
 /**
  * Crop boxes in SOURCE pixels, measured from the files rather than guessed:
@@ -109,7 +109,7 @@ const template = `/**
  * Why embedded rather than served from \`assets/\`: the browser half ships as
  * \`lib/client.js\`, one script the host loads into the settings dialog. Nothing
  * in that script can resolve a path relative to the package, and the plugin's
- * \`/plugins/dsh-xdpool/*\` routes are registered by the host half — adding one
+ * \`/plugins/dsh-onepool/*\` routes are registered by the host half — adding one
  * more route for a picture that never changes would mean a second thing to keep
  * working across two host lines. A data URI has no path to get wrong.
  *
@@ -131,7 +131,7 @@ const template = `/**
  * expired code fails SILENTLY — it scans, then the join is refused — which is
  * why both panels carry a line telling the reader to ask for a new one.
  *
- * @module dsh-xdpool/client/community-qr
+ * @module dsh-onepool/client/community-qr
  */
 
 /** Edge length of the embedded WeChat code, in pixels. */

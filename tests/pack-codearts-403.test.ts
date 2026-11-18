@@ -16,7 +16,7 @@
  *   4. The throw discarded the upstream body, leaving `HTTP 403` and nothing else.
  *
  * These are source assertions against the vendored bundle. It is a build artifact
- * of another repository patched in place with `[xdpool-local]` markers, so the
+ * of another repository patched in place with `[onepool-local]` markers, so the
  * risk is not "does the logic work" — it is "does the patch still exist after the
  * next re-vendor", which is exactly when nobody re-runs the live experiment.
  */

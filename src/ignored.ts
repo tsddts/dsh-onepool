@@ -9,12 +9,12 @@
  * come back when the desktop app writes a fresh `.info` file for it.
  *
  * It lives in a plugin-owned file rather than in the settings document for one
- * practical reason: the CLI has no settings service. `dsh-xdpool
+ * practical reason: the CLI has no settings service. `dsh-onepool
  * ignore <id>` runs without a host, so a settings-only list could be written by
  * the card and never by the CLI. One file, read by both halves, keeps the two
  * views of "which accounts are ignored" identical by construction.
  *
- * @module dsh-xdpool/ignored
+ * @module dsh-onepool/ignored
  */
 
 import { readFile, rename } from 'node:fs/promises'
@@ -25,7 +25,7 @@ import { ensureSecretDir, writeSecretFile } from './file-perms.ts'
 import type { PoolWebIgnoredAccount } from './status-paths.ts'
 
 /** Directory holding this plugin's own state (imported snapshots, ignore list). */
-export const PLUGIN_DATA_DIR_NAME = '.xdpool'
+export const PLUGIN_DATA_DIR_NAME = '.onepool'
 
 /** File holding the permanent ignore list, inside {@link pluginDataDir}. */
 export const IGNORED_FILE_NAME = 'ignored.json'

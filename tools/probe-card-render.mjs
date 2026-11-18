@@ -141,13 +141,13 @@ const classOf = element => String(element.props?.className ?? '')
 let tree = render()
 let all = walk(tree)
 
-const group = all.find(el => classOf(el).includes('dsm-xdpool-group'))
+const group = all.find(el => classOf(el).includes('dsm-onepool-group'))
 if (group === undefined) throw new Error('the group button is not in the rendered tree')
 if (group.type !== 'button') throw new Error(`the group control is a <${String(group.type)}>, expected <button>`)
 if (typeof group.props.onClick !== 'function') throw new Error('the group button has no click handler')
-const star = all.find(el => el.type === 'a' && classOf(el).includes('dsm-xdpool-star'))
+const star = all.find(el => el.type === 'a' && classOf(el).includes('dsm-onepool-star'))
 if (star === undefined) throw new Error('the star button disappeared')
-if (all.some(el => classOf(el).includes('dsm-xdpool-groupmask'))) {
+if (all.some(el => classOf(el).includes('dsm-onepool-groupmask'))) {
   throw new Error('the dialog rendered before it was opened')
 }
 console.log('closed: group button + star present, dialog absent')
@@ -159,7 +159,7 @@ harness.clear()
 tree = render()
 all = walk(tree)
 
-const panel = all.find(el => classOf(el).includes('dsm-xdpool-groupinline'))
+const panel = all.find(el => classOf(el).includes('dsm-onepool-groupinline'))
 if (panel === undefined) throw new Error('clicking the group button did not open the panel')
 if (panel.props.role !== 'dialog') throw new Error('the panel does not declare role="dialog"')
 // NOT modal any more: it expands in the flow under the tab strip rather than
@@ -169,7 +169,7 @@ if (panel.props['aria-modal'] === 'true') throw new Error('an in-flow disclosure
 // TWO codes now — a WeChat bot and a QQ group — each with its own caption. The
 // probe checks both, because a dialog that renders one image and drops the other
 // is exactly the half-broken state a single-image assertion cannot see.
-const images = all.filter(el => classOf(el).includes('dsm-xdpool-groupqr'))
+const images = all.filter(el => classOf(el).includes('dsm-onepool-groupqr'))
 if (images.length !== 2) throw new Error(`the dialog should carry two QR images, found ${String(images.length)}`)
 for (const [index, image] of images.entries()) {
   const label = `QR #${String(index + 1)}`
@@ -188,7 +188,7 @@ if (String(images[0].props.src) === String(images[1].props.src)) {
 const src = String(images[0].props.src ?? '')
 
 const close = all.find(el => typeof el.props?.onClick === 'function'
-  && classOf(el).includes('dsm-xdpool-groupclose'))
+  && classOf(el).includes('dsm-onepool-groupclose'))
 if (close === undefined) throw new Error('the panel has no close control besides Escape')
 console.log(`open: panel rendered, QR ${String(src.length)} chars`)
 
@@ -197,7 +197,7 @@ console.log(`open: panel rendered, QR ${String(src.length)} chars`)
 close.props.onClick({ stopPropagation() {} })
 harness.clear()
 all = walk(render())
-if (all.some(el => classOf(el).includes('dsm-xdpool-groupinline'))) {
+if (all.some(el => classOf(el).includes('dsm-onepool-groupinline'))) {
   throw new Error('the panel did not close')
 }
 console.log('closed again from the close button')

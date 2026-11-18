@@ -125,7 +125,7 @@ describe('per-channel roll-up', () => {
 describe('reading the pack ledger', () => {
   it('reads cacheReadTokens as its own tier', async () => {
     // The field the old code ignored entirely.
-    const dir = await mkdtemp(join(tmpdir(), 'xdpool-ledger-'))
+    const dir = await mkdtemp(join(tmpdir(), 'onepool-ledger-'))
     try {
       await mkdir(join(dir, 'channel-pack'), { recursive: true })
       await writeFile(join(dir, 'channel-pack', 'token-ledger.json'), JSON.stringify({
@@ -155,7 +155,7 @@ describe('reading the pack ledger', () => {
   })
 
   it('excludes relay traffic, but counts it so the exclusion is visible', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'xdpool-ledger-'))
+    const dir = await mkdtemp(join(tmpdir(), 'onepool-ledger-'))
     try {
       await mkdir(join(dir, 'channel-pack'), { recursive: true })
       await writeFile(join(dir, 'channel-pack', 'token-ledger.json'), JSON.stringify({
@@ -181,7 +181,7 @@ describe('reading the pack ledger', () => {
   })
 
   it('counts unparseable keys instead of silently dropping them', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'xdpool-ledger-'))
+    const dir = await mkdtemp(join(tmpdir(), 'onepool-ledger-'))
     try {
       await mkdir(join(dir, 'channel-pack'), { recursive: true })
       // Dated "today" rather than a literal, because the window is the LOCAL calendar day
@@ -200,7 +200,7 @@ describe('reading the pack ledger', () => {
   })
 
   it('reports "empty" when there is no ledger, never a confident zero', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'xdpool-ledger-'))
+    const dir = await mkdtemp(join(tmpdir(), 'onepool-ledger-'))
     try {
       const report = await readCreditSpend({ home: dir, days: 1, rateOf: () => DS })
       expect(report.empty).toBe(true)
@@ -213,7 +213,7 @@ describe('reading the pack ledger', () => {
 describe('the day window means the LOCAL calendar day', () => {
   /** Write a ledger with one entry on each of two adjacent local days. */
   async function ledgerWithTwoDays(): Promise<string> {
-    const dir = await mkdtemp(join(tmpdir(), 'xdpool-day-'))
+    const dir = await mkdtemp(join(tmpdir(), 'onepool-day-'))
     await mkdir(join(dir, 'channel-pack'), { recursive: true })
     await writeFile(join(dir, 'channel-pack', 'token-ledger.json'), JSON.stringify({
       days: {

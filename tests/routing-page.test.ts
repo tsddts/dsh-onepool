@@ -63,10 +63,10 @@ describe('the routing tab is reachable and safe', () => {
     expect(pageCode).not.toContain('credentials:\'include\'')
   })
   it('keeps both routes inside the plugin namespace and guards them by method', () => {
-    expect(POOL_COMBOS_PATH).toBe('/plugins/dsh-xdpool/combos')
-    expect(POOL_COMBOS_SAVE_PATH).toBe('/plugins/dsh-xdpool/combos/save')
+    expect(POOL_COMBOS_PATH).toBe('/plugins/dsh-onepool/combos')
+    expect(POOL_COMBOS_SAVE_PATH).toBe('/plugins/dsh-onepool/combos/save')
     for (const path of [POOL_COMBOS_PATH, POOL_COMBOS_SAVE_PATH]) {
-      expect(path.startsWith('/plugins/dsh-xdpool/')).toBe(true)
+      expect(path.startsWith('/plugins/dsh-onepool/')).toBe(true)
     }
     const routes = read('../src/web-status.ts')
     expect(routes).toContain('POOL_COMBOS_PATH')
@@ -176,15 +176,15 @@ describe('the roster offered to the editor cannot contradict the server', () => 
     expect(page).toContain('const candidates = status?.candidates ?? []')
   })
   it('renders every class name the stylesheet defines, and defines no other', () => {
-    const used = new Set([...page.matchAll(/dsm-xdpool-(rt-[a-z-]+)/gu)].map(m => m[1]!))
+    const used = new Set([...page.matchAll(/dsm-onepool-(rt-[a-z-]+)/gu)].map(m => m[1]!))
     expect(used.size).toBeGreaterThan(10)
     const css = read('../src/client/styles.ts')
     const block = css.slice(css.indexOf('export const ROUTING_CARD_CSS'))
     for (const name of used) {
-      expect(block, `missing .${name}`).toContain(`.dsm-xdpool-${name}{`)
+      expect(block, `missing .${name}`).toContain(`.dsm-onepool-${name}{`)
     }
     // The generic classes it leans on are documented as coming from elsewhere.
-    for (const shared of ['dsm-xdpool-pill', 'dsm-xdpool-switch']) {
+    for (const shared of ['dsm-onepool-pill', 'dsm-onepool-switch']) {
       expect(page).toContain(shared)
     }
   })
@@ -194,10 +194,10 @@ describe('the roster offered to the editor cannot contradict the server', () => 
     // matched no rule at all and rendered as a bare browser dropdown while every
     // other control on the page was restyled. The user reported exactly that.
     // This locks the class it now wears, and the rule that now matches it.
-    expect(page).toContain('className="dsm-xdpool-rt-pick"')
+    expect(page).toContain('className="dsm-onepool-rt-pick"')
     const css = read('../src/client/styles.ts')
-    expect(css).toContain('.dsm-xdpool-rt-pick{')
-    expect(page).not.toMatch(/className="dsm-xdpool-rt-field"[\s\S]{0,120}?<option/u)
+    expect(css).toContain('.dsm-onepool-rt-pick{')
+    expect(page).not.toMatch(/className="dsm-onepool-rt-field"[\s\S]{0,120}?<option/u)
   })
   it('gives the picker a focus ring, a hover state and a monospace face', () => {
     // Three states that a bare select does not have: focus (the page must never
@@ -205,13 +205,13 @@ describe('the roster offered to the editor cannot contradict the server', () => 
     // — these are model ids, and in a proportional font `deepseek-v4` and
     // `deepseekv4` are near-identical strings.
     const css = read('../src/client/styles.ts')
-    const pick = /\.dsm-xdpool-rt-pick\{([^}]*)\}/u.exec(css)?.[1] ?? ''
+    const pick = /\.dsm-onepool-rt-pick\{([^}]*)\}/u.exec(css)?.[1] ?? ''
     expect(pick).not.toBe('')
     expect(pick).toContain('font-family')
     expect(pick).toContain('ui-monospace')
-    expect(css).toContain('.dsm-xdpool-rt-pick:hover{')
-    expect(css).toContain('.dsm-xdpool-rt-pick:focus-visible{')
-    expect(css).toContain('.dsm-xdpool-rt-pick option{')
+    expect(css).toContain('.dsm-onepool-rt-pick:hover{')
+    expect(css).toContain('.dsm-onepool-rt-pick:focus-visible{')
+    expect(css).toContain('.dsm-onepool-rt-pick option{')
   })
   it('states the roster ONCE, with its number, instead of as a repeated sentence', () => {
     // The page used to carry the sentence "Models you can put in a chain" in two
@@ -226,7 +226,7 @@ describe('the roster offered to the editor cannot contradict the server', () => 
     // The search box is gone, not renamed: nothing left in the page narrows the
     // roster, because the select's own type-ahead already did.
     expect(page).not.toContain('type="search"')
-    expect(page).not.toContain('dsm-xdpool-rt-roster')
+    expect(page).not.toContain('dsm-onepool-rt-roster')
     const locales = read('../src/client/locales.ts')
     expect(locales).not.toContain(`'route.roster':`)
   })

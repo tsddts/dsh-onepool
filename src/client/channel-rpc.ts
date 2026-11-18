@@ -11,7 +11,7 @@
  * returns a credential, and none of these parsers invent a field the pack did not
  * send: an answer we cannot read becomes "not connected", never a guessed zero.
  *
- * @module dsh-xdpool/client/channel-rpc
+ * @module dsh-onepool/client/channel-rpc
  */
 import { CHANNEL_PACK_RPC_PATH, POOL_CHANNEL_MODELS_PATH, POOL_CHANNELS_PATH } from '../status-paths.ts'
 import type { PoolWebChannel, PoolWebChannelModel } from '../status-paths.ts'
@@ -153,7 +153,7 @@ export async function callPack(method: string, payload: Record<string, unknown>)
     credentials: 'same-origin',
     body: JSON.stringify({
       type: 'client-request',
-      rpcId: `xdpool-${Date.now().toString(36)}`,
+      rpcId: `onepool-${Date.now().toString(36)}`,
       method: 'channel-pack',
       payload: { method, payload },
     }),

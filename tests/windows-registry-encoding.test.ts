@@ -22,15 +22,56 @@
  */
 
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { workbuddyAppExecutableCandidates } from '../src/at-rest.ts'
 
 const isWindows = process.platform === 'win32'
 
+/**
+ * A drive this machine can actually write to.
+ *
+ * The probe used to hard-code `D:\`, which held on the machine that wrote it and
+ * fails everywhere else: a second internal disk, a card reader with no card, or —
+ * the case that surfaced this — a DVD drive with a Windows ISO mounted, where
+ * `mkdir` answers EPERM. The drive letter is incidental to the subject (a
+ * non-ASCII path reaching the reader intact); it must be discovered, not assumed.
+ *
+ * Prefers a non-system drive so the fixture is never written next to the repo or
+ * inside a mounted ISO, and falls back to the system drive when it is the only
+ * writable one.
+ */
+function writableProbeRoot(): string {
+  const candidates = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => `${letter}:\\`)
+  const probe = (base: string): boolean => {
+    const dir = join(base, '_dsh_enc_probe_writable')
+    try {
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(dir, '.probe'), '')
+      rmSync(dir, { recursive: true, force: true })
+      return true
+    } catch {
+      return false
+    }
+  }
+  // Everything but the system drive first, then the system drive.
+  const system = (process.env['SystemDrive'] ?? 'C:').toUpperCase() + '\\'
+  const ordered = [...candidates.filter(base => base !== system), system]
+  for (const base of ordered) {
+    if (!existsSync(base)) continue
+    try {
+      // A mounted ISO reports 0 free bytes and rejects writes; skip it cheaply.
+      if (statSync(base).isDirectory() && probe(base)) return join(base, '_dsh_enc_probe')
+    } catch {
+      /* unreadable drive: try the next one */
+    }
+  }
+  throw new Error('no writable drive found for the registry-encoding fixture')
+}
+
 /** A real directory whose path contains Chinese characters. */
-const ROOT = join('D:\\', '_dsh_enc_probe')
+const ROOT = writableProbeRoot()
 const DIR = join(ROOT, '腾讯', 'WorkBuddy')
 const EXE = join(DIR, 'WorkBuddy.exe')
 

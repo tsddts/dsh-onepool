@@ -11,7 +11,7 @@
  * host answers 401. The card then read "no accounts" while the accounts were
  * there. Nothing about it looks broken, which is why it is pinned here.
  *
- * @module dsh-xdpool/tests/client-pack-rpc
+ * @module dsh-onepool/tests/client-pack-rpc
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

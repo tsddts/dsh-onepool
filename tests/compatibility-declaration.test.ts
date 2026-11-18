@@ -52,7 +52,7 @@ describe('engines.dsh admits the generation that actually works', () => {
 
 describe('the README points at the entry point that exists', () => {
   it('does not INSTRUCT the reader to use the removed 0.1.x path', () => {
-    // "设置 → 插件 → DSH WorkBuddy XD Pool" was right for 0.1.x and is wrong
+    // "设置 → 插件 → DSH WorkBuddy OnePool" was right for 0.1.x and is wrong
     // from 0.2.0 on, where the card is a PEER tab of 通用设置/模型/内置插件.
     //
     // A historical mention is fine and deliberately kept — it is what tells an
@@ -63,13 +63,13 @@ describe('the README points at the entry point that exists', () => {
     expect(readme).not.toMatch(/插件配置卡片（设置 → 插件/u)
     expect(readme).not.toMatch(/装完以后：[^。]*设置 → 插件/u)
     // And the explanatory mention must be framed as history, not as guidance.
-    const mention = /（0\.1\.x 时代它叫「设置 → 插件 → DSH WorkBuddy XD Pool」[^）]*）/u.exec(readme)
+    const mention = /（0\.1\.x 时代它叫「设置 → 插件 → DSH WorkBuddy OnePool」[^）]*）/u.exec(readme)
     expect(mention, 'the old path may only appear as a historical note').not.toBeNull()
     expect(mention?.[0]).toContain('找不到')
   })
 
   it('names the tab the user will actually see', () => {
-    expect(readme).toContain('XD Pool')
+    expect(readme).toContain('OnePool')
   })
 
   it('says how to OPEN the settings panel', () => {

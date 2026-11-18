@@ -16,7 +16,7 @@
  * of appearing twice — which is the whole point of routing them through a
  * single pool rather than merging two lists at render time.
  *
- * @module dsh-xdpool/pack-accounts
+ * @module dsh-onepool/pack-accounts
  */
 
 import type { WorkBuddyCredential } from './accounts.ts'
@@ -215,15 +215,15 @@ export async function adoptChannelPackAccounts(
   // is cheap.
   pool.applyExternalSource(() => readPackCredentials(readPackAccountPool(ctx)))
   if (pack === undefined) {
-    logger?.warn?.('[xdpool] channel-pack account pool not visible yet; pool stays on desktop sign-ins')
+    logger?.warn?.('[onepool] channel-pack account pool not visible yet; pool stays on desktop sign-ins')
     return
   }
   try {
     const merged = await pool.scan()
     const count = Array.isArray(merged) ? merged.length : 0
-    logger?.info?.(`[xdpool] pool now serves ${count} account(s) including channel sign-ins`)
+    logger?.info?.(`[onepool] pool now serves ${count} account(s) including channel sign-ins`)
   } catch (error: unknown) {
-    logger?.warn?.('[xdpool] could not merge channel-pack accounts', error)
+    logger?.warn?.('[onepool] could not merge channel-pack accounts', error)
   }
 }
 

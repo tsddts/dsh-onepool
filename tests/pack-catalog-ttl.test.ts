@@ -25,7 +25,7 @@ describe('the vendored catalogue cache expires', () => {
     expect(pack).toContain('function remoteModelsStale(owner)')
     // Ten minutes by default, overridable so a test host can prove a refetch
     // without waiting one out.
-    expect(pack).toContain('process.env.DSH_XDPOOL_CATALOG_TTL_MS')
+    expect(pack).toContain('process.env.DSH_ONEPOOL_CATALOG_TTL_MS')
   })
 
   it('routes every lazy loader through it', () => {

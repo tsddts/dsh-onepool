@@ -1,5 +1,5 @@
 /**
- * Doubao as a channel the XD Pool gateway can serve.
+ * Doubao as a channel the OnePool gateway can serve.
  *
  * HOW THIS FITS
  *
@@ -17,7 +17,7 @@
  * `sec-ch-ua` brand — and getting any of them wrong answers `710022004 rate limited`, which
  * reads as throttling. Re-deriving those cost a day; this module does not touch them.
  *
- * @module dsh-xdpool/doubao-llm
+ * @module dsh-onepool/doubao-llm
  */
 import { cookieHeader, sessionUsable, type DoubaoSession } from './doubao-auth.ts'
 import {

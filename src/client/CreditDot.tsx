@@ -33,16 +33,16 @@
  * Escape. That is the same contract the host's meters use, implemented locally rather
  * than depending on a module this bundle cannot import.
  *
- * @module dsh-xdpool/client/CreditDot
+ * @module dsh-onepool/client/CreditDot
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactElement } from 'react'
 import { createPortal } from 'react-dom'
 import { POOL_CREDITS_SPEND_PATH, POOL_STATUS_PATH } from '../status-paths.ts'
 import { POOL_NAV_ICON_MASK_URL } from './nav-icon.ts'
 import { CREDIT_DOT_CSS } from './styles.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** One channel's balance, as the dot decides on it. */
 interface ChannelBalance {
@@ -444,8 +444,8 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
 
   return (
     <span
-      className="dsm-xdpool-dotwrap"
-      style={{ ['--xdpool-dot-mask' as string]: `url("${POOL_NAV_ICON_MASK_URL}")` }}
+      className="dsm-onepool-dotwrap"
+      style={{ ['--onepool-dot-mask' as string]: `url("${POOL_NAV_ICON_MASK_URL}")` }}
     >
       {/* The stylesheet travels WITH the component. The dot renders in the composer,
           which no settings page's <style> reaches, so a style block parked in a page's
@@ -454,7 +454,7 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
       <button
         ref={anchorRef}
         type="button"
-        className="dsm-xdpool-dot"
+        className="dsm-onepool-dot"
         data-state={alive ? 'alive' : 'empty'}
         aria-label={label}
         aria-expanded={open}
@@ -464,7 +464,7 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
         {/* The plugin's own pool glyph in a mask, not a plain circle: it says WHICH
             number this is, and it takes its colour from `currentColor` so the same
             green/grey state drives the icon without a second asset. */}
-        <span className="dsm-xdpool-dot-glyph" aria-hidden="true" />
+        <span className="dsm-onepool-dot-glyph" aria-hidden="true" />
       </button>
       {/*
         The panel is PORTALLED to `document.body`.
@@ -482,7 +482,7 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
       {!open ? null : createPortal((
         <div
           ref={panelRef}
-          className="dsm-xdpool-dotpanel"
+          className="dsm-onepool-dotpanel"
           role="dialog"
           aria-label={t?.('dot.panelTitle') ?? '本会话积分'}
           style={pos === undefined ? { visibility: 'hidden' } : { top: `${String(pos.top)}px`, left: `${String(pos.left)}px` }}
@@ -520,7 +520,7 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
             its own click; "not loaded yet" is an answer, an empty box is not.
           */}
           {!ready ? (
-            <p className="dsm-xdpool-dotpanel-empty">
+            <p className="dsm-onepool-dotpanel-empty">
               {failed
                 ? (t?.('dot.loadFailed') ?? '积分数据读取失败')
                 : (t?.('dot.loading') ?? '正在读取积分…')}
@@ -528,8 +528,8 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
           ) : null}
           {!ready ? null : (
             <>
-          <div className="dsm-xdpool-dotpanel-head">
-            <span className="dsm-xdpool-dotpanel-channel">
+          <div className="dsm-onepool-dotpanel-head">
+            <span className="dsm-onepool-dotpanel-channel">
               {snapshot.all.length === 0
                 ? (t?.('dot.channelUnknown') ?? '未连接渠道')
                 : `${snapshot.channel?.name ?? ''} · ${grouped(snapshot.all.reduce((sum, row) => sum + row.total, 0))}`}
@@ -539,9 +539,9 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
               edge" without reading any number, which is what makes it worth the space.
               The width is the SPENT share, so a fuller bar means more has been used. */}
           {snapshot.baseline <= 0 ? null : (
-            <div className="dsm-xdpool-dotbar" role="img" aria-label={t?.('dot.barLabel') ?? '今日已用占比'}>
+            <div className="dsm-onepool-dotbar" role="img" aria-label={t?.('dot.barLabel') ?? '今日已用占比'}>
               <div
-                className="dsm-xdpool-dotbar-fill"
+                className="dsm-onepool-dotbar-fill"
                 data-full={snapshot.spentToday !== undefined && snapshot.baseline > 0
                   && (snapshot.spentToday / snapshot.baseline) >= 0.9 ? 'true' : 'false'}
                 style={{ width: `${String(Math.min(100, Math.max(0, snapshot.baseline > 0 ? (snapshot.spentToday ?? 0) / snapshot.baseline * 100 : 0)))}%` }}
@@ -550,15 +550,15 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
           )}
           {/* The channel lives in the header now, so it is not repeated here. This row
               and the one below are the two things the header does not carry. */}
-          <div className="dsm-xdpool-dotpanel-sec">
-            <span className="dsm-xdpool-dotpanel-k">{t?.('dot.spentToday') ?? '今日已用'}</span>
-            <span className="dsm-xdpool-dotpanel-v">
+          <div className="dsm-onepool-dotpanel-sec">
+            <span className="dsm-onepool-dotpanel-k">{t?.('dot.spentToday') ?? '今日已用'}</span>
+            <span className="dsm-onepool-dotpanel-v">
               {snapshot.spentToday === undefined ? '—' : grouped(snapshot.spentToday)}
             </span>
           </div>
-          <div className="dsm-xdpool-dotpanel-sec">
-            <span className="dsm-xdpool-dotpanel-k">{t?.('dot.model') ?? '模型'}</span>
-            <span className="dsm-xdpool-dotpanel-v">
+          <div className="dsm-onepool-dotpanel-sec">
+            <span className="dsm-onepool-dotpanel-k">{t?.('dot.model') ?? '模型'}</span>
+            <span className="dsm-onepool-dotpanel-v">
               {snapshot.model === '' ? '—' : snapshot.model}
               {snapshot.multiplier === undefined ? '' : ` · x${rate(snapshot.multiplier)}`}
             </span>
@@ -569,15 +569,15 @@ export function CreditDot({ t }: { readonly t?: Translate | undefined }): ReactE
               cluttered. */}
           {snapshot.all.length > 1
             ? (
-              <div className="dsm-xdpool-dotpanel-more">
+              <div className="dsm-onepool-dotpanel-more">
                 {snapshot.all.map(channel => {
                   const used = snapshot.usedChannels?.some(row => row.id === channel.id) === true
                   return (
-                    <div className="dsm-xdpool-dotpanel-row" key={channel.id}>
-                      <span className="dsm-xdpool-dotpanel-rowname" data-used={used ? 'true' : 'false'}>
+                    <div className="dsm-onepool-dotpanel-row" key={channel.id}>
+                      <span className="dsm-onepool-dotpanel-rowname" data-used={used ? 'true' : 'false'}>
                         {channel.name}
                       </span>
-                      <span className="dsm-xdpool-dotpanel-rowval">{grouped(channel.total)}</span>
+                      <span className="dsm-onepool-dotpanel-rowval">{grouped(channel.total)}</span>
                     </div>
                   )
                 })}

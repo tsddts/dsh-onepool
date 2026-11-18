@@ -18,7 +18,7 @@
  * no rule captures (`-sg`, `-x`), while the upstream already groups them by
  * name. A name that matches a single row simply has no sibling.
  *
- * @module dsh-xdpool/siblings
+ * @module dsh-onepool/siblings
  */
 
 /** The minimum shape needed to spot a family and price it. */

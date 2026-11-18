@@ -21,7 +21,7 @@
  * other, which reads as a flagged account rather than a broken endpoint — so the result is
  * passed through and the caller reports it.
  *
- * @module dsh-xdpool/doubao-campaign
+ * @module dsh-onepool/doubao-campaign
  */
 import { cookieHeader, sessionUsable, type DoubaoSession } from './doubao-auth.ts'
 

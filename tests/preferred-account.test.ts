@@ -194,7 +194,7 @@ describe('the preferred-account file', () => {
   })
 
   it('defaults to the plugin data directory, so both processes agree on one file', () => {
-    const env = { DSH_HOME: 'D:/xdpool-prefer-home' } as NodeJS.ProcessEnv
+    const env = { DSH_HOME: 'D:/onepool-prefer-home' } as NodeJS.ProcessEnv
     expect(preferredIdPath(env)).toBe(join(pluginDataDir(env), PREFERRED_FILE_NAME))
     // Honoured explicitly rather than read from process.env at module scope, so
     // two hosts in one test process do not share a path by accident.

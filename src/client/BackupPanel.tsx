@@ -25,16 +25,16 @@
  * button per action, and the file is chosen as part of the import, not before it. Picking
  * a file and then pressing "import" was two steps for one intention.
  *
- * @module dsh-xdpool/client/BackupPanel
+ * @module dsh-onepool/client/BackupPanel
  */
 import { UpdatePanel } from './UpdatePanel.tsx'
 import { useCallback, useRef, useState, type ReactElement } from 'react'
 import { callPack } from './channel-rpc.ts'
 import { decryptBackup, encryptBackup, isEncryptedEnvelope, MIN_PASSWORD } from './backup-crypto.ts'
 import { BACKUP_CSS } from './styles.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** What `backup.status` answers: enough to warn before an overwrite. */
 interface BackupStatus {
@@ -102,7 +102,7 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
       const anchor = document.createElement('a')
       anchor.href = url
       // A dated name so two exports do not overwrite each other in Downloads.
-      anchor.download = `xdpool-accounts-${new Date().toISOString().slice(0, 10)}.json`
+      anchor.download = `onepool-accounts-${new Date().toISOString().slice(0, 10)}.json`
       anchor.click()
       URL.revokeObjectURL(url)
       const warnings = Array.isArray(value.warnings) ? value.warnings.length : 0
@@ -224,7 +224,7 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
   }, [chooseFile, password, picked, tooShort, t])
 
   return (
-    <div className="dsm-xdpool-bak">
+    <div className="dsm-onepool-bak">
       {/* Own stylesheet. The `display:none` that hid the raw file input used to live in a
           page block this component never loads, so the browser's own picker rendered
           beside the buttons — three "choose file" controls for one action. */}
@@ -232,17 +232,17 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
       {/* Both are maintenance done occasionally rather than part of running the pool, which is
           why they share a page and the tab is now 「更新与备份」. */}
       <UpdatePanel t={t} />
-      <div className="dsm-xdpool-bak-head">
-        <span className="dsm-xdpool-bak-title">{t?.('backup.title') ?? '账号备份'}</span>
-        <span className="dsm-xdpool-bak-warn">{t?.('backup.encrypted') ?? '加密'}</span>
+      <div className="dsm-onepool-bak-head">
+        <span className="dsm-onepool-bak-title">{t?.('backup.title') ?? '账号备份'}</span>
+        <span className="dsm-onepool-bak-warn">{t?.('backup.encrypted') ?? '加密'}</span>
       </div>
-      <p className="dsm-xdpool-bak-hint">{t?.('backup.hint') ?? ''}</p>
+      <p className="dsm-onepool-bak-hint">{t?.('backup.hint') ?? ''}</p>
 
-      <label className="dsm-xdpool-bak-field">
-        <span className="dsm-xdpool-bak-label">{t?.('backup.password') ?? '密码'}</span>
+      <label className="dsm-onepool-bak-field">
+        <span className="dsm-onepool-bak-label">{t?.('backup.password') ?? '密码'}</span>
         <input
           type="password"
-          className="dsm-xdpool-bak-input"
+          className="dsm-onepool-bak-input"
           value={password}
           disabled={busy}
           autoComplete="new-password"
@@ -254,10 +254,10 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
       {/* Two actions, one button each. The import button doubles as the file picker until
           a file exists, so the row never shows a control whose only job is to reveal
           another one. */}
-      <div className="dsm-xdpool-bak-actions">
+      <div className="dsm-onepool-bak-actions">
         <button
           type="button"
-          className="dsm-xdpool-bak-btn"
+          className="dsm-onepool-bak-btn"
           data-tone="primary"
           disabled={busy || tooShort}
           title={tooShort
@@ -269,7 +269,7 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
         </button>
         <button
           type="button"
-          className="dsm-xdpool-bak-btn"
+          className="dsm-onepool-bak-btn"
           data-tone="quiet"
           disabled={busy}
           title={picked === undefined
@@ -292,11 +292,11 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
       </div>
 
       {picked === undefined ? null : (
-        <div className="dsm-xdpool-bak-file">
-          <span className="dsm-xdpool-bak-filename" title={picked.name}>{picked.name}</span>
+        <div className="dsm-onepool-bak-file">
+          <span className="dsm-onepool-bak-filename" title={picked.name}>{picked.name}</span>
           <button
             type="button"
-            className="dsm-xdpool-bak-clear"
+            className="dsm-onepool-bak-clear"
             aria-label={t?.('backup.clearFile') ?? '取消选择'}
             disabled={busy}
             onClick={() => { setPicked(undefined) }}
@@ -306,8 +306,8 @@ export function BackupPanel({ t }: { readonly t?: Translate | undefined }): Reac
         </div>
       )}
 
-      {notice === undefined ? null : <p className="dsm-xdpool-bak-note">{notice}</p>}
-      {error === undefined ? null : <p className="dsm-xdpool-bak-error">{error}</p>}
+      {notice === undefined ? null : <p className="dsm-onepool-bak-note">{notice}</p>}
+      {error === undefined ? null : <p className="dsm-onepool-bak-error">{error}</p>}
     </div>
   )
 }

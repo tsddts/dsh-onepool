@@ -1,9 +1,9 @@
 /**
- * Plugin-card copy registered under the `settings.xdpool` locale
+ * Plugin-card copy registered under the `settings.onepool` locale
  * namespace. Key lists in `en` and `zh` are kept 1:1 by typing `zh` against
  * the key set of `en`.
  *
- * @module dsh-xdpool/client/locales
+ * @module dsh-onepool/client/locales
  */
 export const en = {
   'update.install': 'Install {version}',
@@ -39,7 +39,7 @@ export const en = {
   'channelpool.claimCredits': 'Claim credits',
   // The Settings nav row. Short by design: the nav column is narrow and the
   // card body already carries the full product name.
-  'row.navLabel': 'XD Pool',
+  'row.navLabel': 'OnePool',
   'row.title': 'Account pool',
   'row.desc': '',
   'row.expand': 'Expand',
@@ -152,8 +152,8 @@ export const en = {
   'row.modelsDiscard': 'Discard',
   'row.modelsSaved': 'Model selection saved',
   'row.sidebarRowTitle': 'Sidebar entry',
-  'row.sidebarRowOn': 'XD Pool has its own row in the left sidebar. Turn it off to open the pool from Settings instead.',
-  'row.sidebarRowOff': 'The sidebar row is hidden; the pool still opens from Settings → XD Pool, and models are unaffected.',
+  'row.sidebarRowOn': 'OnePool has its own row in the left sidebar. Turn it off to open the pool from Settings instead.',
+  'row.sidebarRowOff': 'The sidebar row is hidden; the pool still opens from Settings → OnePool, and models are unaffected.',
   'row.modelsConflict': 'The settings changed elsewhere; review and save again',
   'row.modelsSaveError': 'Could not save: {message}',
   'row.modelsEmpty': 'No model enabled — enable at least one before saving.',
@@ -342,7 +342,7 @@ export const en = {
   'route.chainName': 'Chain name',
   'route.chainNamePlaceholder': 'e.g. write-then-fallback',
   'route.id': 'Model id',
-  'route.ownerPool': 'XD Pool (WorkBuddy)',
+  'route.ownerPool': 'OnePool (WorkBuddy)',
   'route.platformOrder': 'Platform order (higher is tried first)',
   'route.platformNoModels': 'No model added to this platform yet.',
   'route.platformHint': 'Higher is tried first. The same applies to the models inside one platform.',
@@ -407,20 +407,9 @@ export const en = {
   'chan.ownedElsewhereRow': 'Sign in on the “Our Free Model” page',
 
   'chan.empty': 'No channel is connected yet.',
-  'shell.brand': 'XD Pool',
+  'shell.brand': 'OnePool',
   'shell.star': 'Star',
   'shell.starHint': 'Open this plugin on GitHub',
-  'shell.group': 'Community',
-  'shell.groupHint': 'Scan a code to join the XD community group',
-  'shell.groupTitle': 'XD community group',
-  'shell.groupClose': 'Close',
-  'shell.groupWechat': 'WeChat (bot)',
-  'shell.groupWechatAlt': 'WeChat bot code: scan to add the bot, then send XD to be pulled into the group',
-  'shell.groupWechatStep': 'Scan to add the bot, then send "XD" to be pulled in',
-  'shell.groupQq': 'QQ group',
-  'shell.groupQqAlt': 'QQ group code: scan it to join the XD community group',
-  'shell.groupQqStep': 'Just scan — no message needed',
-  'shell.groupNote': 'Both groups are live; use whichever you prefer. If a code stops working, open an issue on GitHub and it will be refreshed.',
   'shell.tabPool': 'Account pool',
   'shell.tabChannels': 'Login channels',
   'shell.tabAggregate': 'Providers',
@@ -657,8 +646,8 @@ export const en = {
   'channelpool.stateNone': 'not connected',
   'channelpool.note': 'Note',
 } as const
-export type XdPoolSettingsKey = keyof typeof en
-export const zh: Record<XdPoolSettingsKey, string> = {
+export type OnePoolSettingsKey = keyof typeof en
+export const zh: Record<OnePoolSettingsKey, string> = {
   'update.install': '安装 {version}',
   'update.installing': '安装中…',
   'update.installHint': '下载到本机并写入插件配置，重启 DSH 后生效；数据和账号不受影响。',
@@ -690,7 +679,7 @@ export const zh: Record<XdPoolSettingsKey, string> = {
   'channelpool.autoOff': '关闭自动化',
 
   'channelpool.claimCredits': '领取积分',
-  'row.navLabel': 'XD Pool',
+  'row.navLabel': '一泓',
   'row.title': '账号池',
   'row.desc': '',
   'row.expand': '展开',
@@ -802,8 +791,8 @@ export const zh: Record<XdPoolSettingsKey, string> = {
   'row.modelsDiscard': '放弃修改',
   'row.modelsSaved': '模型选择已保存',
   'row.sidebarRowTitle': '侧栏入口',
-  'row.sidebarRowOn': '左侧栏会给 XD Pool 留一行入口。关掉后改为从「设置 → XD Pool」进入，模型池不受影响。',
-  'row.sidebarRowOff': '侧栏入口已隐藏；仍可从「设置 → XD Pool」进入，模型池不受影响。',
+  'row.sidebarRowOn': '左侧栏会给 OnePool 留一行入口。关掉后改为从「设置 → OnePool」进入，模型池不受影响。',
+  'row.sidebarRowOff': '侧栏入口已隐藏；仍可从「设置 → OnePool」进入，模型池不受影响。',
   'row.modelsConflict': '设置已在别处被修改，请确认后重新保存',
   'row.modelsSaveError': '保存失败：{message}',
   'row.modelsEmpty': '至少要启用一个模型才能保存。',
@@ -988,7 +977,7 @@ export const zh: Record<XdPoolSettingsKey, string> = {
   'route.chainName': '链的名字',
   'route.chainNamePlaceholder': '例如 主力-兜底',
   'route.id': '模型 id',
-  'route.ownerPool': 'XD Pool（WorkBuddy）',
+  'route.ownerPool': 'OnePool（WorkBuddy）',
   'route.platformOrder': '平台顺序（越靠上越优先）',
   'route.platformNoModels': '这个平台还没有添加模型',
   'route.platformHint': '平台越靠上越优先；同一个平台里模型也一样。',
@@ -1053,20 +1042,9 @@ export const zh: Record<XdPoolSettingsKey, string> = {
   'chan.ownedElsewhereRow': '在「我们的免费模型」里登录',
 
   'chan.empty': '还没有任何渠道连上来。',
-  'shell.brand': 'XD Pool',
+  'shell.brand': '一泓',
   'shell.star': '点Star',
   'shell.starHint': '在 GitHub 上给这个插件点个星',
-  'shell.group': '交流群',
-  'shell.groupHint': '扫码加入 XD 交流群',
-  'shell.groupTitle': 'XD 交流群',
-  'shell.groupClose': '关闭',
-  'shell.groupWechat': '微信（机器人）',
-  'shell.groupWechatAlt': '微信机器人二维码：扫码添加后发送 XD，即可被拉进群',
-  'shell.groupWechatStep': '扫码添加机器人后，发送「XD」拉你进群',
-  'shell.groupQq': 'QQ 群',
-  'shell.groupQqAlt': 'QQ 群二维码：直接扫码加入 XD 交流群',
-  'shell.groupQqStep': '直接扫码即可加入',
-  'shell.groupNote': '两个群都在，哪个方便用哪个。二维码失效了在 GitHub 提个 issue 说一声，会更新。',
   'shell.tabPool': '账号池',
   'shell.tabChannels': '扫码登录',
   'shell.tabAggregate': '聚合渠道',

@@ -25,7 +25,7 @@
  * the ordinary case on a machine that only uses the web product, and it must not be reported
  * as a failure — the six measured models are still there.
  *
- * @module dsh-xdpool/doubao-client-cache
+ * @module dsh-onepool/doubao-client-cache
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

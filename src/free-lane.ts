@@ -56,7 +56,7 @@ function conversationKeyOf(body: Record<string, unknown>): string {
       : JSON.stringify(raw.content ?? '')
     return crypto.createHash('sha256').update(content, 'utf8').digest('hex').slice(0, 32)
   }
-  return crypto.createHash('sha256').update('xdpool-free-conversation', 'utf8').digest('hex').slice(0, 32)
+  return crypto.createHash('sha256').update('onepool-free-conversation', 'utf8').digest('hex').slice(0, 32)
 }
 
 /** The envelope one chat chunk carries, so frames from different lanes match. */

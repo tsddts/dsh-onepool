@@ -35,7 +35,7 @@ describe('the credit dot', () => {
   it('is the pool glyph, not a plain circle', () => {
     // A circle says "some status"; the plugin's own glyph says whose number it is.
     expect(dot).toContain('POOL_NAV_ICON_MASK_URL')
-    expect(dot).toContain('dsm-xdpool-dot-glyph')
+    expect(dot).toContain('dsm-onepool-dot-glyph')
     // The colour comes from `currentColor` so one state attribute drives both the dot
     // and the icon, with no second asset.
     expect(styles).toContain('-webkit-mask-image')
@@ -83,7 +83,7 @@ describe('the credit dot', () => {
 
   it('draws a bar whose fill is the share SPENT', () => {
     // A fuller bar means more used — it drains toward the right like a fuel gauge.
-    expect(dot).toContain('dsm-xdpool-dotbar-fill')
+    expect(dot).toContain('dsm-onepool-dotbar-fill')
     expect(dot).toContain('baseline')
     // Amber past 90%: the point at which a long task becomes a gamble.
     expect(styles).toContain("[data-full='true']")
@@ -155,7 +155,7 @@ describe('the credit dot', () => {
     // a difference of the 99 sitting on a second credential origin. The dot was naming
     // the LARGEST channel, not the sum. Two screens in one plugin disagreeing about the
     // same quantity is a bug the reader cannot resolve.
-    const start = dot.indexOf('dsm-xdpool-dotpanel-head')
+    const start = dot.indexOf('dsm-onepool-dotpanel-head')
     const body = dot.slice(start, start + 800)
     expect(body).toContain('snapshot.all.reduce')
     // And the per-channel split is shown so the total is reconcilable.
@@ -166,10 +166,10 @@ describe('the credit dot', () => {
     // "还有积分" was a chip restating what the green dot already says, and it pushed the
     // one fact worth reading — which pool, how much — onto a separate row. The header
     // now carries it, so the rows below are only today's spend and the model.
-    expect(dot).toContain('dsm-xdpool-dotpanel-channel')
+    expect(dot).toContain('dsm-onepool-dotpanel-channel')
     expect(dot).toContain('dot.channelUnknown')
     // The restated chip is gone...
-    expect(dot).not.toContain('dsm-xdpool-dotpanel-chip')
+    expect(dot).not.toContain('dsm-onepool-dotpanel-chip')
     // ...and the channel row with it, since the header holds the same value.
     expect(dot).not.toContain("'dot.channel'")
   })

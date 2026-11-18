@@ -21,7 +21,7 @@
  *
  * A second regression is pinned here too: `import` used to write snapshots
  * that NO code path ever read (`lib/bin.js` wrote `<md5>.json` into
- * `~/.dsh/.xdpool/`, `scan()` never looked there). The snapshot directory is
+ * `~/.dsh/.onepool/`, `scan()` never looked there). The snapshot directory is
  * now a scan source, and the plugin's own state files in it are excluded.
  */
 
@@ -68,7 +68,7 @@ function parsedCredential(name: string, token = `token-${name}`) {
 
 /** Temp home directory standing in for `~/.dsh`, restored after each test. */
 function tempHome(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'xdpool-store-'))
+  const dir = mkdtempSync(join(tmpdir(), 'onepool-store-'))
   process.env['DSH_HOME'] = dir
   return dir
 }
@@ -84,7 +84,7 @@ describe('the durable account store', () => {
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
     // Simulate what the previous process wrote before exiting.
-    const storeDir = join(home, '.xdpool')
+    const storeDir = join(home, '.onepool')
     mkdirSync(storeDir, { recursive: true })
     writeFileSync(join(storeDir, ACCOUNTS_FILE_NAME), JSON.stringify({
       version: 1,
@@ -97,7 +97,7 @@ describe('the durable account store', () => {
     }))
 
     // An auth dir with a DIFFERENT account: the pool must end up with both.
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('bob'))
 
@@ -110,8 +110,8 @@ describe('the durable account store', () => {
   it('prefers a credential freshly read from disk over the stored copy', async () => {
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
-    mkdirSync(join(home, '.xdpool'), { recursive: true })
-    writeFileSync(join(home, '.xdpool', ACCOUNTS_FILE_NAME), JSON.stringify({
+    mkdirSync(join(home, '.onepool'), { recursive: true })
+    writeFileSync(join(home, '.onepool', ACCOUNTS_FILE_NAME), JSON.stringify({
       version: 1,
       accounts: [{
         // Same billing identity as the on-disk account below, so the merge
@@ -124,7 +124,7 @@ describe('the durable account store', () => {
       }],
     }))
     // Same account (same uin/uid → same pool id) with a NEWER token on disk.
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('stale', 'fresh-token'))
 
@@ -142,17 +142,17 @@ describe('the durable account store', () => {
     // fresh sign-in.
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
-    mkdirSync(join(home, '.xdpool'), { recursive: true })
+    mkdirSync(join(home, '.onepool'), { recursive: true })
     const stored = ['keep1', 'keep2', 'keep3'].map(name => ({
       id: workbuddyAccountId(parsedCredential(name)),
       label: name,
       credential: parsedCredential(name),
       savedAtMs: Date.now() - 1000,
     }))
-    writeFileSync(join(home, '.xdpool', ACCOUNTS_FILE_NAME), JSON.stringify({ version: 1, accounts: stored }))
+    writeFileSync(join(home, '.onepool', ACCOUNTS_FILE_NAME), JSON.stringify({ version: 1, accounts: stored }))
 
     // ONE auth file, so the scan finds one account and the store holds four.
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('live'))
 
@@ -166,7 +166,7 @@ describe('the durable account store', () => {
     // read the store".
     const second = await pool.scan()
     expect(second).toHaveLength(4)
-    const storedAfter = JSON.parse(readFileSync(join(home, '.xdpool', ACCOUNTS_FILE_NAME), 'utf8')) as {
+    const storedAfter = JSON.parse(readFileSync(join(home, '.onepool', ACCOUNTS_FILE_NAME), 'utf8')) as {
       accounts: { label: string }[]
     }
     expect(storedAfter.accounts).toHaveLength(4)
@@ -184,16 +184,16 @@ describe('the durable account store', () => {
     // SAID — a card list that quietly loses an account is the report in #117.
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
-    mkdirSync(join(home, '.xdpool'), { recursive: true })
+    mkdirSync(join(home, '.onepool'), { recursive: true })
     const gone = {
       id: workbuddyAccountId(parsedCredential('gone')),
       label: 'gone',
       credential: parsedCredential('gone'),
       savedAtMs: Date.now() - 1000,
     }
-    writeFileSync(join(home, '.xdpool', ACCOUNTS_FILE_NAME), JSON.stringify({ version: 1, accounts: [gone] }))
+    writeFileSync(join(home, '.onepool', ACCOUNTS_FILE_NAME), JSON.stringify({ version: 1, accounts: [gone] }))
 
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('live'))
 
@@ -219,7 +219,7 @@ describe('the durable account store', () => {
   it('writes the merged list back atomically after every scan', async () => {
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('carol'))
 
@@ -236,9 +236,9 @@ describe('the durable account store', () => {
   it('a corrupt store yields an empty seed, not a broken pool', async () => {
     const home = tempHome()
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
-    mkdirSync(join(home, '.xdpool'), { recursive: true })
-    writeFileSync(join(home, '.xdpool', ACCOUNTS_FILE_NAME), '{ truncated')
-    const authDir = mkdtempSync(join(tmpdir(), 'xdpool-auth-'))
+    mkdirSync(join(home, '.onepool'), { recursive: true })
+    writeFileSync(join(home, '.onepool', ACCOUNTS_FILE_NAME), '{ truncated')
+    const authDir = mkdtempSync(join(tmpdir(), 'onepool-auth-'))
     cleanups.push(() => rmSync(authDir, { recursive: true, force: true }))
     writeFileSync(join(authDir, 'workbuddy-desktop.info'), plainCredential('dave'))
 
@@ -252,7 +252,7 @@ describe('the durable account store', () => {
     cleanups.push(() => rmSync(home, { recursive: true, force: true }))
     // Every state file the plugin keeps next to the snapshots — if any of them
     // were parsed as a credential, the pool would grow phantom accounts.
-    const stateDir = join(home, '.xdpool')
+    const stateDir = join(home, '.onepool')
     mkdirSync(stateDir, { recursive: true })
     for (const name of NON_SNAPSHOT_FILES) {
       writeFileSync(join(stateDir, name), JSON.stringify({

@@ -7,7 +7,7 @@
  * account is keyed by its billing identity (`uin`, falling back to `uid`), so
  * re-logging the same account refreshes in place instead of creating a duplicate.
  *
- * @module dsh-xdpool/accounts
+ * @module dsh-onepool/accounts
  */
 
 import { createHash } from 'node:crypto'
@@ -231,7 +231,7 @@ export class WorkBuddyEncryptedCredentialError extends Error {
         + ' If the app IS installed, it is simply outside the paths this plugin probes — set '
         + 'WORKBUDDY_APP_EXECUTABLE to its full .exe path (then restart DSH) and the credential will open.'
         + ' Signing in again will not help: the credential itself is intact. '
-        + 'Run `dsh-xdpool doctor` to see which paths were probed — if one of them looks like '
+        + 'Run `dsh-onepool doctor` to see which paths were probed — if one of them looks like '
         + 'mojibake (e.g. "??" where a Chinese folder name should be), the registry value could not be '
         + 'decoded on this machine; report that line and use the override above in the meantime.',
     )
@@ -749,14 +749,14 @@ export interface AccountPoolOptions {
   /**
    * Enable the durable account store.
    *
-   * When on, `scan()` seeds its merge from `~/.dsh/.xdpool/accounts.json` and
+   * When on, `scan()` seeds its merge from `~/.dsh/.onepool/accounts.json` and
    * writes the merged list back, so accounts gathered by switching desktop
    * sign-ins survive a restart, and the plugin's snapshot directory becomes a
    * scan source.
    *
    * DEFAULT OFF, on purpose: the 70+ existing pool tests build fixtures over
    * temp auth dirs, and a store that wrote by default would flush those
-   * fixtures into the user's real `~/.dsh/.xdpool/accounts.json`. Production
+   * fixtures into the user's real `~/.dsh/.onepool/accounts.json`. Production
    * assembles the pool through `createCore()`, which passes `persistent: true`;
    * tests opt in explicitly.
    */
@@ -1167,7 +1167,7 @@ export class WorkBuddyAccountPool {
         await unlink(entry.path)
         removed.push(entry.path)
       } catch (error: unknown) {
-        this.logger?.warn?.(`dsh-xdpool: could not remove expired snapshot ${entry.path}: ${String(error)}`)
+        this.logger?.warn?.(`dsh-onepool: could not remove expired snapshot ${entry.path}: ${String(error)}`)
       }
     }
     return removed
@@ -1216,7 +1216,7 @@ export class WorkBuddyAccountPool {
     this.skippedFiles = skipped
     if (skipped.length > 0) {
       this.logger?.warn?.(
-        `dsh-xdpool: ${skipped.length} credential file(s) could not be read; `
+        `dsh-onepool: ${skipped.length} credential file(s) could not be read; `
         + `${found.length} account(s) still loaded. Reasons: `
         + [...new Set(skipped.map(s => s.reason))].join('; '),
       )
@@ -1247,7 +1247,7 @@ export class WorkBuddyAccountPool {
     if (cleaned.length > 0) {
       this.skippedFiles = skipped.filter(entry => !cleaned.includes(entry.path))
       this.logger?.info?.(
-        `dsh-xdpool: removed ${cleaned.length} expired credential snapshot(s) superseded by a newer sign-in`,
+        `dsh-onepool: removed ${cleaned.length} expired credential snapshot(s) superseded by a newer sign-in`,
       )
     }
 
@@ -1266,7 +1266,7 @@ export class WorkBuddyAccountPool {
       } catch (error: unknown) {
         // A source that cannot answer is a missing pool, not a broken one: the
         // desktop accounts found above are still valid and still usable.
-        this.logger?.warn?.('dsh-xdpool: could not read channel-pack accounts; desktop accounts only', error)
+        this.logger?.warn?.('dsh-onepool: could not read channel-pack accounts; desktop accounts only', error)
       }
     }
 
@@ -1407,7 +1407,7 @@ export class WorkBuddyAccountPool {
           : [...this.lastPersistedIds].filter(id => !this.accounts.some(account => account.id === id))
         if (leaving.length > 0) {
           this.logger?.warn?.(
-            `dsh-xdpool: ${String(leaving.length)} account(s) are no longer in the pool after a rescan `
+            `dsh-onepool: ${String(leaving.length)} account(s) are no longer in the pool after a rescan `
               + `and were removed from the store: ${leaving.join(', ')}. `
               + 'Their credentials are gone unless they are signed in again.',
           )
@@ -1415,7 +1415,7 @@ export class WorkBuddyAccountPool {
         await saveStoredAccounts(this.storePath, this.accounts)
         this.lastPersistedIds = new Set(this.accounts.map(account => account.id))
       } catch (error: unknown) {
-        this.logger?.warn?.('dsh-xdpool: could not persist the account store', error)
+        this.logger?.warn?.('dsh-onepool: could not persist the account store', error)
       }
     }
     return this.accounts
@@ -1465,7 +1465,7 @@ export class WorkBuddyAccountPool {
       // The account is named so a systematically broken billing endpoint can be
       // told apart from a pool that simply has not been read yet.
       this.logger?.warn?.(
-        `dsh-xdpool: could not read credit deadlines for ${account.label} `
+        `dsh-onepool: could not read credit deadlines for ${account.label} `
           + '(read failed); expiry mode keeps falling back for it until a read succeeds',
         error,
       )
@@ -1542,7 +1542,7 @@ export class WorkBuddyAccountPool {
       // is empty for the same reason `creditExpiry` was, so this floor silently
       // does not apply until the first reading lands — the same structural bug
       // as the expiry one, reported as V4 in
-      // `xdpool-fix/EXPIRY-ADVERSARIAL-20261111.md` §3 and tracked separately.
+      // `onepool-fix/EXPIRY-ADVERSARIAL-20261111.md` §3 and tracked separately.
       const reserve = this.creditReserves.get(account.id)
       if (!reserveExempt?.has(account.id) && reserve !== undefined && reserve > 0) {
         const balance = this.creditBalances.get(account.id)
@@ -1907,14 +1907,14 @@ export class WorkBuddyAccountPool {
     }
     if (stale.length > 0) {
       this.logger?.info?.(
-        `dsh-xdpool: expiry mode found ${stale.length} deadline reading(s) older than `
+        `dsh-onepool: expiry mode found ${stale.length} deadline reading(s) older than `
           + `${Math.round(this.expiryReadingTtlMs / 60_000)} minute(s) `
           + `(${stale.map(account => account.label).join(', ')}); they are being topped up in the background`,
       )
     }
     if (unread.length > 0) {
       this.logger?.warn?.(
-        `dsh-xdpool: expiry mode has no deadline reading for ${unread.length} of ${pool.length} `
+        `dsh-onepool: expiry mode has no deadline reading for ${unread.length} of ${pool.length} `
           + `account(s) (${unread.map(account => account.label).join(', ')}); `
           + 'falling back to pool order for this pick, which may not be the soonest to expire. '
           + 'Readings are filled in the background after a scan and by the request path.',
@@ -2316,7 +2316,7 @@ export class WorkBuddyAccountPool {
     const until = Date.now() + this.credentialDeadCooldownMs
     account.credentialDeadUntilMs = Math.max(account.credentialDeadUntilMs ?? 0, until)
     this.logger?.warn(
-      `dsh-xdpool: ${account.label} sign-in was rejected by the upstream; `
+      `dsh-onepool: ${account.label} sign-in was rejected by the upstream; `
         + `keeping it out of rotation until ${new Date(until).toISOString()} (sign in again to restore it)`,
     )
   }
@@ -2373,7 +2373,7 @@ export class WorkBuddyAccountPool {
       this.clearCredentialDead(account.id)
       revived.push(account)
       this.logger?.info?.(
-        `dsh-xdpool: ${account.label} answered a probe; back in rotation without waiting out the cooldown`,
+        `dsh-onepool: ${account.label} answered a probe; back in rotation without waiting out the cooldown`,
       )
     }
     return revived
@@ -2408,7 +2408,7 @@ export class WorkBuddyAccountPool {
       if (credential.refreshToken === '') {
         // Nothing to refresh with; only worth failing if already expired.
         if (credential.expiresAtMs > Date.now() + 30_000) return true
-        this.logger?.warn(`dsh-xdpool: ${account.label} token expired with no refresh token; sign in again`)
+        this.logger?.warn(`dsh-onepool: ${account.label} token expired with no refresh token; sign in again`)
         this.penalizeCredentialDead(account.id)
         return false
       }
@@ -2426,7 +2426,7 @@ export class WorkBuddyAccountPool {
         // A working refresh is the strongest possible proof the sign-in is
         // alive again — undo any earlier dead mark.
         this.clearCredentialDead(account.id)
-        this.logger?.info?.(`dsh-xdpool: refreshed token for ${account.label}`)
+        this.logger?.info?.(`dsh-onepool: refreshed token for ${account.label}`)
         return true
       } catch (error: unknown) {
         if (isCredentialDeadError(error)) {
@@ -2436,15 +2436,15 @@ export class WorkBuddyAccountPool {
           // so mark the account dead instead of retrying it forever.
           this.penalizeCredentialDead(account.id)
           this.logger?.warn?.(
-            `dsh-xdpool: ${account.label} refresh token was revoked upstream; sign in again to restore it`,
+            `dsh-onepool: ${account.label} refresh token was revoked upstream; sign in again to restore it`,
             error,
           )
           return false
         }
         if (credential.expiresAtMs > Date.now() + 30_000) {
-          this.logger?.warn?.(`dsh-xdpool: token refresh failed but token still valid for ${account.label}`, error)
+          this.logger?.warn?.(`dsh-onepool: token refresh failed but token still valid for ${account.label}`, error)
         } else {
-          this.logger?.error?.(`dsh-xdpool: token refresh failed and token expired for ${account.label}`, error)
+          this.logger?.error?.(`dsh-onepool: token refresh failed and token expired for ${account.label}`, error)
         }
         return true
       }
@@ -2471,7 +2471,7 @@ export class WorkBuddyAccountPool {
     this.logger?.warn(
       
 `
-dsh-xdpool: account credits exhausted; cooling the whole account until 
+dsh-onepool: account credits exhausted; cooling the whole account until 
 `
  +
         
@@ -2498,14 +2498,14 @@ ${new Date(until).toISOString()}
     if (modelId !== undefined && modelId !== '') {
       account.modelCooldowns[modelId] = Math.max(account.modelCooldowns[modelId] ?? 0, until)
       this.logger?.warn(
-        `dsh-xdpool: ${account.label} rate-limited on model ${modelId}; ` +
+        `dsh-onepool: ${account.label} rate-limited on model ${modelId}; ` +
           `cooling that model until ${new Date(until).toISOString()}`,
       )
       return
     }
     account.cooldownUntilMs = Math.max(account.cooldownUntilMs, until)
     this.logger?.warn(
-      `dsh-xdpool: account ${account.label} rate-limited; cooling until ${new Date(until).toISOString()}`,
+      `dsh-onepool: account ${account.label} rate-limited; cooling until ${new Date(until).toISOString()}`,
     )
   }
 

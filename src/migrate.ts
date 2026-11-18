@@ -1,13 +1,28 @@
 /**
- * One-time adoption of state written under the plugin's pre-rename name.
+ * One-time adoption of state written by the builds this fork continues from.
  *
  * WHAT CHANGED
  *
- * This plugin used to be `dsh-workbuddy-xdpool`, and its own directory was
- * `~/.dsh/.workbuddy-xdpool`. It is now `dsh-xdpool`, reading `~/.dsh/.xdpool`.
- * Every name the plugin owned changed at once — package, provider ids, settings
- * namespace, CLI and this directory — so an existing install that simply
- * upgrades would otherwise look like a fresh one and silently lose:
+ * The lineage is now three names deep, and this module exists to walk a user
+ * forward across the last step of it:
+ *
+ *   dsh-workbuddy-xdpool   ->  dsh-xdpool  ->  dsh-onepool   (this fork)
+ *   ~/.dsh/.workbuddy-xdpool -> ~/.dsh/.xdpool -> ~/.dsh/.onepool
+ *
+ * Upstream did the first hop in its own 2.1.0 and kept `.workbuddy-xdpool` as
+ * its LEGACY constant. This fork adds the second hop, so the directory a real
+ * user actually has on disk TODAY is `.xdpool` — the upstream one, holding every
+ * account the desktop app ever signed in. `.workbuddy-xdpool` is two renames
+ * stale and, on any machine that has run a recent version, does not exist.
+ *
+ * WHY THE ORDER MATTERS
+ *
+ * Adoption copies from ONE source directory and never merges two. If `.onepool`
+ * already exists it is authoritative and nothing is copied at all. So the chain
+ * has to be walked newest-first: `.xdpool` (what 2.x wrote) before
+ * `.workbuddy-xdpool` (what 1.x wrote). Getting this backwards would make the
+ * fork look like a fresh install to every user who upgraded past 2.1.0 —
+ * silently losing:
  *
  *   - the API keys typed into the aggregate page,
  *   - the account ignore list,
@@ -28,7 +43,7 @@
  *
  * WHAT THIS DELIBERATELY DOES NOT TOUCH
  *
- * Two other things carry the old name, and neither can be migrated from inside
+ * Two other things carry an old name, and neither can be migrated from inside
  * the plugin:
  *
  *   1. `settings.yaml`'s `agent-default-model.provider` and the profile's
@@ -39,21 +54,38 @@
  *   2. The old settings namespace's saved values. The host resolves those by
  *      namespace, and the plugin only ever sees the new one.
  *
- * @module dsh-xdpool/migrate
+ * @module dsh-onepool/migrate
  */
 import { cpSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-/** Directory the plugin wrote before the rename. */
-export const LEGACY_DATA_DIR_NAME = '.workbuddy-xdpool'
+/**
+ * Directories earlier builds wrote, newest first.
+ *
+ * `.xdpool` is the immediate predecessor (upstream 2.x) and is what nearly
+ * every existing install has. `.workbuddy-xdpool` is the one before it
+ * (upstream 1.x) and is kept so a user two upgrades behind is not stranded.
+ */
+export const LEGACY_DATA_DIR_NAMES = ['.xdpool', '.workbuddy-xdpool'] as const
+/**
+ * The directory an install from four years of history is most likely to have.
+ *
+ * Kept as a single constant because tests and log lines want to name "the"
+ * legacy directory; the plural is what adoption walks.
+ */
+export const LEGACY_DATA_DIR_NAME = LEGACY_DATA_DIR_NAMES[0]
 /** Directory it writes now. */
-export const CURRENT_DATA_DIR_NAME = '.xdpool'
-/** Provider ids before the rename, and what each became. */
+export const CURRENT_DATA_DIR_NAME = '.onepool'
+/** Provider ids before this fork, and what each became. */
 export const PROVIDER_ID_RENAMES: Readonly<Record<string, string>> = Object.freeze({
-  'workbuddy-xdpool': 'xdpool',
-  'workbuddy-xdpool-global': 'xdpool-global',
-  'workbuddy-xdpool-aggregate': 'xdpool-aggregate',
-  'workbuddy-xdpool-free': 'xdpool-free',
+  'workbuddy-xdpool': 'onepool',
+  'workbuddy-xdpool-global': 'onepool-global',
+  'workbuddy-xdpool-aggregate': 'onepool-aggregate',
+  'workbuddy-xdpool-free': 'onepool-free',
+  'xdpool': 'onepool',
+  'xdpool-global': 'onepool-global',
+  'xdpool-aggregate': 'onepool-aggregate',
+  'xdpool-free': 'onepool-free',
 })
 /** Result of an adoption attempt, for the caller to log. */
 export interface MigrationResult {
@@ -95,8 +127,14 @@ function dshHome(env: NodeJS.ProcessEnv): string {
 export function adoptLegacyDataDir(env: NodeJS.ProcessEnv = process.env): MigrationResult {
   const home = dshHome(env)
   const to = join(home, CURRENT_DATA_DIR_NAME)
-  const from = join(home, LEGACY_DATA_DIR_NAME)
-  if (!existsSync(from)) return { adopted: false, to, files: [], skipped: 'no-legacy-dir' }
+  // Newest legacy name that actually exists. `.xdpool` is the immediate
+  // predecessor; `.workbuddy-xdpool` is only reached on a machine that never
+  // ran a 2.x build.
+  const source = LEGACY_DATA_DIR_NAMES
+    .map(name => join(home, name))
+    .find(dir => existsSync(dir))
+  if (source === undefined) return { adopted: false, to, files: [], skipped: 'no-legacy-dir' }
+  const from = source
   let legacyNames: string[]
   try {
     legacyNames = readdirSync(from).filter(name => {

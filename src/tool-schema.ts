@@ -27,7 +27,7 @@
  * The tool stays callable, and an upstream that cannot see the cycle cannot refuse the
  * request.
  *
- * @module dsh-xdpool/tool-schema
+ * @module dsh-onepool/tool-schema
  */
 
 /** The maximum depth a schema is walked to. Deep enough for real schemas, shallow enough to be cheap. */

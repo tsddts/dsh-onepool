@@ -4,7 +4,7 @@
  * The host's own logs have moved between at least three directories across the
  * 0.1.x / 0.2.x / DSH NEXT lines, and on a machine with no outbound network
  * they are not always where anyone thinks to look. When a provider fails to
- * register, "the model picker does not list xdpool" is the only symptom the
+ * register, "the model picker does not list onepool" is the only symptom the
  * user can report, and answering it needs the exact throw — so the plugin
  * writes one small append-only file next to the settings it already owns.
  *
@@ -12,7 +12,7 @@
  * diagnosing is worse than no diagnostic, so every path swallows its own
  * failure and returns a value the caller can log instead.
  *
- * @module dsh-xdpool/diagnostics
+ * @module dsh-onepool/diagnostics
  */
 import { appendFileSync, mkdirSync, statSync, truncateSync } from 'node:fs'
 import { homedir } from 'node:os'
@@ -28,7 +28,7 @@ export function startupLogPath(): string {
   const home = process.env.DSH_HOME !== undefined && process.env.DSH_HOME !== ''
     ? process.env.DSH_HOME
     : homedir()
-  return join(home, '.xdpool', 'startup.log')
+  return join(home, '.onepool', 'startup.log')
 }
 /**
  * Render any thrown value as one line of text.

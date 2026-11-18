@@ -30,11 +30,11 @@
  * obviously-bad cases, and the UI says plainly that the file is only as strong as the
  * password.
  *
- * @module dsh-xdpool/client/backup-crypto
+ * @module dsh-onepool/client/backup-crypto
  */
 
 /** Marks an encrypted envelope so a plain payload is never mistaken for one. */
-export const ENCRYPTED_FORMAT = 'dsh-xdpool/backup-encrypted'
+export const ENCRYPTED_FORMAT = 'dsh-onepool/backup-encrypted'
 
 /** Shortest password accepted. Chosen to refuse "1" without pretending to policy. */
 export const MIN_PASSWORD = 8

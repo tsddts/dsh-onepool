@@ -29,7 +29,7 @@ describe('the backup card', () => {
   it('keeps the file input out of the layout in MARKUP, not by CSS', () => {
     // A stylesheet that is not loaded cannot hide anything; `hidden` cannot be missed.
     expect(panel).toContain('hidden')
-    expect(panel).not.toContain('dsm-xdpool-backup-file')
+    expect(panel).not.toContain('dsm-onepool-backup-file')
   })
 
   it('offers one button per action, not three file controls', () => {
@@ -51,8 +51,8 @@ describe('the backup card', () => {
 
   it('shows which file is about to be restored', () => {
     // "Which backup am I importing" must be answered before the confirm dialog, not by it.
-    expect(panel).toContain('dsm-xdpool-bak-filename')
-    expect(panel).toContain('dsm-xdpool-bak-clear')
+    expect(panel).toContain('dsm-onepool-bak-filename')
+    expect(panel).toContain('dsm-onepool-bak-clear')
   })
 
   it('still refuses a password too short to be a secret', () => {

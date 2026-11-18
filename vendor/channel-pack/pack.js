@@ -1222,7 +1222,7 @@ async function requestToken(body, keyPair, fetcher = fetch) {
     const message2 = `CodeArts token request failed: ${response.status}${data ? ` ${JSON.stringify(data)}` : ""}`;
     const errorCode = String(data?.error_code ?? "");
     if (data?.error === "invalid_grant" || errorCode.includes("ExpiredRefreshToken")
-          // [xdpool-local] a consumed refresh token is a dead credential.
+          // [onepool-local] a consumed refresh token is a dead credential.
           //
           // Huawei STS refresh tokens are SINGLE-USE: presenting one returns a
           // new one, and the old value is marked used. "Has been used" is
@@ -29461,14 +29461,14 @@ var CHANNEL_PACK_NS = "channel-pack";
 var channelPackSchema = Schema.object({
   accounts: Schema.array(Schema.any()).default([]),
   disabledModels: Schema.dict(Schema.any()).default({}),
-  // ── 本地扩展（dsh-xdpool，2026-10-17）────────────────────────────────
+  // ── 本地扩展（dsh-onepool，2026-10-17）────────────────────────────────
   // 每 provider 一个「模型 → 上下文预算(正整数)」表：模型原生的上下文窗口
   // 常常远超会话实际能吃下的量（1M/2M），用户需要能在选择器里按需收窄，
   // 语义与 WorkBuddy 账号池里的「上下文大小」选择器一致（0/缺键 = 不收窄）。
   // **必须显式声明**：SettingsStore 的 `scope.replace()` 是整体覆盖，
   // schema 里没声明的键会被 schemastery 剥掉，写回时就此静默丢失。
   contextBudgets: Schema.dict(Schema.any()).default({}),
-  // ── 本地扩展（dsh-xdpool，2026-10-26）────────────────────────────────
+  // ── 本地扩展（dsh-onepool，2026-10-26）────────────────────────────────
   // 记录「用户亲手动过这个 provider 的模型选择」，用来把「用户把模型全部
   // 打开」和「用户从未选择过」区分开。`disabledModels` 本身做不到这件事：
   // 打开模型时我们**删除**键而不是写 false（见 setModelDisabled 注释），
@@ -29853,17 +29853,17 @@ function createPermanentLockStore(ctx) {
 // vendor/channel-pack/src/account-pool.ts
 var EMPTY_MODEL_SET = /* @__PURE__ */ new Set();
 
-// [xdpool-local] laneAllowedIds
+// [onepool-local] laneAllowedIds
 //
 // buddy / workbuddy are exempt from the startup silence pass because
-// dsh-xdpool's own pool card owns their model selection (see
+// dsh-onepool's own pool card owns their model selection (see
 // POOL_OWNED_PROVIDERS below). The exemption avoided a conflict but not a GAP:
 // `disabledModelsFor("buddy")` is therefore always empty, so every adapter
 // returned its whole catalogue and the card's "1 of 16" had no effect on the
 // host's model picker (#121).
 //
 // This helper is the missing link. It intersects the pack's own blacklist with
-// the allow-list dsh-xdpool publishes on `globalThis.__xdpoolLaneSelection`,
+// the allow-list dsh-onepool publishes on `globalThis.__onepoolLaneSelection`,
 // keyed by lane id. The global is a handoff, not an API: the pack is a build
 // artifact of another repository and cannot import from the plugin's src/, and
 // threading a value through ten adapter constructors would be rejected by the
@@ -29877,7 +29877,7 @@ var EMPTY_MODEL_SET = /* @__PURE__ */ new Set();
 //     and must be honoured — hence the two are distinguished below rather than
 //     folded with `??`.
 function laneAllowedIds(disabled, laneId, catalogue) {
-  // [xdpool-local] laneAllowedIds returns the DISABLED set.
+  // [onepool-local] laneAllowedIds returns the DISABLED set.
   //
   // The call sites consume the result as a BLACKLIST
   // (`source.filter(model => !disabled.has(model.id))`), so returning the
@@ -29887,7 +29887,7 @@ function laneAllowedIds(disabled, laneId, catalogue) {
   //
   // It is a THUNK: one adapter declares its roster on the line AFTER this call, so
   // a value would read it before initialization. The body runs later.
-  const table = globalThis.__xdpoolLaneSelection;
+  const table = globalThis.__onepoolLaneSelection;
   const allow = table === void 0 || table === null ? void 0 : table[laneId];
   if (allow === void 0) return disabled;
   const blocked = disabled === void 0 ? EMPTY_MODEL_SET : disabled;
@@ -29913,7 +29913,7 @@ function laneAllowedIds(disabled, laneId, catalogue) {
   return out.size === 0 ? disabled : out;
 }
 
-// [xdpool-local] LANE_DISPLAY_NAME
+// [onepool-local] LANE_DISPLAY_NAME
 //
 // The picker's group names for the two lanes this plugin owns, matching
 // `src/channels.ts` exactly. The vendored upstream constants still call the CN
@@ -30067,7 +30067,7 @@ var AccountPool = class {
   readAccounts() {
     this.ensureLoaded();
     /**
-     * [xdpool-local] Bring in accounts the CREDENTIAL STORE knows and the pool document does
+     * [onepool-local] Bring in accounts the CREDENTIAL STORE knows and the pool document does
      * not — the missing half of the four-group report (#148).
      *
      * A scan login writes `<PREFIX>_ACCOUNT_<hash>` into the host's credentials. The pool
@@ -30827,7 +30827,7 @@ var AccountPool = class {
       if (credential !== void 0) return true;
     }
     /**
-     * [xdpool-local] A signed-in account may exist as a CREDENTIAL without a pool entry.
+     * [onepool-local] A signed-in account may exist as a CREDENTIAL without a pool entry.
      *
      * A scan login writes `<PREFIX>_ACCOUNT_<hash>` into the host's credential store and tells
      * the pack about it through `account.create`. When the pool document and the credential
@@ -31224,7 +31224,7 @@ function resolveHideWithoutAccountFlag(raw) {
 
 // vendor/channel-pack/src/remote-catalog-gate.ts
 var REMOTE_CATALOG_COOLDOWN_MS = 3e4;
-// [xdpool-local] How long a successfully fetched model catalog is trusted.
+// [onepool-local] How long a successfully fetched model catalog is trusted.
 //
 // Each adapter below caches its catalog for the life of the process ("if
 // remoteModels is set, return"), so a vendor renaming a model or changing its
@@ -31235,7 +31235,7 @@ var REMOTE_CATALOG_TTL_MS = 6e5;
 var REMOTE_CATALOG_STAMP = new WeakMap();
 function remoteModelsStale(owner) {
   if (owner.remoteModels === void 0) return true;
-  var override = Number(process.env.DSH_XDPOOL_CATALOG_TTL_MS ?? "");
+  var override = Number(process.env.DSH_ONEPOOL_CATALOG_TTL_MS ?? "");
   var ttl = Number.isFinite(override) && override >= 0 ? override : REMOTE_CATALOG_TTL_MS;
   var now = Date.now();
   var stamp = REMOTE_CATALOG_STAMP.get(owner);
@@ -33006,7 +33006,7 @@ function isQueueError(status, body) {
   return status === 400 && (body.includes("TM.00001041") || /peak\s+usage|try\s+again\s+after|peak\s+hours/i.test(body) || /high\s+demand|too\s+many\s+requests/i.test(body));
 }
 function isAuthError(status, body) {
-  // [xdpool-local] 403 is not auth for CodeArts.
+  // [onepool-local] 403 is not auth for CodeArts.
   //
   // Every IAM rejection this gateway produces is measured to be 401 APIG.0301:
   // bad SK signature, truncated STS token, wrong AK, and a body rewritten after
@@ -33048,7 +33048,7 @@ function errorDetail(body) {
   return body;
 }
 function httpErrorCode(status, body) {
-  // [xdpool-local] benefitNotFound — see tools/patch-pack-error-kinds.mjs
+  // [onepool-local] benefitNotFound — see tools/patch-pack-error-kinds.mjs
   //
   // CodeArts answers `InferHub.4004.200 benefit not found` when the account has
   // no entitlement for the model. The request carries `maas_type: benefit`
@@ -33065,7 +33065,7 @@ function httpErrorCode(status, body) {
       return "INVALID_REQUEST";
     }
   }
-  // [xdpool-local] 403 is not auth — see isAuthError. The frontend renders AUTH
+  // [onepool-local] 403 is not auth — see isAuthError. The frontend renders AUTH
   // as "API 密钥无效", so routing a WAF 403 here produced a confident wrong
   // diagnosis. Only a 401, or a 403 whose body names the token, is AUTH.
   if (status === 401) return "AUTH";
@@ -33080,7 +33080,7 @@ function httpErrorCode(status, body) {
     if (isContextWindowExceededError(detail)) return CONTEXT_WINDOW_EXCEEDED_CODE;
     return "INVALID_REQUEST";
   }
-  // [xdpool-local] A 200 body can carry the benefit refusal too (the upstream
+  // [onepool-local] A 200 body can carry the benefit refusal too (the upstream
   // answers 200 with an error frame), so the probe above is the only guard that
   // covers both transports — nothing to do here.
   if (status >= 500) return "SERVER";
@@ -33497,7 +33497,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
     const isBenefitModel = isCodeArtsBenefitModel(options.model);
     for (; ; ) {
       /**
-       * [xdpool-local] The benefit header is NEVER sent — issue #150.
+       * [onepool-local] The benefit header is NEVER sent — issue #150.
        *
        * `maas_type: benefit` routes the request onto a lane the upstream has retired: with it
        * the first frame is `InferHub.APIG.0101.404`, which surfaces as
@@ -33522,7 +33522,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
         extraSignedHeaders
       );
       const headers = new Headers(attributionHeaders());
-      // [xdpool-local] Override the host USER-AGENT, or the gateway answers 403.
+      // [onepool-local] Override the host USER-AGENT, or the gateway answers 403.
       //
       // attributionHeaders() stamps the DSH bot UA and snap-access rejects it
       // outright with 403 {error_code:TM.00000001}. Measured against the live
@@ -33540,7 +33540,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
       headers.set("Chat-Id", this.chatId);
       headers.set("Session-Id", this.sessionId);
       headers.set("lang", "en");
-      // [xdpool-local] billion-context（bili）在 DSH 内做上下文压缩，而压缩必须重写请求体；
+      // [onepool-local] billion-context（bili）在 DSH 内做上下文压缩，而压缩必须重写请求体；
       // 本请求的签名覆盖请求体（SDK-HMAC-SHA256），重写即失效。bili 手里没有可重签的凭证，
       // 于是按它的 compress-or-refuse 契约**本地 403 拒绝转发**，而 pack 侧只看到 403
       // （httpErrorCode 对 403 无条件返回 "AUTH"），最终被 lib/index.js 的
@@ -33557,7 +33557,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
       //
       // 默认为什么仍是关：billion-context 只在 optionalDependencies 里，未安装时这两个头
       // 会直达上游；且 bili 的进程内 native client 自己就会构造这两个头（resignExtra），
-      // 那条路径加不加都不影响它。开关留给「xdpool 直接对接 bili 代理路径」的场合。
+      // 那条路径加不加都不影响它。开关留给「onepool 直接对接 bili 代理路径」的场合。
       if (this.options.codeartsResignHeaders === true) {
         headers.set("x-bili-resign", "sdk-hmac-sha256");
         headers.set(
@@ -33621,7 +33621,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
         const errorText = await response.text().catch(() => "");
         if (isAuthError(response.status, errorText) && !authRefreshed) {
           authRefreshed = true;
-          // [xdpool-local] auth failure rotates the account, not just refresh it.
+          // [onepool-local] auth failure rotates the account, not just refresh it.
           //
           // This branch used to refresh and continue, which re-reads the SAME
           // account — so with two accounts in the pool, a credential the gateway
@@ -33704,7 +33704,7 @@ var CodeArtsAdapter = class extends LlmAdapter {
           const probe = await this.queryQueueStatus(credential, options.model, options.signal);
           if (probe === void 0 || probe.status === "working") {
             const code = httpErrorCode(response.status, errorText);
-            // [xdpool-local] error detail on the HTTP-status throw.
+            // [onepool-local] error detail on the HTTP-status throw.
             //
             // "HTTP 403" alone cannot be diagnosed: the 403 in this report was a
             // WAF verdict on the User-Agent, and with no body in the message the
@@ -35445,7 +35445,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
    */
   providerInfo(provider) {
     const id = typeof provider === "string" && provider.length > 0 ? provider : this.product.id;
-    // [xdpool-local] The picker's group name follows this plugin's own naming.
+    // [onepool-local] The picker's group name follows this plugin's own naming.
     return { id, name: LANE_DISPLAY_NAME[id] ?? this.product.displayName };
   }
   /**
@@ -35748,7 +35748,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
       }
     }
     const messages = serializeMessages2(options.messages, imageUrls);
-    // [xdpool-local] The WorkBuddy gateways refuse role "developer" with business
+    // [onepool-local] The WorkBuddy gateways refuse role "developer" with business
     // code 11128 ("Illegal API invocation from an unapproved channel"), and DSH
     // sends workspace instructions under exactly that role. Convert in place: role
     // only, no merging and no reordering, so a rule at the front stays at the
@@ -35759,7 +35759,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
     if (options.system !== void 0 && options.system.length > 0) {
       messages.unshift({ role: "system", content: options.system });
     }
-    // [xdpool-local] The same gateways scan system and assistant CONTENT for
+    // [onepool-local] The same gateways scan system and assistant CONTENT for
     // other clients' fingerprints and answer 11128 / "this call failed channel
     // verification". The match is a case-insensitive substring, so the fix has
     // to rewrite the phrase, not shift it: a leading newline clears the
@@ -35774,7 +35774,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
     for (const message of messages) {
       if ((message.role === "system" || message.role === "assistant") && typeof message.content === "string") {
         message.content = message.content.replace(/powered by DeepSeek Harness/gi, "running on DeepSeek Harness").replace(/DeepSeek Harness Web GUI/gi, "DeepSeek Harness web interface").replace(/Relative paths resolve from the workspace root/gi, "Relative paths are resolved against the workspace root")
-          // [xdpool-local] codexCliBanner — see tools/patch-pack-codex-banner.mjs
+          // [onepool-local] codexCliBanner — see tools/patch-pack-codex-banner.mjs
           //
           // Codex CLI 0.166 opens with a developer message the gate catalogued.
           // Measured (#112): the banner's first 184 chars pass, 185 (the same
@@ -36035,7 +36035,7 @@ var BuddyAdapter = class _BuddyAdapter extends LlmAdapter2 {
     headers.set("X-IDE-Version", this.product.clientVersion);
     headers.set(HTTP_HEADER_PRODUCT, this.product.attributionName);
     headers.set("User-Agent", resolveUserAgent(this.product, options.model));
-    // [xdpool-local] The international gateway turned its channel verification
+    // [onepool-local] The international gateway turned its channel verification
     // from soft to hard: missing ANY one of these three headers and every turn
     // comes back 400 / 11128 "request illegal", which reaches the user as a
     // blocked request with nothing wrong in the body. The official client sets all
@@ -37032,7 +37032,7 @@ var LobsteraiAdapter = class extends LlmAdapter3 {
    */
   providerInfo(provider) {
     const id = typeof provider === "string" && provider.length > 0 ? provider : this.product.id;
-    // [xdpool-local] Present this lane under the name the rest of the plugin uses.
+    // [onepool-local] Present this lane under the name the rest of the plugin uses.
     //
     // `channels.ts` (REGISTERED_CHANNELS), `region-card.tsx` and
     // `ChannelPoolSection.tsx` all call this lane 「WorkBuddy 国内版」, while the
@@ -37895,7 +37895,7 @@ function buildQoderInferPayload(ask, requestId = crypto.randomUUID()) {
 }
 var gluePromise = null;
 /**
- * [xdpool-local] Keep a Qoder payload inside the WASM's memory budget — issue #155.
+ * [onepool-local] Keep a Qoder payload inside the WASM's memory budget — issue #155.
  *
  * WHAT IS CUT, AND IN WHICH ORDER
  *
@@ -38167,7 +38167,7 @@ var QoderEncryptedInfer = class _QoderEncryptedInfer {
       const host = g.writeString(this.host);
       const hostLen = g.lastLength();
       /**
-       * [xdpool-local] Shrink the payload before it reaches the WASM — issue #155.
+       * [onepool-local] Shrink the payload before it reaches the WASM — issue #155.
        *
        * The encrypted-infer glue declares ~1 MB of linear memory, and the whole request is
        * written into it as UTF-8: the plaintext JSON string, its encoded copy and the WASM
@@ -38299,7 +38299,7 @@ function unwrapQoderEnvelopeStream(response, label) {
         if (classifyInner(inner) === "error") {
           let code;
           let message2 = inner;
-          // [xdpool-local] benefitNotFound / pricingUrl — see
+          // [onepool-local] benefitNotFound / pricingUrl — see
           // tools/patch-pack-error-kinds.mjs
           //
           // A refusal whose body is only a pricingUrl is upstream pointing at its
@@ -46983,7 +46983,7 @@ var TraeAuth = class _TraeAuth extends Service5 {
       const available2 = await pool.getAvailableAccount(this.product.id, "").catch(() => void 0);
       if (available2) credential = available2.credential;
       /**
-       * [xdpool-local] Fall back to ANY account the pool holds — issue #154.
+       * [onepool-local] Fall back to ANY account the pool holds — issue #154.
        *
        * `getAvailableAccount` skips accounts that are cooling down, disabled, or simply not
        * the current pick. When it answers nothing, the code below resolved
@@ -52583,7 +52583,7 @@ function hasZcodeUnusualActivity(body) {
   return mentionsZcodeUnusualActivity(body);
 }
 /**
- * [xdpool-local] Recognise the risk-control refusal that arrives with NO code and a
+ * [onepool-local] Recognise the risk-control refusal that arrives with NO code and a
  * non-401 status (#132).
  *
  * The reporter's screenshot showed `HTTP 405 · request has been blocked due to unusual
@@ -58285,7 +58285,7 @@ function parseCreditBalance(metrics) {
   );
   return { total, packages, expiredTotal: 0 };
 }
-// [xdpool-local] Whether this CodeArts credential's own STS expiry has passed.
+// [onepool-local] Whether this CodeArts credential's own STS expiry has passed.
 //
 // Huawei mints these AK/SK/security-token triples with a two-hour life, so a
 // stored credential very often IS expired while its refresh_token still has
@@ -61052,7 +61052,7 @@ async function collectClaimResults(accounts, product, deps) {
   }
   return { results, summary: computeClaimSummary(outcomes) };
 }
-// [xdpool-local] Re-mint any CodeArts credential whose own STS expiry has
+// [onepool-local] Re-mint any CodeArts credential whose own STS expiry has
 // already passed, before the caller reports it as a failure.
 //
 // Best-effort by design: every failure is logged and swallowed. A refresh that
@@ -61434,7 +61434,7 @@ function registerChannelPackEndpoints(ctx, pool, codearts, buddy, workbuddy, lob
     };
   }
   async function handleMethod(method, payload, _signal) {
-    // [xdpool-local] One heal for every CodeArts entry point, before the switch.
+    // [onepool-local] One heal for every CodeArts entry point, before the switch.
     //
     // A CodeArts credential lives two hours; its refresh_token behind it lives
     // ~30 days. Three separate RPC families read that credential and each of
@@ -61806,7 +61806,7 @@ function registerChannelPackEndpoints(ctx, pool, codearts, buddy, workbuddy, lob
                 userId
               );
               if (existingId.length > 0 && existingId !== id) {
-                // 本地适配（dsh-xdpool）：重扫同一账号时用新凭据覆盖已有条目，
+                // 本地适配（dsh-onepool）：重扫同一账号时用新凭据覆盖已有条目，
                 // 而不是新增一条「重复，已停用」的死条目。覆盖顺序很重要：
                 // 先把已有条目的 credentialRef 指到新凭据，再删掉本次的新条目
                 //（removeAccount 会 unset 其 credentialRef 指向的凭据本体，
@@ -62562,7 +62562,7 @@ function registerChannelPackEndpoints(ctx, pool, codearts, buddy, workbuddy, lob
             fetchBalanceDetailed: async (credential) => {
               const result = await fetchCodeArtsAccountInfoDetailed(credential);
               if (!result.ok) {
-                // [xdpool-local] An expired STS token is the commonest CodeArts
+                // [onepool-local] An expired STS token is the commonest CodeArts
                 // failure, and the raw APIG message does not say what to do about
                 // it. Name the condition, then name the one action that fixes it.
                 // Only when it IS expired: a 5xx keeps its original wording.
@@ -63008,7 +63008,7 @@ function registerChannelPackEndpoints(ctx, pool, codearts, buddy, workbuddy, lob
         const disabledMap = pool.listDisabledModels(req.provider);
         const catalogSource = modelAdapters?.[req.provider];
         const all = catalogSource?.listAllModels();
-        // ── 本地适配（dsh-xdpool，2026-10-17）────────────────────────────
+        // ── 本地适配（dsh-onepool，2026-10-17）────────────────────────────
         // `llm` 只在**没有适配器目录**时才需要：上游把 `llm.listModels()`
         // 放在最前面当硬门槛，于是宿主未注册 `llm` 服务（或它抛错）时，
         // 整条 RPC 直接失败 —— 而下面那段目录其实就在本地、根本不需要
@@ -63056,7 +63056,7 @@ function registerChannelPackEndpoints(ctx, pool, codearts, buddy, workbuddy, lob
             if (!known.has(id)) catalog.push({ id, name: id });
           }
         }
-        // ── 本地扩展（dsh-xdpool，2026-10-17）────────────────────────────
+        // ── 本地扩展（dsh-onepool，2026-10-17）────────────────────────────
         // 上游这份 value 只有 `{id,name,disabled,dead,isFree?}`，上下文窗口与
         // 识图能力一概没有，于是账号池页每一行都只能印一个光秃秃的模型名。
         // 那些事实其实**就在适配器里**（`contextWindowFor` / `inputModalitiesFor`
@@ -67183,7 +67183,7 @@ function createChannelFetch(options = {}) {
   let systemAt = 0;
   let closed = false;
   /**
-   * [xdpool-local] Capture the fetch implementation ONCE, not at every call (#140).
+   * [onepool-local] Capture the fetch implementation ONCE, not at every call (#140).
    *
    * `options.fetchImpl ?? globalThis.fetch` read the global lazily, at call time. When
    * another plugin patches `globalThis.fetch` — billion-context does, to enforce an 8 MiB
@@ -68728,7 +68728,7 @@ function apply(ctx, config = {}) {
   const service = new CodeArtsAuth(ctx);
   const pool = new AccountPool(ctx);
   configureDeadModelStore(ctx);
-  // ── 本地适配（dsh-xdpool）：扫码渠道**首次**登录成功后默认静音该渠道 ──
+  // ── 本地适配（dsh-onepool）：扫码渠道**首次**登录成功后默认静音该渠道 ──
   // 需求（2026-10-16）：新扫码的渠道不该立刻把它的全部模型灌进选择器；
   // 账号先出现在账号池页，模型默认全不勾，用户在账号池页手动勾选启用。
   // 实现：包装 `pool.addAccount`，当该 provider 此前没有任何账号（即本次是
@@ -68744,7 +68744,7 @@ function apply(ctx, config = {}) {
   //   非空（用户勾选的模型已被移出黑名单），不会重复静音。
   let channelPackModelAdaptersRef;
   const rawAddAccount = pool.addAccount.bind(pool);
-  // ── 本地适配（dsh-xdpool）：清掉同一账号的重复条目 ──
+  // ── 本地适配（dsh-onepool）：清掉同一账号的重复条目 ──
   // 需求（2026-10-16）：用户在扫码登录页反复点「添加账号」，上游 `addAccount`
   // 是纯追加（无任何去重），于是同一账号攒出多条，账号池页一张卡里显示
   // 3-4 个一模一样的人。
@@ -68835,13 +68835,13 @@ function apply(ctx, config = {}) {
 
   // 启动时先扫一遍：用户升级前攒下的重复只能靠这一次清掉。
   void Promise.resolve().then(() => dedupeChannelAccounts());
-  // ── 本地适配（dsh-xdpool）：启动时补静音「黑名单为空但已有账号」的渠道 ──
+  // ── 本地适配（dsh-onepool）：启动时补静音「黑名单为空但已有账号」的渠道 ──
   // 需求（2026-10-17）：上面的首登静音只在「下一次登录」时才补，而用户是在
   // 打上补丁之前就登好的那些渠道（codearts / lobsterai / cline / raccoon /
   // minimax / gemini），黑名单永远是空的，账号池页打开就是「全部已勾」，
   // 与「让用户自己选」的预期相反。启动这一次把这类渠道补上。
   //
-  // 例外：buddy / workbuddy 不在其中。这两条 lane 由 dsh-xdpool 自己的账号池
+  // 例外：buddy / workbuddy 不在其中。这两条 lane 由 dsh-onepool 自己的账号池
   // 服务（账号池页顶部的 WorkBuddy 国内版 / 国际版两张卡），它们有一套自己的
   // 模型选择（写进本插件的配置，不走 pack 的黑名单）；在这里把它们静音等于
   // 用 pack 的黑名单去覆盖另一套开关，会让这两张卡的模型凭空消失。

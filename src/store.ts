@@ -18,7 +18,7 @@
  * the card is open is picked up without a reload — the same contract
  * `ignored.ts` documents for the ignore list.
  *
- * @module dsh-xdpool/store
+ * @module dsh-onepool/store
  */
 import { readFile, rename } from 'node:fs/promises'
 // The sync reader below needs `readFileSync`, and `node:fs/promises` does not
@@ -96,7 +96,7 @@ function text(value: unknown): string {
 export function aggregateSettingsPath(): string | undefined {
   const home = env.DSH_HOME ?? homedir()
   if (typeof home !== 'string' || home === '') return undefined
-  return join(home, '.xdpool', 'aggregate.json')
+  return join(home, '.onepool', 'aggregate.json')
 }
 /** One provider's setting, normalised; an unknown id is dropped on read. */
 function normalizeSetting(raw: unknown): ProviderSetting {

@@ -21,12 +21,12 @@
  * claiming there is nothing new — telling a user they are current when the check did not run is
  * the one wrong answer here.
  *
- * @module dsh-xdpool/update-check
+ * @module dsh-onepool/update-check
  */
 import { POOL_VERSION } from './version.ts'
 
 /** The package name this plugin publishes under. */
-const PACKAGE = 'dsh-xdpool'
+const PACKAGE = 'dsh-onepool'
 
 /** The registries tried, in order. npm first: it is the canonical one. */
 const REGISTRIES = [

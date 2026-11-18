@@ -73,7 +73,7 @@ export type { FingerprintPlan }
  * turns an unguarded read into a miss that falls through to the real gateway.
  */
 export const FREE_UPSTREAM_BASE =
-  (typeof process === 'undefined' ? undefined : process.env.XDPOOL_FREE_BASE) ?? 'https://opencode.ai'
+  (typeof process === 'undefined' ? undefined : process.env.ONEPOOL_FREE_BASE) ?? 'https://opencode.ai'
 /**
  * The gateway fingerprints a genuine client, and only a v2-shaped UA is one.
  *
@@ -235,13 +235,13 @@ const SESSION_EPOCH = 1769721600000n // 2026-06-01T00:00:00Z
 
 /** Deterministic canonical upstream session for a conversation seed. */
 function sessionFromSeed(seed: string): string {
-  const h = fnv64(`xdpool-free\0${seed}`)
+  const h = fnv64(`onepool-free\0${seed}`)
   const offset = h & 0x7fffffffn // up to ~24.9 days of spread
   const ts = SESSION_EPOCH + (offset % (30n * 24n * 3600n * 1000n))
   const seq = Number((h >> 31n) & 0x3fn) + 1
   const prefix = canonicalPrefix(ts, seq > 63 ? 63 : seq)
   const suffix = base62From(
-    crypto.createHash('sha256').update(`xdpool-free-suffix\0${seed}`, 'utf8').digest().subarray(0, 14),
+    crypto.createHash('sha256').update(`onepool-free-suffix\0${seed}`, 'utf8').digest().subarray(0, 14),
   )
   return `ses_${prefix}${suffix}`
 }
@@ -276,7 +276,7 @@ export function sessionForConversation(sessionId: string | undefined): string {
  */
 export function requestIdFor(sessionId: string, turnSeed: string | undefined): string {
   if (text(turnSeed) === '') return mintRequestId()
-  const digest = crypto.createHash('sha256').update(`xdpool-free-req\0${sessionId}\0${turnSeed}`, 'utf8').digest()
+  const digest = crypto.createHash('sha256').update(`onepool-free-req\0${sessionId}\0${turnSeed}`, 'utf8').digest()
   const id = `msg_${digest.subarray(0, 6).toString('hex')}${base62From(digest.subarray(6, 20))}`
   return REQUEST_RE.test(id) ? id : mintRequestId()
 }
@@ -825,7 +825,7 @@ function withFreeTierHint(status: number, refusal: string, retryAfterMs: number 
         + 'or subscribe to OpenCode Go'
         + kept
       : 'the free lane refused this client: its request fingerprint no longer matches what opencode.ai accepts, '
-      + 'so this is NOT an exhausted quota and waiting will not help — update dsh-xdpool and try again; '
+      + 'so this is NOT an exhausted quota and waiting will not help — update dsh-onepool and try again; '
       + 'if it persists, report this message. The shared free quota is also metered per conversation, so one '
       + `retry in a fresh conversation covers the case where only that budget is spent${kept}`,
     status,

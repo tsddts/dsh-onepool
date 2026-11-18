@@ -28,7 +28,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 const PACK = join(ROOT, 'vendor', 'channel-pack', 'pack.js')
-const MARKER = '[xdpool-local] LANE_DISPLAY_NAME'
+const MARKER = '[onepool-local] LANE_DISPLAY_NAME'
 
 const raw = readFileSync(PACK, 'utf8')
 const eol = raw.includes('\r\n') ? '\r\n' : '\n'
@@ -47,7 +47,7 @@ if (text.includes(MARKER)) {
  * them byte-identical is the point of the fix — a near-match would leave the
  * two screens differing by punctuation.
  */
-const TABLE = `// [xdpool-local] LANE_DISPLAY_NAME
+const TABLE = `// [onepool-local] LANE_DISPLAY_NAME
 //
 // The picker's group names for the two lanes this plugin owns, matching
 // \`src/channels.ts\` exactly. The vendored upstream constants still call the CN
@@ -89,7 +89,7 @@ const OLD_BODY = `  providerInfo(provider) {
   }`
 const NEW_BODY = `  providerInfo(provider) {
     const id = typeof provider === "string" && provider.length > 0 ? provider : this.product.id;
-    // [xdpool-local] The picker's group name follows this plugin's own naming.
+    // [onepool-local] The picker's group name follows this plugin's own naming.
     return { id, name: LANE_DISPLAY_NAME[id] ?? this.product.displayName };
   }`
 if (!text.startsWith(OLD_BODY, methodAt)) {

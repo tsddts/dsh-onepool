@@ -13,7 +13,7 @@ Trusted Publishing 因此成为唯一无码可用的官方通道，也是 npm �
 1. **npm 侧绑定**：npmjs.com → 该包 → Settings → **Trusted Publisher** →
    选 **GitHub Actions**，填：
    - Organization or user：`XDTrees`
-   - Repository：`dsh-xdpool`
+   - Repository：`dsh-onepool`
    - Workflow filename：`release.yml`
    - Environment name：留空
    - Allowed actions：按需勾选（**至少保留 `npm stage publish`**；
@@ -21,7 +21,7 @@ Trusted Publishing 因此成为唯一无码可用的官方通道，也是 npm �
 2. **GitHub 侧**：确认仓库的 Actions 有写权限（默认有），然后推送一个 tag 即可。
 ## 发布一个新版本
 ```powershell
-cd D:\DSH\dsh-xdpool
+cd D:\DSH\dsh-onepool
 # 1. 改 package.json 的 version，并同步写 CHANGELOG
 # 2. 提交
 git add -A

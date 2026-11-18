@@ -64,7 +64,7 @@ describe('login channel roster', () => {
 })
 describe('channel route contract', () => {
   it('addresses the list and the pack RPC on separate paths', () => {
-    expect(POOL_CHANNELS_PATH).toBe('/plugins/dsh-xdpool/channels')
+    expect(POOL_CHANNELS_PATH).toBe('/plugins/dsh-onepool/channels')
     expect(CHANNEL_PACK_RPC_PATH).toBe('/api/channel-pack')
   })
   it('forwards exactly the methods the UI actually calls', () => {

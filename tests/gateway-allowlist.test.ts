@@ -7,7 +7,7 @@
  *     This one process answers the host's own pool adapter and, through the
  *     relay, whatever device holds the LAN key — so a list meant for other
  *     machines would start refusing the user's own chat. The relay stamps
- *     `x-xdpool-relay-hop` on what it forwards and strips a client-supplied copy,
+ *     `x-onepool-relay-hop` on what it forwards and strips a client-supplied copy,
  *     so the two callers are distinguishable and only one is gated.
  *   - filtering only `/v1/models` would be cosmetic. The relay key is one secret
  *     shared by every device on the network, so a model merely left off a listing

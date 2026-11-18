@@ -1,10 +1,10 @@
-# DSH XD Pool
+# DSH OnePool
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-xdpool"><img src="https://img.shields.io/npm/v/dsh-xdpool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/dsh-xdpool"><img src="https://img.shields.io/npm/dm/dsh-xdpool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-xdpool?style=flat-square" alt="MIT license"></a>
-  <a href="https://github.com/XDTrees/dsh-xdpool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-xdpool?style=flat-square" alt="GitHub stars"></a>
+  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/v/dsh-onepool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/dm/dsh-onepool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-onepool?style=flat-square" alt="MIT license"></a>
+  <a href="https://github.com/XDTrees/dsh-onepool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-onepool?style=flat-square" alt="GitHub stars"></a>
 </p>
 
 ## Join the group
@@ -17,13 +17,13 @@
   <b>Left: WeChat (bot)</b> — scanning only adds the bot. <b>Send “XD”</b> and it pulls you into the group; scanning alone does nothing.<br>
   <b>Right: QQ group</b> — scan and you are in. Group number 1103463688.
   <br>
-  <sub>Both groups are live; use whichever you prefer. If a code stops working, say so in <a href="https://github.com/XDTrees/dsh-xdpool/issues">issues</a> and it will be refreshed.</sub>
+  <sub>Both groups are live; use whichever you prefer. If a code stops working, say so in <a href="https://github.com/XDTrees/dsh-onepool/issues">issues</a> and it will be refreshed.</sub>
   <br>
   <sub>The 交流群 button next to “Star” in the card's top-right corner opens these same two codes — no need to come back to the README.</sub>
 </p>
 
 <p align="center">
-  <sub>The downloads badge reads <code>dsh-xdpool</code>'s own live npm stats now, not the pre-rename snapshot.</sub>
+  <sub>The downloads badge reads <code>dsh-onepool</code>'s own live npm stats now, not the pre-rename snapshot.</sub>
 </p>
 
 English | [中文](./README.md)
@@ -45,16 +45,16 @@ Then it grew into six pages. Beyond the account pool: sign in to thirteen vendor
 
 **It also throws in a full points-automation suite**: check-ins, task rewards, streak redemption, the buddy trip — all the chores you'd otherwise click through every day, done in the background.
 
-> **How this differs from the single-account connectors**: plugins like `dsh-workbuddy-connect` handle one account at a time. XD Pool treats **multiple accounts as the normal case** — it doesn't pick favourites or ask you to import anything. Every account you've switched through on the desktop app is remembered across restarts, exposed as a single `xdpool` provider group, with automatic failover inside.
+> **How this differs from the single-account connectors**: plugins like `dsh-workbuddy-connect` handle one account at a time. OnePool treats **multiple accounts as the normal case** — it doesn't pick favourites or ask you to import anything. Every account you've switched through on the desktop app is remembered across restarts, exposed as a single `onepool` provider group, with automatic failover inside.
 
-> **Upgrading from the old name**: this plugin used to be `dsh-workbuddy-xdpool`. Your data is **carried over automatically** (API keys, ignore list, account pin). The one thing you may need to do by hand is a default model pinned to an old id — see [Upgrading from an older version](#upgrading-from-an-older-version).
+> **Upgrading from the old name**: this plugin used to be `dsh-workbuddy-onepool`. Your data is **carried over automatically** (API keys, ignore list, account pin). The one thing you may need to do by hand is a default model pinned to an old id — see [Upgrading from an older version](#upgrading-from-an-older-version).
 
 
 ## Screenshots
 
 **Account pool (the card's home page: brand bar plus seven page tabs, usage right at the top)**
 
-![Account pool: the brand bar shows XD Pool with its version, seven page tabs, the usage panel sits at the very top, and below it the WorkBuddy CN account card with its connected badge](assets/account-pool.png)
+![Account pool: the brand bar shows OnePool with its version, seven page tabs, the usage panel sits at the very top, and below it the WorkBuddy CN account card with its connected badge](assets/account-pool.png)
 
 **Login channels (thirteen vendors that sign in by web or QR — sign in once and their free models are yours)**
 
@@ -136,7 +136,7 @@ Prerequisite: the WorkBuddy desktop app installed and signed in (the plugin reus
 
 ```sh
 # if dsh is not on PATH, use node ~/.dsh/profiles/node_modules/@deepseek-ai/dsh/lib/bin.js instead
-dsh plugin --profile desktop add dsh-xdpool
+dsh plugin --profile desktop add dsh-onepool
 ```
 
 > npm is the fast path: the only dependency pulled in is the plugin itself (**roughly 1 package, a few seconds**).
@@ -145,17 +145,17 @@ dsh plugin --profile desktop add dsh-xdpool
 **Option B — install from the GitHub source**
 
 ```sh
-dsh plugin --profile desktop add github:XDTrees/dsh-xdpool
+dsh plugin --profile desktop add github:XDTrees/dsh-onepool
 ```
 
 **Option C — register the bundle by hand**
 
 ```sh
 # 1) install the package (npm or GitHub)
-dsh plugin --profile desktop add dsh-xdpool
+dsh plugin --profile desktop add dsh-onepool
 
 # 2) register the bundle: edit ~/.dsh/profiles/desktop/package.json and append
-#    "dsh-xdpool" to the end of the "dsh" → "profile" → "bundles" array
+#    "dsh-onepool" to the end of the "dsh" → "profile" → "bundles" array
 
 # 3) restart DSH Desktop
 ```
@@ -174,31 +174,31 @@ pnpm typecheck:client   # client side
 
 > Note: `pnpm install` wants pnpm 11 (`npx pnpm@11`), and may need `--config.confirmModulesPurge=false --config.minimumReleaseAge=0` — pnpm 11's default `minimumReleaseAge` supply-chain policy blocks just-published rc packages.
 
-Once installed: **XD Pool（国内版）** and **XD Pool（国际版）** groups appear in the model picker (plus "聚合渠道" and "XD Pool · 免费模型" when those lanes are configured), and the **XD Pool** settings tab shows pool health, each account's token / credits / check-in / cooldown state, the "Detect accounts again" and "Clear all cooldowns" buttons, and a check-in button per account.
+Once installed: **OnePool（国内版）** and **OnePool（国际版）** groups appear in the model picker (plus "聚合渠道" and "OnePool · 免费模型" when those lanes are configured), and the **OnePool** settings tab shows pool health, each account's token / credits / check-in / cooldown state, the "Detect accounts again" and "Clear all cooldowns" buttons, and a check-in button per account.
 
 It also works under the Web / TUI profiles (`--profile web` / `--profile dsh-tui`).
 
 ## Upgrading from an older version
 
-This plugin used to be **`dsh-workbuddy-xdpool`** (display name `DSH WorkBuddy XD Pool`). As of 2.1.0 it is **`dsh-xdpool`**.
+This plugin used to be **`dsh-workbuddy-onepool`** (display name `DSH WorkBuddy OnePool`). As of 2.1.0 it is **`dsh-onepool`**.
 
-**Your data is not lost.** The plugin's own directory moved from `~/.dsh/.workbuddy-xdpool` to `~/.dsh/.xdpool`, and startup **copies the old one across automatically** — the third-party API keys you typed, your ignore list, your account pin, the startup trace. The old directory is **copied, never deleted**, so a rollback or a side-by-side install still works.
+**Your data is not lost.** The plugin's own directory moved from `~/.dsh/.workbuddy-onepool` to `~/.dsh/.onepool`, and startup **copies the old one across automatically** — the third-party API keys you typed, your ignore list, your account pin, the startup trace. The old directory is **copied, never deleted**, so a rollback or a side-by-side install still works.
 
 The one thing that does not migrate itself: **a default model pinned to an old provider id**. That pin is a plain string in the host's own config, and the plugin does not rewrite the host config that loads it.
 
 | Old id | New id |
 | --- | --- |
-| `workbuddy-xdpool` | `xdpool` |
-| `workbuddy-xdpool-global` | `xdpool-global` |
-| `workbuddy-xdpool-aggregate` | `xdpool-aggregate` |
-| `workbuddy-xdpool-free` | `xdpool-free` |
+| `workbuddy-onepool` | `onepool` |
+| `workbuddy-onepool-global` | `onepool-global` |
+| `workbuddy-onepool-aggregate` | `onepool-aggregate` |
+| `workbuddy-onepool-free` | `onepool-free` |
 
 Two places to edit, both inside the profile directory:
 
 ```yaml
 # ~/.dsh/profiles/desktop/home/settings.yaml
 agent-default-model:
-  provider: xdpool        # was workbuddy-xdpool
+  provider: onepool        # was workbuddy-onepool
   model: hy3
 ```
 
@@ -206,43 +206,43 @@ agent-default-model:
 # ~/.dsh/profiles/desktop/cordis.patch.yml
 - id: agent-default-model
   config:
-    provider: xdpool-global   # was workbuddy-xdpool-global
+    provider: onepool-global   # was workbuddy-onepool-global
 ```
 
-Every startup writes this to `~/.dsh/.xdpool/startup.log`, so if you forget, the log tells you exactly what to change.
+Every startup writes this to `~/.dsh/.onepool/startup.log`, so if you forget, the log tells you exactly what to change.
 
 ## CLI
 
-All commands run through `dsh plugin --profile desktop exec dsh-xdpool <subcommand>`:
+All commands run through `dsh plugin --profile desktop exec dsh-onepool <subcommand>`:
 
 ```sh
-dsh plugin --profile desktop exec dsh-xdpool status    # pool accounts/cooldown + shim state (--credits, --json, --rates)
-dsh plugin --profile desktop exec dsh-xdpool accounts  # discovered accounts (--json)
-dsh plugin --profile desktop exec dsh-xdpool doctor    # diagnose discovery/cooldown/upstream
-dsh plugin --profile desktop exec dsh-xdpool reset     # clear all 429 cooldowns now
-dsh plugin --profile desktop exec dsh-xdpool checkin   # today's check-in state per account (--json)
-dsh plugin --profile desktop exec dsh-xdpool checkin all
+dsh plugin --profile desktop exec dsh-onepool status    # pool accounts/cooldown + shim state (--credits, --json, --rates)
+dsh plugin --profile desktop exec dsh-onepool accounts  # discovered accounts (--json)
+dsh plugin --profile desktop exec dsh-onepool doctor    # diagnose discovery/cooldown/upstream
+dsh plugin --profile desktop exec dsh-onepool reset     # clear all 429 cooldowns now
+dsh plugin --profile desktop exec dsh-onepool checkin   # today's check-in state per account (--json)
+dsh plugin --profile desktop exec dsh-onepool checkin all
                                                                  # collect every account's daily reward (or pass one label)
-dsh plugin --profile desktop exec dsh-xdpool login     # guide to adding another desktop account
+dsh plugin --profile desktop exec dsh-onepool login     # guide to adding another desktop account
 ```
 
 ## How accounts get into the pool
 
-The desktop app keeps only the **currently signed-in** account on disk (each switch overwrites the same file), so XD Pool remembers accounts itself: every time you switch sign-ins in the desktop app, the outgoing account is captured into `~/.dsh/.xdpool/accounts.json` and **survives restarts**. Hit "Detect accounts again" or just start using the pool — every historical account comes back.
+The desktop app keeps only the **currently signed-in** account on disk (each switch overwrites the same file), so OnePool remembers accounts itself: every time you switch sign-ins in the desktop app, the outgoing account is captured into `~/.dsh/.onepool/accounts.json` and **survives restarts**. Hit "Detect accounts again" or just start using the pool — every historical account comes back.
 
 To snapshot an extra login explicitly (e.g. to pin one account for verification):
 
 ```sh
-dsh plugin --profile desktop exec dsh-xdpool import myKey
-dsh plugin --profile desktop exec dsh-xdpool accounts
-dsh plugin --profile desktop exec dsh-xdpool remove myKey
+dsh plugin --profile desktop exec dsh-onepool import myKey
+dsh plugin --profile desktop exec dsh-onepool accounts
+dsh plugin --profile desktop exec dsh-onepool remove myKey
 ```
 
-Imported snapshots live in the same directory, `~/.dsh/.xdpool/`, and every scan absorbs them into the pool — they are no longer written and never read back. Snapshots are named by the **MD5-8 prefix** of their key (so keys with Chinese, `/`, or spaces are safe). Long-lived use relies on refresh-token auto-renewal; if it lapses, re-sign-in on the desktop and `import <key> --force`.
+Imported snapshots live in the same directory, `~/.dsh/.onepool/`, and every scan absorbs them into the pool — they are no longer written and never read back. Snapshots are named by the **MD5-8 prefix** of their key (so keys with Chinese, `/`, or spaces are safe). Long-lived use relies on refresh-token auto-renewal; if it lapses, re-sign-in on the desktop and `import <key> --force`.
 
 ## Configuration
 
-Effective config is read from the plugin settings section (`settings.xdpool`), editable on the Models settings page and applied live:
+Effective config is read from the plugin settings section (`settings.onepool`), editable on the Models settings page and applied live:
 
 | Field | Description | Default |
 | --- | --- | --- |
@@ -252,14 +252,14 @@ Effective config is read from the plugin settings section (`settings.xdpool`), e
 Or set it directly in `~/.dsh/settings.yaml`:
 
 ```yaml
-xdpool:
+onepool:
   cooldownMs: 120000
 ```
 
 ## Architecture
 
 - **Host side** (`src/`, inside the DSH main process)
-  - `index.ts` — registers the `xdpool` provider, the `xdpool` settings section, the same-origin routes (status / re-scan / clear cooldowns / check-in / automation run / credit reserve), plus account discovery and catalog seeding.
+  - `index.ts` — registers the `onepool` provider, the `onepool` settings section, the same-origin routes (status / re-scan / clear cooldowns / check-in / automation run / credit reserve), plus account discovery and catalog seeding.
   - `accounts.ts` — `WorkBuddyAccountPool`: discovers and durably stores local WorkBuddy accounts (`account-store.ts`), 429 cooldowns, rotation and token refresh; account disabling and credit reserves live here too.
   - `scheduler.ts` — the points-automation scheduler: runs five jobs on local time points (check-in / report / tasks / streak / travel), persists the daily earnings ledger, and backs the card's "Run now" button with the same code path.
   - `task-events.ts` — builds the 13 task event chains. Each chain is plain data plus the fingerprint channel it must go out on (desktop or web); the tasks that need a REAL conversation (skill, experts) open one here to get the server-side id.
@@ -267,13 +267,13 @@ xdpool:
   - `web-status.ts` / `status-paths.ts` — the same-origin status document and routes the card reads. Mutations are gated on POST + loopback origin + an explicit `accountId`.
   - `bin.ts` — the CLI above.
 - **Client** (`src/client/`, the browser card loaded via `dsh.client`)
-  The collapsible shell reuses the host's `dsm-plugin-card*` style language (`--dsw-alias-*` theme tokens); content classes are namespaced `dsm-xdpool-*`, and copy lives under the `settings.xdpool` namespace.
+  The collapsible shell reuses the host's `dsm-plugin-card*` style language (`--dsw-alias-*` theme tokens); content classes are namespaced `dsm-onepool-*`, and copy lives under the `settings.onepool` namespace.
 - **Build**
   `tsdown` produces `lib/index.js` (host entry) + `lib/index.d.ts` (types) + `lib/bin.js` (CLI) + `lib/client.js` (CJS browser bundle wrapped in `window.__ModuleLoader__.load`). All four are committed, so an install needs no build-time script.
 
 ## Known limitations
 
-- **The WorkBuddy sign-in itself still goes through the desktop app**: XD Pool can launch QR sign-in for its own thirteen login channels, but WorkBuddy's own token is minted by the desktop app's Tencent SSO and bound to the device — the pool will not sign you in to WorkBuddy. Adding an account = signing in on the desktop app; XD Pool absorbs it.
+- **The WorkBuddy sign-in itself still goes through the desktop app**: OnePool can launch QR sign-in for its own thirteen login channels, but WorkBuddy's own token is minted by the desktop app's Tencent SSO and bound to the device — the pool will not sign you in to WorkBuddy. Adding an account = signing in on the desktop app; OnePool absorbs it.
 
 - **A few automation tasks are deliberately not implemented**
   - `Expert_Philanthropy` (charity expert): requires a real donation; there is no way around it.

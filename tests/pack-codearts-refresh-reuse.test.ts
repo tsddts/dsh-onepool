@@ -24,7 +24,7 @@ const pack = readFileSync(new URL('../vendor/channel-pack/pack.js', import.meta.
 
 describe('the STS5.1806 classification', () => {
   it('is recognised as a terminal refresh failure', () => {
-    expect(pack).toContain('[xdpool-local] a consumed refresh token is a dead credential')
+    expect(pack).toContain('[onepool-local] a consumed refresh token is a dead credential')
     expect(pack).toContain('errorCode.includes("STS5.1806")')
     // The message text is the fallback: Huawei is not guaranteed to keep the code
     // stable across STS revisions, but the sentence is what the error actually says.

@@ -29,7 +29,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] laneAllowedIds returns the DISABLED set'
+const MARKER = '[onepool-local] laneAllowedIds returns the DISABLED set'
 
 const raw = readFileSync(PATH, 'utf8')
 if (raw.includes(MARKER)) {
@@ -61,7 +61,7 @@ const NEW_HELPER = [
   '  //',
   '  // It is a THUNK: one adapter declares its roster on the line AFTER this call, so',
   '  // a value would read it before initialization. The body runs later.',
-  '  const table = globalThis.__xdpoolLaneSelection;',
+  '  const table = globalThis.__onepoolLaneSelection;',
   '  const allow = table === void 0 || table === null ? void 0 : table[laneId];',
   '  if (allow === void 0) return disabled;',
   '  const blocked = disabled === void 0 ? EMPTY_MODEL_SET : disabled;',

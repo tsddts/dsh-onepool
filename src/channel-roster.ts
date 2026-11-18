@@ -11,7 +11,7 @@
  * So the DATA lives here with no imports, and both halves read it: the host for the ids it
  * serves, the card for the cards it draws before the host answers.
  *
- * @module dsh-xdpool/channel-roster
+ * @module dsh-onepool/channel-roster
  */
 
 /** What one login channel is, to the card and to the host alike. */

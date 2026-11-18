@@ -10,7 +10,7 @@
  * JSON only, atomic rename on write: a crash mid-write leaves the previous
  * generation intact, and the pool never reads a half-written account again.
  *
- * @module dsh-xdpool/account-store
+ * @module dsh-onepool/account-store
  */
 
 import { readFile, rename } from 'node:fs/promises'
@@ -25,7 +25,7 @@ export const ACCOUNTS_FILE_NAME = 'accounts.json'
 /**
  * State files that live in the same directory but are NOT account snapshots.
  *
- * The snapshot importer (`dsh-xdpool import <key>`) writes `<md5prefix>.json`
+ * The snapshot importer (`dsh-onepool import <key>`) writes `<md5prefix>.json`
  * into this directory, and the pool scans it — so every other `.json` file here
  * is treated as an imported snapshot. These three are the plugin's own
  * bookkeeping and must never be parsed as credentials.

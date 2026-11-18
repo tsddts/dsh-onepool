@@ -16,7 +16,7 @@
  *
  * WHY `file:` AND NOT THE PUBLISHED VERSION
  *
- * Naming the version (`"dsh-xdpool": "2.7.5"`) makes the host fetch from the registry on every
+ * Naming the version (`"dsh-onepool": "2.7.5"`) makes the host fetch from the registry on every
  * start, which fails on a machine whose registry is proxied or slow — and the failure mode is a
  * plugin that does not load. Pinning the tarball that was just verified to download keeps the
  * update as local as the install it replaces.
@@ -27,7 +27,7 @@
  * user restarts when convenient — claiming the update took effect immediately would be a lie the
  * user discovers on the next crash.
  *
- * @module dsh-xdpool/update-install
+ * @module dsh-onepool/update-install
  */
 import { createWriteStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
@@ -35,7 +35,7 @@ import { dirname, join } from 'node:path'
 import { checkForUpdate } from './update-check.ts'
 
 /** The package this plugin publishes under. */
-const PACKAGE = 'dsh-xdpool'
+const PACKAGE = 'dsh-onepool'
 
 /** The profile directory whose `package.json` names this plugin. */
 function profileDir(): string | undefined {

@@ -45,7 +45,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const PATH = 'vendor/channel-pack/pack.js'
-const MARKER = '[xdpool-local] a consumed refresh token is a dead credential'
+const MARKER = '[onepool-local] a consumed refresh token is a dead credential'
 
 const source = readFileSync(PATH, 'utf8')
 if (source.includes(MARKER)) {

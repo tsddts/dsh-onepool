@@ -21,7 +21,7 @@
  * Rules are declared as data so a new promotion is a table entry, and an expiry
  * is automatic: once `until` passes, the rule stops applying on its own.
  *
- * @module dsh-xdpool/promo
+ * @module dsh-onepool/promo
  */
 
 import { hasFreeBadge } from './badges.ts'

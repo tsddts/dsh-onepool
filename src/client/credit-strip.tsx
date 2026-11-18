@@ -24,13 +24,13 @@
  * request. Thirty seconds matches the pool card and is comfortably faster than a
  * person notices.
  *
- * @module dsh-xdpool/client/credit-strip
+ * @module dsh-onepool/client/credit-strip
  */
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react'
 import { POOL_CREDITS_SPEND_PATH } from '../status-paths.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
-type Translate = (key: XdPoolSettingsKey, params?: Record<string, unknown>) => string
+type Translate = (key: OnePoolSettingsKey, params?: Record<string, unknown>) => string
 
 /** One channel's line in the breakdown. */
 interface ChannelTotal {
@@ -159,42 +159,42 @@ export function CreditStrip({ t }: { readonly t?: Translate | undefined }): Reac
   const unpriced = channels.reduce((sum, row) => sum + row.unpricedModels, 0)
 
   return (
-    <div className="dsm-xdpool-strip">
+    <div className="dsm-onepool-strip">
       <button
         type="button"
-        className="dsm-xdpool-strip-main"
+        className="dsm-onepool-strip-main"
         aria-expanded={open}
         onClick={() => { setOpen(current => !current) }}
         title={t?.('strip.hint') ?? '今日估算消耗，按渠道拆分；数字是 token × 模型倍率的估算'}
       >
-        <span className="dsm-xdpool-strip-k">{t?.('strip.today') ?? '今日消耗'}</span>
-        <span className="dsm-xdpool-strip-v">{compact(total)}</span>
-        <span className="dsm-xdpool-strip-u">{t?.('strip.credits') ?? '积分'}</span>
-        <span className="dsm-xdpool-strip-sep">·</span>
-        <span className="dsm-xdpool-strip-tok">{tokens(totalTokens)} tokens</span>
+        <span className="dsm-onepool-strip-k">{t?.('strip.today') ?? '今日消耗'}</span>
+        <span className="dsm-onepool-strip-v">{compact(total)}</span>
+        <span className="dsm-onepool-strip-u">{t?.('strip.credits') ?? '积分'}</span>
+        <span className="dsm-onepool-strip-sep">·</span>
+        <span className="dsm-onepool-strip-tok">{tokens(totalTokens)} tokens</span>
         {unpriced > 0
           ? (
             <>
-              <span className="dsm-xdpool-strip-sep">·</span>
-              <span className="dsm-xdpool-strip-warn" title={t?.('strip.unpricedHint') ?? '这些模型没有公布倍率，只统计 token 不计积分'}>
+              <span className="dsm-onepool-strip-sep">·</span>
+              <span className="dsm-onepool-strip-warn" title={t?.('strip.unpricedHint') ?? '这些模型没有公布倍率，只统计 token 不计积分'}>
                 {t?.('strip.unpriced', { count: unpriced }) ?? `${String(unpriced)} 个未定价`}
               </span>
             </>
           )
           : null}
-        <span className="dsm-xdpool-strip-caret" aria-hidden="true">{open ? '▾' : '▸'}</span>
+        <span className="dsm-onepool-strip-caret" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>
       {!open ? null : (
-        <div className="dsm-xdpool-strip-list">
+        <div className="dsm-onepool-strip-list">
           {channels.map(row => (
-            <div className="dsm-xdpool-strip-row" key={row.channel}>
-              <span className="dsm-xdpool-strip-ch">{row.channel}</span>
+            <div className="dsm-onepool-strip-row" key={row.channel}>
+              <span className="dsm-onepool-strip-ch">{row.channel}</span>
               {/* Credits first: the strip's whole purpose is "who is expensive". A
                   channel with no priced model shows a dash rather than 0. */}
-              <span className="dsm-xdpool-strip-n">
+              <span className="dsm-onepool-strip-n">
                 {row.credits > 0 ? compact(row.credits) : '—'}
               </span>
-              <span className="dsm-xdpool-strip-meta">
+              <span className="dsm-onepool-strip-meta">
                 {tokens(row.inputTokens + row.outputTokens)} · {String(row.requests)} {t?.('strip.calls') ?? '次'}
               </span>
             </div>
@@ -204,7 +204,7 @@ export function CreditStrip({ t }: { readonly t?: Translate | undefined }): Reac
               wonder why the ledger has more rows than this list. */}
           {report.gatewayRequests > 0
             ? (
-              <div className="dsm-xdpool-strip-note">
+              <div className="dsm-onepool-strip-note">
                 {t?.('strip.gatewayExcluded', { count: report.gatewayRequests })
                   ?? `另有 ${String(report.gatewayRequests)} 次来自网关（其他设备），未计入`}
               </div>

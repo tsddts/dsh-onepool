@@ -50,7 +50,7 @@
  * depend on which lane a model happens to sit in — the kind of difference a
  * client cannot see coming and discovers as a parse error.
  *
- * @module dsh-xdpool/channel-lane
+ * @module dsh-onepool/channel-lane
  */
 
 /** The slice of the host's `llm` service this lane needs. */
@@ -187,7 +187,7 @@ export function createChannelLane(options: {
         // down. All three read as "nothing to show for this one", which is what
         // the card already says; cached briefly so a client refreshing the
         // picker does not re-pay a known-dead listing on every request.
-        logger?.warn?.(`dsh-xdpool: channel ${channel} listed no models: ${String(error)}`)
+        logger?.warn?.(`dsh-onepool: channel ${channel} listed no models: ${String(error)}`)
         return [] as readonly ChannelLaneRow[]
       })
     const tracked = pending.then(rows => {

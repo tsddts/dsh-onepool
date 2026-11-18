@@ -12,7 +12,7 @@
  * it can only collect what the server has already marked finished. When nothing is claimable it
  * says so rather than reporting a failure.
  *
- * @module dsh-xdpool/doubao-automation
+ * @module dsh-onepool/doubao-automation
  */
 import { attemptCheckin, claimTasks, fetchCampaign } from './doubao-campaign.ts'
 import type { DoubaoSession } from './doubao-auth.ts'
@@ -114,7 +114,7 @@ export function createDoubaoAutomation(options: {
         : { lastNote: result.reason }),
     }
     options.logger?.info?.(
-      `[xdpool] doubao automation: claimed ${String(result.claimed)} task(s)`
+      `[onepool] doubao automation: claimed ${String(result.claimed)} task(s)`
         + (result.failed > 0 ? `, ${String(result.failed)} failed` : ''),
     )
     return state

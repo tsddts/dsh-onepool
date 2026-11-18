@@ -31,7 +31,7 @@
  * sentence, keeping the URL as detail.
  *
  * Both patches are additive and marker-guarded, matching the file's existing
- * `[xdpool-local]` convention.
+ * `[onepool-local]` convention.
  *
  * Idempotent.
  */
@@ -40,7 +40,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dirname, '..')
 const PACK = join(ROOT, 'vendor', 'channel-pack', 'pack.js')
-const MARKER = '[xdpool-local] benefitNotFound'
+const MARKER = '[onepool-local] benefitNotFound'
 
 const raw = readFileSync(PACK, 'utf8')
 const eol = raw.includes('\r\n') ? '\r\n' : '\n'
@@ -57,7 +57,7 @@ const OLD_HTTP_ERROR = `function httpErrorCode(status, body) {
   if (status === 401 || status === 403) return "AUTH";`
 
 const NEW_HTTP_ERROR = `function httpErrorCode(status, body) {
-  // [xdpool-local] benefitNotFound — see tools/patch-pack-error-kinds.mjs
+  // [onepool-local] benefitNotFound — see tools/patch-pack-error-kinds.mjs
   //
   // CodeArts answers \`InferHub.4004.200 benefit not found\` when the account has
   // no entitlement for the model. The request carries \`maas_type: benefit\`
@@ -92,7 +92,7 @@ const NEW_400 = `  if (status === 400) {
     if (isContextWindowExceededError(detail)) return CONTEXT_WINDOW_EXCEEDED_CODE;
     return "INVALID_REQUEST";
   }
-  // [xdpool-local] A 200 body can carry the benefit refusal too (the upstream
+  // [onepool-local] A 200 body can carry the benefit refusal too (the upstream
   // answers 200 with an error frame), so the probe above is the only guard that
   // covers both transports — nothing to do here.`
 if (text.includes(OLD_400)) {
@@ -125,7 +125,7 @@ const OLD_QODER = `        if (classifyInner(inner) === "error") {
 const NEW_QODER = `        if (classifyInner(inner) === "error") {
           let code;
           let message2 = inner;
-          // [xdpool-local] benefitNotFound / pricingUrl — see
+          // [onepool-local] benefitNotFound / pricingUrl — see
           // tools/patch-pack-error-kinds.mjs
           //
           // A refusal whose body is only a pricingUrl is upstream pointing at its

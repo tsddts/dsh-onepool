@@ -1,5 +1,5 @@
 /**
- * Plugin card icon (data URI) for the WorkBuddy XD Pool card.
+ * Plugin card icon (data URI) for the WorkBuddy OnePool card.
  *
  * A neutral, dependency-free 24px “pool / droplet stack” glyph kept as an SVG
  * data URI so the browser half never needs an external asset. Three stacked
@@ -7,7 +7,7 @@
  * the line and fill colors stay inside the host’s accent family so the icon
  * sits naturally on the dark Plugin configuration surface.
  *
- * @module dsh-xdpool/client/icon
+ * @module dsh-onepool/client/icon
  */
 
 export const POOL_PLUGIN_ICON =

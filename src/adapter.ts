@@ -1,5 +1,5 @@
 /**
- * The `xdpool` pi-ai provider: one loopback-backed adapter registered
+ * The `onepool` pi-ai provider: one loopback-backed adapter registered
  * into the Harness LLM seam, assembled from public `dsh-llm-pi-ai` extension
  * points. Every model points at the shim; account rotation stays inside it.
  *
@@ -8,7 +8,7 @@
  * (MIT, Copyright (c) 2026 Corrine Hu) and dingminhua/dsh-connect-workbuddy
  * (MIT), both designed and validated against this host.
  *
- * @module dsh-xdpool/adapter
+ * @module dsh-onepool/adapter
  */
 import { createProvider } from '@earendil-works/pi-ai'
 import type { Api, AuthContext, CredentialStore, Model, Provider } from '@earendil-works/pi-ai'
@@ -25,9 +25,9 @@ import type { WorkBuddyShim } from './shim.ts'
 import type { FreeModelRow } from './free-catalog.ts'
 /** Provider route this bundle owns. */
 /** Provider route this bundle owns for the domestic (CN) gateway. */
-export const XDPOOL_PROVIDER = 'xdpool'
+export const ONEPOOL_PROVIDER = 'onepool'
 /** Provider route this bundle owns for the international gateway. */
-export const XDPOOL_GLOBAL_PROVIDER = 'xdpool-global'
+export const ONEPOOL_GLOBAL_PROVIDER = 'onepool-global'
 /**
  * Provider route this bundle owns for the aggregate lane.
  *
@@ -38,7 +38,7 @@ export const XDPOOL_GLOBAL_PROVIDER = 'xdpool-global'
  * failures into the pool's cooldown table and its spend into the pool's usage
  * panel, both of which the user reads as WorkBuddy traffic.
  */
-export const XDPOOL_AGGREGATE_PROVIDER = 'xdpool-aggregate'
+export const ONEPOOL_AGGREGATE_PROVIDER = 'onepool-aggregate'
 /**
  * Provider route for the免密 free lane.
  *
@@ -48,7 +48,7 @@ export const XDPOOL_AGGREGATE_PROVIDER = 'xdpool-aggregate'
  * and its tokens into the pool's usage panel — both of which the user reads as
  * their own WorkBuddy traffic.
  */
-export const XDPOOL_FREE_PROVIDER = 'xdpool-free'
+export const ONEPOOL_FREE_PROVIDER = 'onepool-free'
 /**
  * Display name the free lane registers under, so the picker can group it.
  *
@@ -58,12 +58,12 @@ export const XDPOOL_FREE_PROVIDER = 'xdpool-free'
  * and a lane that answers 503 for everyone else is worse than no lane at all.
  */
 export const EXTRA_LANE_NAMES = {
-  free: 'XD Pool · 免费模型',
+  free: 'OnePool · 免费模型',
 } as const
 /** The provider id each region registers as. */
 export const POOL_PROVIDER_BY_REGION = {
-  cn: XDPOOL_PROVIDER,
-  global: XDPOOL_GLOBAL_PROVIDER,
+  cn: ONEPOOL_PROVIDER,
+  global: ONEPOOL_GLOBAL_PROVIDER,
 } as const
 /**
  * The name each pool region shows in the model picker.
@@ -72,7 +72,7 @@ export const POOL_PROVIDER_BY_REGION = {
  *
  * Every account in these two pools arrived through a scan sign-in on the channel card, so the
  * reader who picked a model here was working with "WorkBuddy 国内版" a moment earlier. Calling
- * the group "XD Pool" asked them to learn a second name for the same accounts — and, because
+ * the group "OnePool" asked them to learn a second name for the same accounts — and, because
  * the vendored pack registers the same two pools under its own ids, it produced FOUR groups
  * where two belonged.
  *
@@ -80,8 +80,8 @@ export const POOL_PROVIDER_BY_REGION = {
  * must never move it. Only what the reader sees changes.
  */
 export const POOL_NAME_BY_REGION = {
-  cn: 'XD Pool（国内版）',
-  global: 'XD Pool（国际版）',
+  cn: 'OnePool（国内版）',
+  global: 'OnePool（国际版）',
 } as const
 /** Provider idle ceiling while one stream read is outstanding. */
 export const WORKBUDDY_STREAM_IDLE_TIMEOUT_MS = 300_000
@@ -101,7 +101,7 @@ const INERT_AUTH: { credentials: CredentialStore; authContext: AuthContext } = {
     async read() { return undefined },
     async list() { return [] },
     async modify() {
-      throw new Error('dsh-xdpool: this route has no pi-ai credential lifecycle')
+      throw new Error('dsh-onepool: this route has no pi-ai credential lifecycle')
     },
     async delete() {},
   },
@@ -343,8 +343,8 @@ function toExtraLaneModel(row: FreeModelRow, baseUrl: string, providerId: string
  */
 export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBuddyAdapter {
   const { shim, catalog } = options
-  const providerId = options.providerId ?? XDPOOL_PROVIDER
-  const displayName = options.displayName ?? 'XD Pool'
+  const providerId = options.providerId ?? ONEPOOL_PROVIDER
+  const displayName = options.displayName ?? 'OnePool'
   const aggregateCatalog = isAggregateCatalog(catalog)
   const extraRows = options.extraRows
   const buildModels = (): Model<Api>[] => {
@@ -367,7 +367,7 @@ export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBu
      * The card's tick-boxes narrow what the picker LISTS, and `visible()` is the right
      * answer for "what should be offered". It is the wrong answer for "what can this
      * provider serve": a user who types or picks a model by id — `kimi-k3.1-pro` in the
-     * report — got `pi-ai provider "xdpool" has no configured model "kimi-k3.1-pro"`,
+     * report — got `pi-ai provider "onepool" has no configured model "kimi-k3.1-pro"`,
      * because that model was not in the four ticked boxes. The model existed, the account
      * could serve it, and the refusal came from a display filter.
      *
@@ -414,12 +414,12 @@ export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBu
       name: displayName,
       auth: {
         apiKey: {
-          name: 'XD Pool loopback secret',
+          name: 'OnePool loopback secret',
           async resolve({ credential }) {
             const apiKey = credential?.key
             return apiKey === undefined || apiKey.length === 0
               ? undefined
-              : { auth: { apiKey }, source: 'XD Pool' }
+              : { auth: { apiKey }, source: 'OnePool' }
           },
         },
       },
@@ -435,7 +435,7 @@ export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBu
     provider: providerId,
     displayName,
     streamIdleTimeoutMs: WORKBUDDY_STREAM_IDLE_TIMEOUT_MS,
-    retryPolicy: resolveRetryPolicy(undefined, 'dsh-xdpool retryPolicy'),
+    retryPolicy: resolveRetryPolicy(undefined, 'dsh-onepool retryPolicy'),
     configuredMaxTokens: new Map(),
     // Required by dsh-llm-pi-ai >= 0.1.5-rc.2: the host adapter reads
     // profile.modelErrors.get(model) on every model resolution. The catalog

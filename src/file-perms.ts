@@ -29,7 +29,7 @@
  * profile relocated to a shared directory is outside what this code can detect —
  * the README says where the files live so the user can check.
  *
- * @module dsh-xdpool/file-perms
+ * @module dsh-onepool/file-perms
  */
 import { chmod, mkdir, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'

@@ -1,5 +1,5 @@
 /**
- * Browser half: XD Pool health and model directory, mounted as its
+ * Browser half: OnePool health and model directory, mounted as its
  * own page in the Settings panel's left nav.
  *
  * Registration shape (see the NOTE below — the choice of slot and of injected
@@ -8,7 +8,7 @@
  *  - `inject` names ONLY services that exist on BOTH host lines. Cordis' gate
  *    is hard: an inject entry the running line does not provide keeps `apply`
  *    from ever running, and the entry stays PENDING forever, so the Desktop
- *    reports "renderer boot failed (plugins: dsh-xdpool)" and refuses
+ *    reports "renderer boot failed (plugins: dsh-onepool)" and refuses
  *    to open. `settingsScope` (0.1.5) and `configForms` (0.1.7) are mutually
  *    exclusive names for the same idea, so neither may be named here; whichever
  *    exists is reached through `ctx.get()` inside `apply`.
@@ -21,7 +21,7 @@
  * The whole body stays inside try/catch so a slot-API change degrades to a
  * console.error instead of tripping the host's "Failed to load plugins" banner.
  *
- * @module dsh-xdpool/client
+ * @module dsh-onepool/client
  */
 
 import type { Context } from '@deepseek-ai/cordis'
@@ -43,12 +43,12 @@ import { installPackRpc } from './channel-rpc.ts'
 import { readSidebarRow } from './sidebar-row.ts'
 import type { PoolCardInjected } from './PoolCard.tsx'
 import { en, zh } from './locales.ts'
-import type { XdPoolSettingsKey } from './locales.ts'
+import type { OnePoolSettingsKey } from './locales.ts'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
-    /** XD Pool card copy. Namespaced `settings.<XDPOOL_SETTINGS_NS>`. */
-    'settings.xdpool': XdPoolSettingsKey
+    /** OnePool card copy. Namespaced `settings.<ONEPOOL_SETTINGS_NS>`. */
+    'settings.onepool': OnePoolSettingsKey
   }
 
   interface SlotMap {
@@ -90,7 +90,7 @@ export type WorkBuddyClientContext = Context & {
 }
 
 /** Stable browser-plugin name. */
-export const name = 'dsh-xdpool-client'
+export const name = 'dsh-onepool-client'
 
 /**
  * Client services required by the settings page.
@@ -105,20 +105,20 @@ export const name = 'dsh-xdpool-client'
 export const inject = ['slots', 'locale']
 
 /** Settings namespace the host-side section registers (shared with the entry). */
-const XDPOOL_SETTINGS_NS = 'xdpool'
+const ONEPOOL_SETTINGS_NS = 'onepool'
 
 /**
  * Host plugin entry id this bundle is mounted under in `cordis.patch.yml`.
  *
  * `configForms` is addressed by this id on the 0.1.7 line.
  */
-const XDPOOL_ENTRY_ID = 'llm-xdpool'
+const ONEPOOL_ENTRY_ID = 'llm-onepool'
 
 /** Register card copy and the pool page under Settings. */
 export function apply(ctx: WorkBuddyClientContext): void {
   try {
-    const namespace = 'settings.xdpool'
-    ctx.effect(() => ctx.locale.register(namespace, { zh, en }), 'dsh-xdpool: settings copy')
+    const namespace = 'settings.onepool'
+    ctx.effect(() => ctx.locale.register(namespace, { zh, en }), 'dsh-onepool: settings copy')
     const t = ctx.locale.bind(namespace) as PoolCardInjected['t']
 
     // Soft service probe. Property access on an undeclared service THROWS
@@ -139,7 +139,7 @@ export function apply(ctx: WorkBuddyClientContext): void {
 
     ctx.slots.inject('settings.section', () => ctx.slots.register({
       name: 'settings.section',
-      id: 'xdpool',
+      id: 'onepool',
       // Sorted after the built-in pages (General 0 / Models 10 / Plugins 15 /
       // presets 20 / market 40) so the pool sits with the other community
       // pages rather than pushing a first-party one down.
@@ -180,7 +180,7 @@ export function apply(ctx: WorkBuddyClientContext): void {
         if (wanted && disposeRow === undefined) {
           disposeRow = ctx.slots.register({
             name: 'sidebar.panellist',
-            id: 'xdpool',
+            id: 'onepool',
             // First-party rows are 0 (Plugins) and schedules, community ones sit
             // at 30+, so 20 keeps the pool with the other top-level destinations.
             order: 20,
@@ -222,13 +222,13 @@ export function apply(ctx: WorkBuddyClientContext): void {
       // settings dialog used to supply.
       ctx.slots.inject('main', () => ctx.slots.register({
         name: 'main',
-        key: 'xdpool',
+        key: 'onepool',
         inject: (): Partial<PoolCardInjected> => settingsScope === undefined
           ? { t }
           : { t, settingsScope },
       }, PoolPage))
     } catch (error: unknown) {
-      console.error('[dsh-xdpool] sidebar entry unavailable (settings page unaffected):', error)
+      console.error('[dsh-onepool] sidebar entry unavailable (settings page unaffected):', error)
     }
     /**
      * The credit dot beside the model name, in the composer's own row.
@@ -247,22 +247,22 @@ export function apply(ctx: WorkBuddyClientContext): void {
     try {
       ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register({
         name: 'conversation.composer.dock',
-        id: 'xdpool-credit-dot',
+        id: 'onepool-credit-dot',
         order: 20,
         inject: (): { t?: PoolCardInjected['t'] } => (t === undefined ? {} : { t }),
       }, CreditDot))
     } catch (error: unknown) {
-      console.error('[dsh-xdpool] composer credit dot unavailable (everything else unaffected):', error)
+      console.error('[dsh-onepool] composer credit dot unavailable (everything else unaffected):', error)
     }
   } catch (error: unknown) {
     // Degrade silently on the page: the pool provider still serves models.
     // Developers see the full cause in the browser console; users see no banner.
-    console.error('[dsh-xdpool] client page failed to load (host provider unaffected):', error)
+    console.error('[dsh-onepool] client page failed to load (host provider unaffected):', error)
   }
 }
 
 /** Attribute carrying the nav-row marker this module installs. */
-const NAV_ICON_MARKER = 'data-dsh-xdpool-nav-icon'
+const NAV_ICON_MARKER = 'data-dsh-onepool-nav-icon'
 
 /**
  * The settings nav rows, as the shell renders them. Scoped to the settings
@@ -299,8 +299,8 @@ function installNavIcon(ctx: WorkBuddyClientContext, resolveLabel: () => string)
   if (typeof document === 'undefined') return
   ctx.effect(() => {
     const tag = document.createElement('style')
-    tag.dataset.plugin = 'dsh-xdpool'
-    tag.dataset.pluginCss = 'dsh-xdpool/settings-nav-icon'
+    tag.dataset.plugin = 'dsh-onepool'
+    tag.dataset.pluginCss = 'dsh-onepool/settings-nav-icon'
     tag.textContent = [
       `[${NAV_ICON_MARKER}] > svg { display: none; }`,
       `[${NAV_ICON_MARKER}]::before {`,
@@ -374,7 +374,7 @@ function installNavIcon(ctx: WorkBuddyClientContext, resolveLabel: () => string)
         .map(row => String(row.textContent ?? '').trim())
         .filter(text => text !== '')
       console.warn(
-        '[dsh-xdpool] the settings nav row could not be found, so the icon was not applied. '
+        '[dsh-onepool] the settings nav row could not be found, so the icon was not applied. '
           + `selector=${JSON.stringify(NAV_ROW_SELECTOR)} expectedLabel=${JSON.stringify(wanted)} `
           + `rowsPresent=${JSON.stringify(present)}. `
           + 'This is cosmetic only — the card itself still works. '
@@ -396,7 +396,7 @@ function installNavIcon(ctx: WorkBuddyClientContext, resolveLabel: () => string)
       for (const row of document.querySelectorAll(`[${NAV_ICON_MARKER}]`)) row.removeAttribute(NAV_ICON_MARKER)
       tag.remove()
     }
-  }, 'dsh-xdpool: settings nav icon')
+  }, 'dsh-onepool: settings nav icon')
 }
 
 /**
@@ -417,8 +417,8 @@ function resolveSettingsScope(
   softGet: (serviceName: string) => unknown,
 ): PoolCardInjected['settingsScope'] | undefined {
   // 0.1.7 line. The entry id is host-chosen (the profile patch may mount this
-  // plugin as `dsh-xdpool` or, as the live Desktop host does, as
-  // `include:dsh-xdpool`), so ask the mirror which namespace it
+  // plugin as `dsh-onepool` or, as the live Desktop host does, as
+  // `include:dsh-onepool`), so ask the mirror which namespace it
   // serves rather than assuming a name: the host resolves a provider's
   // namespace by exact match, so guessing wrong binds the card to a namespace
   // nothing serves and every save silently no-ops.
@@ -427,11 +427,11 @@ function resolveSettingsScope(
     get(ns: string): PoolCardInjected['settingsScope']
   } | undefined
   if (forms !== undefined) {
-    let entryId = XDPOOL_ENTRY_ID
+    let entryId = ONEPOOL_ENTRY_ID
     try {
       const namespaces = forms.describe().getSnapshot().view?.namespaces ?? []
-      const served = namespaces.find(entry => entry.ns === XDPOOL_ENTRY_ID)
-        ?? namespaces.find(entry => /xdpool/.test(entry.ns))
+      const served = namespaces.find(entry => entry.ns === ONEPOOL_ENTRY_ID)
+        ?? namespaces.find(entry => /onepool/.test(entry.ns))
       if (served !== undefined) entryId = served.ns
     } catch {
       // Mirror not ready: the declared entry id is still the right answer.
@@ -443,7 +443,7 @@ function resolveSettingsScope(
   const scope = softGet('settingsScope') as {
     bind(spec: { namespace: string }): PoolCardInjected['settingsScope']
   } | undefined
-  if (scope !== undefined) return scope.bind({ namespace: XDPOOL_SETTINGS_NS })
+  if (scope !== undefined) return scope.bind({ namespace: ONEPOOL_SETTINGS_NS })
 
   return undefined
 }

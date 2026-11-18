@@ -11,7 +11,7 @@
  * The file is written atomically and is readable only by the user: it holds a live session,
  * and a half-written jar would present as "signed in" while every request failed.
  *
- * @module dsh-xdpool/doubao-store
+ * @module dsh-onepool/doubao-store
  */
 import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'

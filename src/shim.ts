@@ -11,7 +11,7 @@
  * corrinehu/dsh-workbuddy-connect (MIT, Copyright (c) 2026 Corrine Hu), which
  * designed and validated it.
  *
- * @module dsh-xdpool/shim
+ * @module dsh-onepool/shim
  */
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto'
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http'
@@ -255,7 +255,7 @@ const REQUEST_BODY_LIMIT = 64 * 1024 * 1024
  * would gate the user's own chat with it; gating on this header restricts the
  * LAN surface and leaves the host untouched.
  */
-export const RELAY_HOP_HEADER = 'x-xdpool-relay-hop'
+export const RELAY_HOP_HEADER = 'x-onepool-relay-hop'
 const LOOPBACK_HOSTS = new Set(['127.0.0.1', 'localhost', '[::1]'])
 /**
  * How long one chain member may hold the request before it is given up on.
@@ -481,12 +481,12 @@ export function createWorkBuddyShim(options: WorkBuddyShimOptions): WorkBuddyShi
         // Only explicit zero on this requested model is sufficient; static
         // fallbacks, stale catalogs, promotional badges and unknown prices are not.
         const price = models.find(model => model.id === modelId)?.creditMultiplier
-        logger?.info?.(`dsh-xdpool: reserve pricing model=${modelId} region=${region ?? 'any'} price=${price ?? 'unknown'} exempt=${!pricingSignal.aborted && price === 0}`)
+        logger?.info?.(`dsh-onepool: reserve pricing model=${modelId} region=${region ?? 'any'} price=${price ?? 'unknown'} exempt=${!pricingSignal.aborted && price === 0}`)
         if (!pricingSignal.aborted && price === 0) {
           reserveExempt.add(account.id)
         }
       } catch {
-        logger?.info?.(`dsh-xdpool: reserve pricing unavailable model=${modelId} region=${region ?? 'any'} aborted=${pricingSignal.aborted}`)
+        logger?.info?.(`dsh-onepool: reserve pricing unavailable model=${modelId} region=${region ?? 'any'} aborted=${pricingSignal.aborted}`)
         // Failed pricing retains THIS account's reserve. Others can still work.
       }
     }))
@@ -658,7 +658,7 @@ function withBareModelId(raw: string, modelId: string): string {
     }
     const nonStreaming = body.stream === false
     const created = Math.floor(Date.now() / 1000)
-    const completionId = `chatcmpl-xdpool-${randomBytes(6).toString('base64url')}`
+    const completionId = `chatcmpl-onepool-${randomBytes(6).toString('base64url')}`
     let text = ''
     let reasoning = ''
     let toolCalls: Record<string, unknown>[] = []
@@ -1002,7 +1002,7 @@ function withBareModelId(raw: string, modelId: string): string {
           entries.push({ id: row.id, name: row.name, source: row.channel })
         }
       } catch (error: unknown) {
-        logger?.warn?.(`dsh-xdpool: channel listing failed: ${String(error)}`)
+        logger?.warn?.(`dsh-onepool: channel listing failed: ${String(error)}`)
       }
     }
     return entries
@@ -1115,7 +1115,7 @@ function withBareModelId(raw: string, modelId: string): string {
     const switches: string[] = []
     const noteSwitch = (member: string, kind: string, status: number): void => {
       switches.push(`${member} → ${kind} (${String(status)})`)
-      logger?.warn?.(`dsh-xdpool: chain ${row.id} skipped ${member}: ${kind} (${String(status)}); trying next`)
+      logger?.warn?.(`dsh-onepool: chain ${row.id} skipped ${member}: ${kind} (${String(status)}); trying next`)
     }
     // The chain path had no conversation identity at all, which meant a combo
     // turn reached the gateway with no session headers and was refused with
@@ -1184,7 +1184,7 @@ function withBareModelId(raw: string, modelId: string): string {
         // that answered describe ONE completion. Reusing a chain-wide id would make
         // a client that groups by id merge two attempts.
         const memberCreated = Math.floor(Date.now() / 1000)
-        const memberCompletionId = `chatcmpl-xdpool-${randomBytes(6).toString('base64url')}`
+        const memberCompletionId = `chatcmpl-onepool-${randomBytes(6).toString('base64url')}`
         const hostFrames: string[] = []
         const frameOf = (delta: Record<string, unknown>, reason: string | null): string => JSON.stringify({
           id: memberCompletionId,
@@ -1378,7 +1378,7 @@ function withBareModelId(raw: string, modelId: string): string {
       // that the answer came from the third choice rather than the first.
       if (switches.length > 0) {
         logger?.info?.(
-          `dsh-xdpool: chain ${row.id} served by ${member.modelId} after skipping `
+          `dsh-onepool: chain ${row.id} served by ${member.modelId} after skipping `
             + `${String(switches.length)}/${String(members.length)}: ${switches.join('; ')}`,
         )
       }
@@ -1456,8 +1456,8 @@ function withBareModelId(raw: string, modelId: string): string {
           403,
           'model_not_shared',
           modelId === undefined
-            ? 'no model was named, and this gateway only serves the models shared on its XD Pool card'
-            : `${modelId} is not shared on this gateway; enable it in XD Pool → Gateway`,
+            ? 'no model was named, and this gateway only serves the models shared on its OnePool card'
+            : `${modelId} is not shared on this gateway; enable it in OnePool → Gateway`,
         )
         return
       }
@@ -1483,7 +1483,7 @@ function withBareModelId(raw: string, modelId: string): string {
         res,
         503,
         'combo_missing',
-        `chain ${modelId} is not available right now; edit or re-enable it in XD Pool → Routing`,
+        `chain ${modelId} is not available right now; edit or re-enable it in OnePool → Routing`,
       )
       return
     }
@@ -1514,8 +1514,8 @@ function withBareModelId(raw: string, modelId: string): string {
         503,
         `${lane}_unavailable`,
         lane === 'free'
-          ? `${modelId as string} is not available right now; the free lane's model listing is refreshed on the XD Pool card`
-          : `${modelId as string} is not available right now; sign in to the co-paid lane on the XD Pool card`,
+          ? `${modelId as string} is not available right now; the free lane's model listing is refreshed on the OnePool card`
+          : `${modelId as string} is not available right now; sign in to the co-paid lane on the OnePool card`,
       )
       return
     }
@@ -1708,13 +1708,13 @@ function withBareModelId(raw: string, modelId: string): string {
           // token. Cool it and spend the rest of the budget elsewhere.
           pool.penalizeCredentialDead(account.id)
           logger?.warn(
-            `dsh-xdpool: ${account.label} still refused after a token refresh `
+            `dsh-onepool: ${account.label} still refused after a token refresh `
               + `(attempt ${attempt + 1}/${maxAttempts}); rotating`,
           )
           continue
         }
         refreshedThisRequest.add(account.id)
-        logger?.warn(`dsh-xdpool: ${account.label} session dead; refreshing token and retrying`)
+        logger?.warn(`dsh-onepool: ${account.label} session dead; refreshing token and retrying`)
         const before = account.credential.accessToken
         const recovered = await pool.refreshAccount(account.id, { force: true })
         // A 401 on a token the upstream still hands out refresh credentials for
@@ -1724,7 +1724,7 @@ function withBareModelId(raw: string, modelId: string): string {
         if (!recovered || account.credential.accessToken === before) {
           pool.penalizeCredentialDead(account.id)
           logger?.warn(
-            `dsh-xdpool: ${account.label} sign-in is no longer valid `
+            `dsh-onepool: ${account.label} sign-in is no longer valid `
               + `(attempt ${attempt + 1}/${maxAttempts}); rotating`,
           )
         }
@@ -1736,7 +1736,7 @@ function withBareModelId(raw: string, modelId: string): string {
       if (result.kind === 'hard_credit') {
         pool.penalizeExhausted(account.id)
         logger?.warn(
-          `dsh-xdpool: ${account.label} has no credits left `
+          `dsh-onepool: ${account.label} has no credits left `
             + `(attempt ${attempt + 1}/${maxAttempts}); rotating`,
         )
         continue
@@ -1749,7 +1749,7 @@ function withBareModelId(raw: string, modelId: string): string {
       // log instead of requiring a reproduction.
       if (result.kind === 'client') {
         logger?.warn(
-          `dsh-xdpool: ${account.label} rejected the request as invalid `
+          `dsh-onepool: ${account.label} rejected the request as invalid `
           + `(model ${modelId ?? '(none)'}) — ${requestShape(raw)}; upstream: ${result.message.slice(0, 300)}`,
         )
       }
@@ -1759,7 +1759,7 @@ function withBareModelId(raw: string, modelId: string): string {
       // usable (the upstream explicitly allows switching to another model).
       pool.penalize(account.id, parseRateLimitReset(result.message), modelId)
       logger?.warn(
-        `dsh-xdpool: ${account.label} rate-limited on ${modelId ?? '(no model)'} ` +
+        `dsh-onepool: ${account.label} rate-limited on ${modelId ?? '(no model)'} ` +
           `(attempt ${attempt + 1}/${maxAttempts}); rotating`,
       )
     }
@@ -1927,7 +1927,7 @@ async function serveSuccessfulStream(
   pool: WorkBuddyAccountPool,
   usage: UsageContext | undefined,
 ): Promise<void> {
-  logger?.info?.(`dsh-xdpool: served by ${account.label}`)
+  logger?.info?.(`dsh-onepool: served by ${account.label}`)
   // Only now is this account the one actually serving the user: a request
   // that failed over to another account must not mark the tried one as used.
   pool.noteServed(account.id)
@@ -2026,7 +2026,7 @@ async function serveSuccessfulStream(
     if (chunk.includes('[DONE]')) sawDone = true
   })
   body.on('error', (error: unknown) => {
-    logger?.warn('dsh-xdpool: upstream stream failed mid-flight', error)
+    logger?.warn('dsh-onepool: upstream stream failed mid-flight', error)
     finish(false)
     if (!sawDone && res.writable) res.end('data: [DONE]\n\n')
   })
@@ -2055,7 +2055,7 @@ async function serveSuccessfulJson(
   usage: UsageContext | undefined,
   modelId: string | undefined,
 ): Promise<void> {
-  logger?.info?.(`dsh-xdpool: served by ${account.label} (non-streaming)`)
+  logger?.info?.(`dsh-onepool: served by ${account.label} (non-streaming)`)
   pool.noteServed(account.id)
   void refreshBalance(account)
   const tracker = new StreamTracker(Date.now())
@@ -2106,7 +2106,7 @@ async function serveSuccessfulJson(
     if (turn.usage !== undefined) tracker.usage = turn.usage
   } catch (error: unknown) {
     failure = error
-    logger?.warn('dsh-xdpool: non-streaming reassembly failed mid-flight', error)
+    logger?.warn('dsh-onepool: non-streaming reassembly failed mid-flight', error)
   }
   if (failure !== undefined) {
     finish(false)
@@ -2194,7 +2194,7 @@ async function recoverFromContextOverrun(options: RecoverOptions): Promise<Recov
   const fromOverrun = Math.max(512, Math.floor(overrunTokens / 2))
   const budget = Math.min(fromWindow, fromOverrun)
   logger?.warn(
-    `dsh-xdpool: context overrun on ${modelId ?? '(no model)'} `
+    `dsh-onepool: context overrun on ${modelId ?? '(no model)'} `
       + `(~${overrunTokens} tokens, catalog window ${realWindow ?? 'unknown'}); `
       + `compacting to ~${budget} and retrying once`,
   )
@@ -2272,7 +2272,7 @@ async function recoverFromContextOverrun(options: RecoverOptions): Promise<Recov
     }
     if (result.ok) {
       logger?.info?.(
-        `dsh-xdpool: recovered from context overrun on ${modelId ?? '(no model)'} `
+        `dsh-onepool: recovered from context overrun on ${modelId ?? '(no model)'} `
           + `(summarised: ${summary === undefined ? 'no' : 'yes'})`,
       )
       return { ok: true, account, result }

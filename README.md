@@ -1,10 +1,10 @@
-# DSH XD Pool
+# DSH OnePool
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-xdpool"><img src="https://img.shields.io/npm/v/dsh-xdpool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/dsh-xdpool"><img src="https://img.shields.io/npm/dm/dsh-xdpool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-xdpool?style=flat-square" alt="MIT license"></a>
-  <a href="https://github.com/XDTrees/dsh-xdpool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-xdpool?style=flat-square" alt="GitHub stars"></a>
+  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/v/dsh-onepool?style=flat-square&label=npm&color=cb3837" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/dsh-onepool"><img src="https://img.shields.io/npm/dm/dsh-onepool?style=flat-square&label=downloads&color=cb3837" alt="npm downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/XDTrees/dsh-onepool?style=flat-square" alt="MIT license"></a>
+  <a href="https://github.com/XDTrees/dsh-onepool/stargazers"><img src="https://img.shields.io/github/stars/XDTrees/dsh-onepool?style=flat-square" alt="GitHub stars"></a>
 </p>
 
 ## 先加群
@@ -17,13 +17,13 @@
   <b>左：微信（机器人）</b> —— 扫码添加机器人后<b>发送「XD」</b>，它才会拉你进群；只扫码不加不发是不会有反应的。<br>
   <b>右：QQ 群</b> —— 直接扫码即可加入，群号 1103463688。
   <br>
-  <sub>两个群都在，哪个方便用哪个。二维码失效了在 <a href="https://github.com/XDTrees/dsh-xdpool/issues">issues</a> 说一声会换新。</sub>
+  <sub>两个群都在，哪个方便用哪个。二维码失效了在 <a href="https://github.com/XDTrees/dsh-onepool/issues">issues</a> 说一声会换新。</sub>
   <br>
   <sub>卡片右上角「点Star」旁边的「交流群」按钮打开的是同样这两张码 —— 不用回头找 README。</sub>
 </p>
 
 <p align="center">
-  <sub>下载量徽章读的是 npm 上 <code>dsh-xdpool</code> 自己的实时统计，不再是改名前的快照。</sub>
+  <sub>下载量徽章读的是 npm 上 <code>dsh-onepool</code> 自己的实时统计，不再是改名前的快照。</sub>
 </p>
 
 [English](./README.en.md) | 中文
@@ -45,16 +45,16 @@
 
 **另外附送一整套「积分自动化」**：签到、领任务奖励、连登兑换、开猫猫旅行……这些每天都要手动点一遍的活儿，插件在后台替你干完了。
 
-> **和单账号连接插件的区别**：`dsh-workbuddy-connect` 那类插件是「一次一个账号」。XD Pool 把**多账号当默认情况**——不挑号、不手动导入，你在桌面 App 换登过的每个号都被池记下并跨重启保存，对外用一个 `xdpool` provider 分组，池内自动容错。
+> **和单账号连接插件的区别**：`dsh-workbuddy-connect` 那类插件是「一次一个账号」。OnePool 把**多账号当默认情况**——不挑号、不手动导入，你在桌面 App 换登过的每个号都被池记下并跨重启保存，对外用一个 `onepool` provider 分组，池内自动容错。
 
-> **从旧名升级**：这个插件以前叫 `dsh-workbuddy-xdpool`。改名后**旧数据会自动接过来**（你的 API key、忽略名单、账号 pin 都还在）；唯一需要你动手的是「默认模型」如果指向旧 id，见[从旧版升级](#从旧版升级)。
+> **从旧名升级**：这个插件以前叫 `dsh-workbuddy-onepool`。改名后**旧数据会自动接过来**（你的 API key、忽略名单、账号 pin 都还在）；唯一需要你动手的是「默认模型」如果指向旧 id，见[从旧版升级](#从旧版升级)。
 
 
 ## 先看几张图
 
 **账号池（卡片首页：品牌栏 + 六个页面标签，顶部就是用量）**
 
-![账号池：顶栏显示 XD Pool 与版本号、七个页面标签、用量面板在页面最上方、下方是 WorkBuddy 国内版账号卡与「已接入」状态](assets/account-pool.png)
+![账号池：顶栏显示 OnePool 与版本号、七个页面标签、用量面板在页面最上方、下方是 WorkBuddy 国内版账号卡与「已接入」状态](assets/account-pool.png)
 
 **扫码登录（十三家支持网页或扫码登录的厂商，登一次就能用它们的免费模型）**
 
@@ -136,14 +136,14 @@
 > 兼容 host `0.1.1-rc.2` 起的整个 0.1.x 系列，以及 `0.2.0-rc.2`。安装设置节时会按 host 能力自动选择 `settings.installSection`（0.1.2-rc.1+）或更早的自由函数写法；卡片在 0.2.0 上作为设置面板里一个**平级标签页**渲染。
 
 > **卡片在哪儿打开**：DSH 设置面板本身。开法是**侧边栏左下角的齿轮**，或者快捷键 `Ctrl+Alt+,`。
-> 面板顶部是平级标签：`通用设置 / 模型 / 内置插件 / Agent 预设 / XD Pool` —— 本插件就是最后那个 **XD Pool**。
-> （0.1.x 时代它叫「设置 → 插件 → DSH WorkBuddy XD Pool」，0.2.0 起改成了平级标签，按老路径找不到。）
+> 面板顶部是平级标签：`通用设置 / 模型 / 内置插件 / Agent 预设 / OnePool` —— 本插件就是最后那个 **OnePool**。
+> （0.1.x 时代它叫「设置 → 插件 → DSH WorkBuddy OnePool」，0.2.0 起改成了平级标签，按老路径找不到。）
 
 **方式一：从 npm 安装（推荐）**
 
 ```sh
 # dsh 不在 PATH 时，用 node ~/.dsh/profiles/node_modules/@deepseek-ai/dsh/lib/bin.js 代替 dsh
-dsh plugin --profile desktop add dsh-xdpool
+dsh plugin --profile desktop add dsh-onepool
 ```
 
 > 推荐 npm：需要拉取的依赖只有插件自己（**约 1 个包，几秒搞定**）。
@@ -152,17 +152,17 @@ dsh plugin --profile desktop add dsh-xdpool
 **方式二：从 GitHub 源码安装**
 
 ```sh
-dsh plugin --profile desktop add github:XDTrees/dsh-xdpool
+dsh plugin --profile desktop add github:XDTrees/dsh-onepool
 ```
 
 **方式三：手动注册 bundle**
 
 ```sh
 # 1) 先装包（npm 或 GitHub 任选）
-dsh plugin --profile desktop add dsh-xdpool
+dsh plugin --profile desktop add dsh-onepool
 
 # 2) 注册 bundle：编辑 ~/.dsh/profiles/desktop/package.json，
-#    在 "dsh" → "profile" → "bundles" 数组末尾加上 "dsh-xdpool"
+#    在 "dsh" → "profile" → "bundles" 数组末尾加上 "dsh-onepool"
 
 # 3) 重启 DSH Desktop
 ```
@@ -181,31 +181,31 @@ pnpm typecheck:client   # 客户端类型检查
 
 > 注意：`pnpm install` 要用 pnpm 11（`npx pnpm@11`），必要时加 `--config.confirmModulesPurge=false --config.minimumReleaseAge=0`——pnpm 11 默认的 `minimumReleaseAge` 供应链年龄策略会拦下刚发布的 rc 包。
 
-装完以后：模型选择器里会出现 **XD Pool（国内版）** 和 **XD Pool（国际版）** 两个分组（另有「聚合渠道」和「XD Pool · 免费模型」按需出现）；打开设置面板（左下角齿轮或 `Ctrl+Alt+,`）切到 **XD Pool** 一栏，能看池健康、各账号的令牌 / 积分 / 签到 / 冷却状态，还有「重新检测账号」「清除所有冷却」按钮和每个账号的签到按钮。
+装完以后：模型选择器里会出现 **OnePool（国内版）** 和 **OnePool（国际版）** 两个分组（另有「聚合渠道」和「OnePool · 免费模型」按需出现）；打开设置面板（左下角齿轮或 `Ctrl+Alt+,`）切到 **OnePool** 一栏，能看池健康、各账号的令牌 / 积分 / 签到 / 冷却状态，还有「重新检测账号」「清除所有冷却」按钮和每个账号的签到按钮。
 
 Web / TUI profile 也能用（`--profile web` / `--profile dsh-tui`）。
 
 ## 从旧版升级
 
-这个插件以前叫 **`dsh-workbuddy-xdpool`**（显示名 `DSH WorkBuddy XD Pool`）。从 2.1.0 起改名为 **`dsh-xdpool`**。
+这个插件以前叫 **`dsh-workbuddy-onepool`**（显示名 `DSH WorkBuddy OnePool`）。从 2.1.0 起改名为 **`dsh-onepool`**。
 
-**你的数据不会丢。** 插件自己的目录从 `~/.dsh/.workbuddy-xdpool` 变成了 `~/.dsh/.xdpool`，启动时会**自动把旧目录复制过来**——你填过的第三方 API key、忽略名单、账号 pin、启动日志，都在。旧目录**只复制、不删除**，所以想退回旧版、或者两个版本并存，都还能用。
+**你的数据不会丢。** 插件自己的目录从 `~/.dsh/.workbuddy-onepool` 变成了 `~/.dsh/.onepool`，启动时会**自动把旧目录复制过来**——你填过的第三方 API key、忽略名单、账号 pin、启动日志，都在。旧目录**只复制、不删除**，所以想退回旧版、或者两个版本并存，都还能用。
 
 唯一需要你动手的地方：**如果你的「默认模型」指向旧 id**，它不会自己改。旧 id 是宿主配置里的一个字符串，插件不去改宿主的配置文件（那等于插件改自己的加载器配置）。
 
 | 旧 id | 新 id |
 | --- | --- |
-| `workbuddy-xdpool` | `xdpool` |
-| `workbuddy-xdpool-global` | `xdpool-global` |
-| `workbuddy-xdpool-aggregate` | `xdpool-aggregate` |
-| `workbuddy-xdpool-free` | `xdpool-free` |
+| `workbuddy-onepool` | `onepool` |
+| `workbuddy-onepool-global` | `onepool-global` |
+| `workbuddy-onepool-aggregate` | `onepool-aggregate` |
+| `workbuddy-onepool-free` | `onepool-free` |
 
 要改两处（都在 profile 目录里）：
 
 ```yaml
 # ~/.dsh/profiles/desktop/home/settings.yaml
 agent-default-model:
-  provider: xdpool        # 原来是 workbuddy-xdpool
+  provider: onepool        # 原来是 workbuddy-onepool
   model: hy3
 ```
 
@@ -213,45 +213,45 @@ agent-default-model:
 # ~/.dsh/profiles/desktop/cordis.patch.yml
 - id: agent-default-model
   config:
-    provider: xdpool-global   # 原来是 workbuddy-xdpool-global
+    provider: onepool-global   # 原来是 workbuddy-onepool-global
 ```
 
-插件每次启动都会把这件事写进 `~/.dsh/.xdpool/startup.log`，所以忘了改也能在日志里找到确切该改什么。
+插件每次启动都会把这件事写进 `~/.dsh/.onepool/startup.log`，所以忘了改也能在日志里找到确切该改什么。
 
 ## 命令行
 
-统一用 `dsh plugin --profile desktop exec dsh-xdpool <子命令>` 调用：
+统一用 `dsh plugin --profile desktop exec dsh-onepool <子命令>` 调用：
 
 ```sh
-dsh plugin --profile desktop exec dsh-xdpool status    # 池里几个号 / 几个冷却 + shim 状态（--credits 查积分、--json 机器可读、--rates 看倍率）
-dsh plugin --profile desktop exec dsh-xdpool accounts  # 已发现的账号（--json）
-dsh plugin --profile desktop exec dsh-xdpool doctor    # 诊断发现 / 冷却 / 上游连通性
-dsh plugin --profile desktop exec dsh-xdpool reset     # 立刻清掉所有 429 冷却
-dsh plugin --profile desktop exec dsh-xdpool checkin   # 查每个账号今天签到了没（--json 机器可读）
-dsh plugin --profile desktop exec dsh-xdpool checkin all
+dsh plugin --profile desktop exec dsh-onepool status    # 池里几个号 / 几个冷却 + shim 状态（--credits 查积分、--json 机器可读、--rates 看倍率）
+dsh plugin --profile desktop exec dsh-onepool accounts  # 已发现的账号（--json）
+dsh plugin --profile desktop exec dsh-onepool doctor    # 诊断发现 / 冷却 / 上游连通性
+dsh plugin --profile desktop exec dsh-onepool reset     # 立刻清掉所有 429 冷却
+dsh plugin --profile desktop exec dsh-onepool checkin   # 查每个账号今天签到了没（--json 机器可读）
+dsh plugin --profile desktop exec dsh-onepool checkin all
                                                                  # 领掉所有账号今天的签到奖励；也可以只传一个账号标签领单个
-dsh plugin --profile desktop exec dsh-xdpool login     # 教你怎么在桌面再加一个号进池
+dsh plugin --profile desktop exec dsh-onepool login     # 教你怎么在桌面再加一个号进池
 ```
 
 ## 池里怎么多账号？
 
-桌面 App 同一时间只保留**当前登录账号**的凭据（每次换号都会覆盖同一个文件），所以 XD Pool 自己把账号记下来：你在桌面 App 里换着登几个号，每个号在切走的瞬间就被池收进 `~/.dsh/.xdpool/accounts.json` 持久保存——**重启 DSH 也不会丢**。之后点卡片上的「重新检测账号」，或者直接开始用，池都会带着全部历史账号服务。
+桌面 App 同一时间只保留**当前登录账号**的凭据（每次换号都会覆盖同一个文件），所以 OnePool 自己把账号记下来：你在桌面 App 里换着登几个号，每个号在切走的瞬间就被池收进 `~/.dsh/.onepool/accounts.json` 持久保存——**重启 DSH 也不会丢**。之后点卡片上的「重新检测账号」，或者直接开始用，池都会带着全部历史账号服务。
 
 如果你想给桌面 App 之外的一次登录做个**显式快照**（比如临时固定某个号做验证），也可以手动导入：
 
 ```sh
 # 在 WorkBuddy 桌面 App 登录账号后（key 自己起名）：
-dsh plugin --profile desktop exec dsh-xdpool import myKey
+dsh plugin --profile desktop exec dsh-onepool import myKey
 # 查看 / 删除已导入的快照：
-dsh plugin --profile desktop exec dsh-xdpool accounts
-dsh plugin --profile desktop exec dsh-xdpool remove myKey
+dsh plugin --profile desktop exec dsh-onepool accounts
+dsh plugin --profile desktop exec dsh-onepool remove myKey
 ```
 
-导入的快照与自动保存的账号存在同一个目录 `~/.dsh/.xdpool/` 下，每次扫描都会被一并收进池——不再是「导入了但没人读」。快照以 key 的 **MD5 前 8 位**命名（key 本身记在文件里），中文、带 `/`、带空格的 key 都安全。长期使用靠 refresh token 自动续期；失效了就回桌面重新登录，再 `import <key> --force` 覆盖。
+导入的快照与自动保存的账号存在同一个目录 `~/.dsh/.onepool/` 下，每次扫描都会被一并收进池——不再是「导入了但没人读」。快照以 key 的 **MD5 前 8 位**命名（key 本身记在文件里），中文、带 `/`、带空格的 key 都安全。长期使用靠 refresh token 自动续期；失效了就回桌面重新登录，再 `import <key> --force` 覆盖。
 
 ## 配置
 
-池的配置走插件设置节（`settings.xdpool`），模型设置页里能改，改完立即生效：
+池的配置走插件设置节（`settings.onepool`），模型设置页里能改，改完立即生效：
 
 | 字段 | 说明 | 默认 |
 | --- | --- | --- |
@@ -264,7 +264,7 @@ dsh plugin --profile desktop exec dsh-xdpool remove myKey
 也可以直接写进 `~/.dsh/settings.yaml`：
 
 ```yaml
-xdpool:
+onepool:
   cooldownMs: 120000
   distribution: sticky
 ```
@@ -272,7 +272,7 @@ xdpool:
 ## 架构
 
 - **宿主侧**（`src/`，跑在 DSH 主进程里）
-  - `index.ts` —— 注册 `xdpool` provider、`xdpool` 设置节、各条同源路由（状态 / 重新检测 / 清除冷却 / 签到 / 自动化运行 / 保留积分），以及账号发现与模型目录播种。
+  - `index.ts` —— 注册 `onepool` provider、`onepool` 设置节、各条同源路由（状态 / 重新检测 / 清除冷却 / 签到 / 自动化运行 / 保留积分），以及账号发现与模型目录播种。
   - `accounts.ts` —— `WorkBuddyAccountPool`：发现并持久保存本机 WorkBuddy 账号（`account-store.ts` 落盘）、429 冷却、轮换与 token 刷新；账号停用与积分保留也在这里。
   - `scheduler.ts` —— 积分自动化的调度器：按本地时点跑五个任务（签到 / 上报 / 任务 / 连登 / 旅行），每日收益账本落盘，手动「立即运行」走的是同一套逻辑。
   - `task-events.ts` —— 13 条任务事件链的构造。每条链都是纯数据，外加它该走哪个指纹通道（桌面 / 网页）；需要真实会话的任务（技能、专家）在这里先开一次真对话，拿到服务端 id。
@@ -280,13 +280,13 @@ xdpool:
   - `web-status.ts` / `status-paths.ts` —— 卡片读的同源状态文档与路由。写操作按「POST + 回环来源 + 显式 accountId」把关。
   - `bin.ts` —— 上面那套 CLI。
 - **客户端**（`src/client/`，浏览器卡片，经 `dsh.client` 由宿主加载）
-  折叠卡片外壳沿用宿主内置卡的 `dsm-plugin-card*` 样式语言（`--dsw-alias-*` 主题变量），内容类名统一 `dsm-xdpool-*` 前缀，不污染宿主其它卡片；文案命名空间 `settings.xdpool`。
+  折叠卡片外壳沿用宿主内置卡的 `dsm-plugin-card*` 样式语言（`--dsw-alias-*` 主题变量），内容类名统一 `dsm-onepool-*` 前缀，不污染宿主其它卡片；文案命名空间 `settings.onepool`。
 - **构建**
   `tsdown` 产出 `lib/index.js`（宿主入口）+ `lib/index.d.ts`（类型）+ `lib/bin.js`（CLI）+ `lib/client.js`（CJS，用 `window.__ModuleLoader__.load` 包起来的浏览器 bundle）。四个产物都随仓库提交，所以安装时不需要任何构建脚本。
 
 ## 已知限制
 
-- **WorkBuddy 主账号的登录仍走桌面 App**：XD Pool 可以为插件自己的十三家扫码登录渠道发起扫码，但 WorkBuddy 本体的 token 由桌面 App 的腾讯 SSO 铸造并和设备绑定，池不会替你登录 WorkBuddy。加号 = 在桌面 App 里登录 / 切换，XD Pool 自动吸收。
+- **WorkBuddy 主账号的登录仍走桌面 App**：OnePool 可以为插件自己的十三家扫码登录渠道发起扫码，但 WorkBuddy 本体的 token 由桌面 App 的腾讯 SSO 铸造并和设备绑定，池不会替你登录 WorkBuddy。加号 = 在桌面 App 里登录 / 切换，OnePool 自动吸收。
 
 - **自动化里有几个任务刻意没做**
   - `Expert_Philanthropy`（公益专家）：需要真捐钱，绕不过去。

@@ -7,7 +7,7 @@
  * first" once, and a card that spelled the same idea differently would make the
  * two lanes look unrelated when they are the same decision at different scales.
  *
- * @module dsh-xdpool/client/distribution
+ * @module dsh-onepool/client/distribution
  */
 import type { PoolDistribution } from '../status-paths.ts'
 

@@ -4,7 +4,7 @@
  * WHY THIS EXISTS
  *
  * Seven of this plugin's dependencies are `peerDependencies`: the host supplies them, not
- * npm. A manual copy of the package into `node_modules/dsh-xdpool` resolved them by walking
+ * npm. A manual copy of the package into `node_modules/dsh-onepool` resolved them by walking
  * up into the host's tree, so nothing was ever missing. Installing normally breaks that
  * walk, and a top-level import failure prevents `apply()` from ever running — so EVERY web
  * route is unregistered and the card renders empty while blaming the gateway.
@@ -36,7 +36,7 @@
  * which is precisely the false negative the reporter hit. `import.meta.resolve` asks the
  * question the plugin will actually ask.
  *
- * @module dsh-xdpool/scripts/link-host-peers
+ * @module dsh-onepool/scripts/link-host-peers
  */
 import { existsSync, mkdirSync, readFileSync, rmSync, symlinkSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -209,7 +209,7 @@ const HARNESS_BASES = [
 /**
  * Harness roots that can be derived from where this profile lives.
  *
- * `D:\dsh-home\profiles\desktop\node_modules\dsh-xdpool` → walk up to the data directory,
+ * `D:\dsh-home\profiles\desktop\node_modules\dsh-onepool` → walk up to the data directory,
  * then try every plausible sibling. Cheap, and it is the only way to find a harness on a
  * non-default drive without asking the user to set an environment variable.
  *
@@ -302,11 +302,11 @@ for (const name of peerNames()) {
 }
 
 if (linked.length > 0) {
-  process.stdout.write(`dsh-xdpool: linked ${String(linked.length)} host dependency(ies)\n`)
+  process.stdout.write(`dsh-onepool: linked ${String(linked.length)} host dependency(ies)\n`)
   for (const line of linked) process.stdout.write(`  ${line}\n`)
 }
 if (alreadyResolved.length > 0 && linked.length === 0) {
-  process.stdout.write(`dsh-xdpool: all ${String(alreadyResolved.length)} peer dependencies already resolve\n`)
+  process.stdout.write(`dsh-onepool: all ${String(alreadyResolved.length)} peer dependencies already resolve\n`)
 }
 
 /**
@@ -319,7 +319,7 @@ if (alreadyResolved.length > 0 && linked.length === 0) {
  */
 if (notFound.length > 0) {
   process.stdout.write(
-    `dsh-xdpool: ${String(notFound.length)} peer dependency(ies) not visible from this process:\n`
+    `dsh-onepool: ${String(notFound.length)} peer dependency(ies) not visible from this process:\n`
     + notFound.map(name => `  ${name}\n`).join('')
     + (IS_SOURCE_CHECKOUT
       ? 'Expected in a source checkout: build and test resolve them from devDependencies.\n'
@@ -332,7 +332,7 @@ if (failed.length > 0) {
   // A link that could not be CREATED is a real problem, but still not fatal: the host may
   // resolve the peer without our help. Worth a warning, not a rollback.
   process.stdout.write(
-    `dsh-xdpool: could not link ${String(failed.length)} dependency(ies):\n`
+    `dsh-onepool: could not link ${String(failed.length)} dependency(ies):\n`
     + failed.map(name => `  ${name}\n`).join(''),
   )
 }
@@ -349,10 +349,10 @@ if (failed.length > 0) {
  */
 const unresolved = peerNames().filter(name => locate(name) === undefined)
 if (unresolved.length === 0) {
-  process.stdout.write('dsh-xdpool: all peer dependencies resolve; the build should load\n')
+  process.stdout.write('dsh-onepool: all peer dependencies resolve; the build should load\n')
 } else {
   process.stdout.write(
-    `dsh-xdpool: ${String(unresolved.length)} peer dependency(ies) do not resolve here: `
+    `dsh-onepool: ${String(unresolved.length)} peer dependency(ies) do not resolve here: `
     + `${unresolved.join(', ')}\n`
     + '  Not treated as an install failure — see the note above.\n',
   )

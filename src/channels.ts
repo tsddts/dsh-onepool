@@ -21,7 +21,7 @@ const HERE = dirname(fileURLToPath(import.meta.url))
  *
  * `src/index.ts` compiles to `lib/index.js`, so from there `vendor/` is one level
  * up. Kept as a computed path rather than `import.meta.resolve` because the
- * installed layout is a flat `node_modules/dsh-xdpool/{lib,vendor}`,
+ * installed layout is a flat `node_modules/dsh-onepool/{lib,vendor}`,
  * which is not resolvable as a bare specifier.
  */
 const PACK_ENTRY = join(HERE, '..', 'vendor', 'channel-pack', 'pack.js')
@@ -246,7 +246,7 @@ export function mountChannelPack(ctx: unknown, logger?: ChannelPackLogger): Moun
       state: 'unavailable',
       reason: 'vendor/channel-pack is missing from the installed package',
     }
-    logger?.warn?.(`[xdpool] ${state.reason}; the login channels are disabled`)
+    logger?.warn?.(`[onepool] ${state.reason}; the login channels are disabled`)
     return { state: () => state }
   }
   void import(PACK_ENTRY_URL)
@@ -254,7 +254,7 @@ export function mountChannelPack(ctx: unknown, logger?: ChannelPackLogger): Moun
       const pack = loaded as ChannelPackModule
       if (typeof pack.apply !== 'function') {
         state = { state: 'unavailable', reason: 'the channel pack exposes no apply()' }
-        logger?.warn?.(`[xdpool] ${state.reason}; the login channels are disabled`)
+        logger?.warn?.(`[onepool] ${state.reason}; the login channels are disabled`)
         return
       }
       // `disableOpencode` because OpenCode is not an IDE this host runs. The pack
@@ -263,7 +263,7 @@ export function mountChannelPack(ctx: unknown, logger?: ChannelPackLogger): Moun
       // where a user is waiting on a login.
       pack.apply(ctx, { disableOpencode: true })
       state = { state: 'ready', providers: REGISTERED_CHANNELS.length }
-      logger?.info?.(`[xdpool] free-channel pack mounted (${REGISTERED_CHANNELS.length} login channels)`)
+      logger?.info?.(`[onepool] free-channel pack mounted (${REGISTERED_CHANNELS.length} login channels)`)
     })
     .catch((error: unknown) => {
       // Losing the mount race to the sibling build is one event with two
@@ -273,12 +273,12 @@ export function mountChannelPack(ctx: unknown, logger?: ChannelPackLogger): Moun
       if (isDuplicateMountError(error)) {
         state = { state: 'unavailable', reason: ROUTE_OWNED_ELSEWHERE }
         logger?.info?.(
-          `[xdpool] the login channels are already served by another plugin (${ROUTE_OWNED_ELSEWHERE}); the account pool is unaffected`,
+          `[onepool] the login channels are already served by another plugin (${ROUTE_OWNED_ELSEWHERE}); the account pool is unaffected`,
         )
         return
       }
       state = { state: 'unavailable', reason: errorMessage(error) }
-      logger?.warn?.(`[xdpool] free-channel pack unavailable (${state.reason}); the account pool is unaffected`)
+      logger?.warn?.(`[onepool] free-channel pack unavailable (${state.reason}); the account pool is unaffected`)
     })
   return { state: () => state }
 }

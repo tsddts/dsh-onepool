@@ -32,7 +32,7 @@ if (tag === undefined || bodyFile === undefined) {
 const body = readFileSync(join(ROOT, bodyFile), 'utf8').trim()
 if (body === '') throw new Error(`${bodyFile} is empty`)
 
-const REPO = 'XDTrees/dsh-xdpool'
+const REPO = 'XDTrees/dsh-onepool'
 const API = 'https://api.github.com'
 
 async function gh(path, init = {}) {
@@ -41,7 +41,7 @@ async function gh(path, init = {}) {
     headers: {
       authorization: `token ${TOKEN}`,
       accept: 'application/vnd.github+json',
-      'user-agent': 'dsh-xdpool-release',
+      'user-agent': 'dsh-onepool-release',
       ...(init.body === undefined ? {} : { 'content-type': 'application/json' }),
       ...init.headers,
     },
@@ -70,7 +70,7 @@ console.log(`tag ${tag} -> ${tagged} (== main)`)
 
 // 2. It must not already have a release.
 const existing = await fetch(`${API}/repos/${REPO}/releases/tags/${tag}`, {
-  headers: { authorization: `token ${TOKEN}`, accept: 'application/vnd.github+json', 'user-agent': 'dsh-xdpool-release' },
+  headers: { authorization: `token ${TOKEN}`, accept: 'application/vnd.github+json', 'user-agent': 'dsh-onepool-release' },
 })
 if (existing.ok) {
   const found = await existing.json()

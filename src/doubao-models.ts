@@ -12,7 +12,7 @@
  * So the DATA lives here with no imports at all, and both halves read it: the host's lane for
  * the ids it sends, the card for the names it draws.
  *
- * @module dsh-xdpool/doubao-models
+ * @module dsh-onepool/doubao-models
  */
 
 /** One catalog entry, as the reference implementation measured it. */

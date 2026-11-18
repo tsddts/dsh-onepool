@@ -1,5 +1,5 @@
 /**
- * Nav glyph for the WorkBuddy XD Pool settings page.
+ * Nav glyph for the WorkBuddy OnePool settings page.
  *
  * The host's settings shell draws its own 16px `svg` in every nav row and the
  * `settings.section` registration contract projects only `id` / `order` /
@@ -11,7 +11,7 @@
  * with whatever the active theme uses for nav text: a filled mask cannot carry
  * its own palette, and a two-tone icon would render as a flat silhouette.
  *
- * @module dsh-xdpool/client/nav-icon
+ * @module dsh-onepool/client/nav-icon
  */
 
 /**

@@ -1,7 +1,7 @@
 /**
  * A 403 on the free lane must not read as "your quota is used up" (#96).
  *
- * The reporter never got a successful call on 「XD Pool · 免费模型」 and was told
+ * The reporter never got a successful call on 「OnePool · 免费模型」 and was told
  * "当前请求的额度已用尽" — which is the host's wording for a bare refusal, and is
  * wrong in the one way that matters: it tells the user to wait. The actual cause
  * was a fingerprint mismatch (403, never billed), which is fixed by updating the
@@ -58,7 +58,7 @@ describe('the free lane explains a refusal instead of guessing', () => {
     expect(hint).toContain('NOT an exhausted quota')
     expect(hint).toContain('waiting will not help')
     // The action the user can actually take.
-    expect(hint).toContain('update dsh-xdpool')
+    expect(hint).toContain('update dsh-onepool')
   })
 
   it('still mentions the per-conversation budget, because a 403 can be that too', () => {

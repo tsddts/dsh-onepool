@@ -19,7 +19,7 @@
  * six models that are known to work, which beats an empty picker because one optional call
  * went wrong.
  *
- * @module dsh-xdpool/doubao-catalog-live
+ * @module dsh-onepool/doubao-catalog-live
  */
 import { cookieHeader, sessionUsable, type DoubaoSession } from './doubao-auth.ts'
 import { DOUBAO_MODELS, type DoubaoModelInfo } from './doubao-models.ts'
