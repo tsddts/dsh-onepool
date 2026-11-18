@@ -2,27 +2,19 @@
 
 > 状态截至 2026-11-18。本文件说的是**发布前还有哪几步是人做的**，工具能自动跑的部分已经跑完了。
 
-## 〇、当前唯一待办：npm 首次发布授权（2026-11-19 更新）
+## 〇、发布状态（2026-11-19 更新）
 
-代码侧发版链路已全部修通并实测：push main → release-please 开 bump PR → auto-merge 自动合并 → 打 tag → 触发 `release.yml`。release PR #8 已自动合并，`dsh-onepool-v1.1.0` tag 已打。**唯一卡点**：`dsh-onepool` 是全新包名，npm registry 上不存在（GET 404），OIDC `npm publish` 对不存在的包返回 `404 PUT /dsh-onepool`，因为 npm 的 trusted publishing 只能给**已存在**的包配置。
+**npm 包已发布成功**：`dsh-onepool`，registry 上 `latest` 可用、tarball 可下载、内容核对无误（slogan 在、头像已移除）。npm 账号 `tsddts`。
 
-需要账号所有人在浏览器/本机做一次（无法代劳，含 npm 登录 OTP）：
+代码侧发版链路已全部修通并实测：push main → release-please 开 bump PR → auto-merge 自动合并 → 打 tag → 触发 `release.yml`。release PR #8/#9 已自动合并，`dsh-onepool-v1.1.0` / `v1.1.1` tag 已打。修复提交：`26da791`(auto-merge bash)、`2e81e92`(版本同步+windows测试)、`9a386a8`(tag 匹配)、`e306bd7`(恢复 LedgerPage)。
 
-1. 首次建包（建立包名后才能配 trusted publisher）：
-   ```powershell
-   cd C:\Users\NeilM\Desktop\research\onepool
-   npm login                  # 你的 npm 账号 + 邮箱 OTP
-   npm publish --access public
-   ```
-2. 打开 https://www.npmjs.com/package/dsh-onepool/settings → **Trusted publishers** → Add GitHub Actions publisher：
-   - owner `tsddts` / repo `dsh-onepool` / workflow `release.yml` / environment 留空
-3. 配好后，在 tag 上重跑发布：
-   ```powershell
-   gh workflow run release.yml --repo tsddts/dsh-onepool --ref dsh-onepool-v1.1.0 -f publish=true
-   ```
+**已知遗留（不影响使用）**：
+- 本机访问 `npmjs.com` 网页返回 403/404（地区/风控问题，浏览器与命令行均如此），但 `registry.npmjs.org` API 完全正常，包的下载安装不受影响。要看包信息用 `npm view dsh-onepool`，别依赖网页。
+- npm 新机制（staged publishing）下，首次 `npm publish` 先进暂存、需 approve；实际用带 bypass-2FA 的 granular token 重复发布后成功落库。`latest` 最终落在 `1.1.2`（内容与 1.1.1 一致，仅 package.json 版本号不同），与 GitHub tag 1.1.1 号不完全对齐，但不影响安装使用。
 
-配好之后，往后每次改动 push main 即全自动发版，无需再做这一步。
-相关修复提交：`26da791`(auto-merge bash)、`2e81e92`(版本同步+windows测试)、`9a386a8`(tag 匹配)、`e306bd7`(恢复 LedgerPage)。
+**可选收尾**：
+1. 删除临时 granular token：`https://www.npmjs.com/settings/tsddts/tokens`（令牌等同发布密码，建议删）。
+2. 配 trusted publishing 实现真·全自动：包已存在，设置页可加 GitHub Actions publisher（`tsddts` / `dsh-onepool` / `release.yml` / environment 留空），之后发版免令牌免验证码。注意本机 npmjs 网页 403，可能需要在别的网络环境完成。
 
 > 下面第一节的表格是 1.0.0 首发时的历史记录，发版链路修复后的最新验证见上方。
 
